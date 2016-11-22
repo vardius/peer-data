@@ -1,0 +1,74 @@
+{
+  "name": "peer-data",
+  "version": "1.0.4",
+  "description": "PeerData - library for files, media streaming/sharing using WebRTC",
+  "scripts": {
+    "watch": "tsc -p src -w",
+    "build": "rm -rf lib && tsc",
+    "typings": "./node_modules/typings/dist/bin.js",
+    "postinstall": "npm run typings install",
+    "test": "karma start",
+    "test-watch": "karma start --no-single-run --auto-watch"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vardius/peer-data.git"
+  },
+  "keywords": [
+    "PeerData",
+    "WebRTC",
+    "cdn",
+    "web",
+    "rtc",
+    "video",
+    "player",
+    "html5",
+    "peer",
+    "socket",
+    "real",
+    "time",
+    "communication"
+  ],
+  "author": {
+    "name": "Rafał Lorenz",
+    "email": "vardius@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vardius/peer-data/issues"
+  },
+  "homepage": "https://github.com/vardius/peer-data#readme",
+  "devDependencies": {
+    "awesome-typescript-loader": "^2.2.4",
+    "html-loader": "^0.4.3",
+    "istanbul-instrumenter-loader": "^0.2.0",
+    "jasmine-core": "^2.4.1",
+    "jasmine-spec-reporter": "^2.4.0",
+    "json-loader": "^0.5.3",
+    "karma": "^1.2.0",
+    "karma-coverage": "^1.0.0",
+    "karma-jasmine": "^1.0.2",
+    "karma-mocha-reporter": "^2.0.3",
+    "karma-phantomjs-launcher": "^1.0.2",
+    "karma-remap-istanbul": "0.1.1",
+    "karma-sourcemap-loader": "^0.3.7",
+    "karma-webpack": "^1.8.0",
+    "node-sass": "^3.4.2",
+    "null-loader": "^0.1.1",
+    "phantomjs-prebuilt": "^2.1.7",
+    "postcss-loader": "^0.9.1",
+    "raw-loader": "^0.5.1",
+    "remap-istanbul": "^0.6.4",
+    "sass-loader": "^4.0.0",
+    "ts-loader": "^0.8.1",
+    "typescript": "^2.0.2",
+    "typings": "^1.3.2",
+    "webpack": "^1.13.0"
+  },
+  "dependencies": {
+    "core-js": "^2.4.1",
+    "rxjs": "5.0.0-beta.12",
+    "webrtc-adapter": "^2.0.8",
+    "zone.js": "^0.6.23"
+  }
+}

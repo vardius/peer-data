@@ -1,0 +1,7 @@
+node_modules
+coverage
+typings
+.idea
+lib
+jspm_packages
+npm-debug.log

@@ -1,0 +1,29 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "moduleResolution": "node",
+    "sourceMap": true,
+    "emitDecoratorMetadata": true,
+    "experimentalDecorators": true,
+    "removeComments": false,
+    "noImplicitAny": true,
+    "suppressImplicitAnyIndexErrors": true,
+//  uncomment for build
+//  comment for tests
+//  triggers the generation of the typings *.d.ts files, that enable IDE Intellisense
+//    "declaration": true,
+    "outDir": "./lib",
+    "noEmitHelpers": false,
+    "isolatedModules": false
+  },
+  "compileOnSave": false,
+  "buildOnSave": false,
+  "exclude": [
+    "index.d.ts",
+    "typings/browser.d.ts",
+    "typings/browser",
+    "node_modules",
+    "examples"
+  ]
+}
