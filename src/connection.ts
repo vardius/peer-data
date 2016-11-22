@@ -9,25 +9,19 @@
 
 import {IPeerCollection} from "./peer";
 import {IChannelCollection} from "./channel";
-import EventDispatcher, {EventType, IEventHandler} from "./event";
 
 export interface IConnection {
     peers(): IPeerCollection
     addPeer(id: string, peer: RTCPeerConnection): IConnection
-    removePeer(id): IConnection
+    removePeer(id: string): IConnection
     channels(): IChannelCollection
     addChannel(id: string, channel: RTCDataChannel): IConnection
-    removeChannel(id): IConnection
-    on(event: EventType, callback: IEventHandler);
+    removeChannel(id: string): IConnection
 }
 
 class Connection implements IConnection {
     private _peers: IPeerCollection;
     private _channels: IChannelCollection;
-
-    on(event: EventType, callback: IEventHandler) {
-        EventDispatcher.register(event, callback);
-    }
 
     peers(): IPeerCollection {
         return this._peers;
@@ -40,7 +34,7 @@ class Connection implements IConnection {
         return this;
     }
 
-    removePeer(id): IConnection {
+    removePeer(id: string): IConnection {
         if (this._peers.hasOwnProperty(id)) {
             this._peers[id].close();
             delete this._peers[id];
@@ -60,7 +54,7 @@ class Connection implements IConnection {
         return this;
     }
 
-    removeChannel(id): IConnection {
+    removeChannel(id: string): IConnection {
         if (this._channels.hasOwnProperty(id)) {
             this._channels[id].close();
             delete this._channels[id];

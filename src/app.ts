@@ -7,23 +7,40 @@
  * file that was distributed with this source code.
  */
 
-import "webrtc-adapter";
-import Config, {configuration} from "./config";
-import {IConnection, connection} from "./connection";
+// import "webrtc-adapter";
+import Config, {config} from "./config";
+import {connection} from "./connection";
+import EventDispatcher, {EventType, IEventHandler} from "./event";
+import {IPeerCollection} from "./peer";
+import {IChannelCollection} from "./channel";
+import {signaling} from "./signaling";
+import {IMessage} from "./bridge";
 
-interface IApp {
-    connect(): IConnection;
-    disconnect();
+export interface IApp {
+    on(event: EventType, callback: IEventHandler): void;
+    connect(): void;
+    disconnect(): void;
+    peers(): IPeerCollection
+    channels(): IChannelCollection
 }
 
-export class App implements IApp {
+export default class App implements IApp {
 
-    constructor(config: Config) {
-        configuration.config = config;
+    constructor(conf: Config) {
+        config.config = conf;
     }
 
-    connect(): IConnection {
-        return connection;
+    on(event: EventType, callback: IEventHandler) {
+        EventDispatcher.register(event, callback);
+    }
+
+    connect() {
+        let message: IMessage = {
+            type: 'offer',
+            caller: null,
+            data: null
+        };
+        signaling.send(message);
     }
 
     disconnect() {
@@ -31,5 +48,13 @@ export class App implements IApp {
             .forEach(([key, value]) => value.close());
         Object.entries(connection.peers())
             .forEach(([key, value]) => value.close());
+    }
+
+    peers(): IPeerCollection {
+        return connection.peers();
+    }
+
+    channels(): IChannelCollection {
+        return connection.channels();
     }
 }

@@ -10,7 +10,7 @@
 const handlers: IEventHandlerCollection = {};
 
 export interface IEventHandler {
-    (data?);
+    (data?: any): any;
 }
 
 export interface IEventHandlerCollection {
@@ -32,7 +32,7 @@ export default class EventDispatcher {
         handlers[type].push(callback);
     }
 
-    static dispatch(type: EventType, data?) {
+    static dispatch(type: EventType, data?: any) {
         handlers[type].forEach(h => h(data));
     }
 }

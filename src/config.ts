@@ -9,7 +9,13 @@
 
 import {LogLevel} from "./logger";
 
-class Configuration {
+export interface IConfiguration {
+    config: Config;
+    servers: RTCConfiguration;
+    logLevel: LogLevel;
+}
+
+class Configuration implements IConfiguration {
     private _config: Config;
 
     set config(value: Config) {
@@ -24,19 +30,14 @@ class Configuration {
         return this._config.servers;
     }
 
-    get constraint(): RTCMediaConstraints {
-        return this._config.constraint;
-    }
-
     get logLevel(): LogLevel {
         return this._config.logLevel;
     }
 }
 
-export const configuration: Configuration = new Configuration();
+export const config: IConfiguration = new Configuration();
 
 export default class Config {
     servers: RTCConfiguration;
-    constraint: RTCMediaConstraints;
     logLevel: LogLevel = LogLevel.ERROR;
 }

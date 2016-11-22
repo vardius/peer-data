@@ -7,6 +7,8 @@
  * file that was distributed with this source code.
  */
 
+import {config} from "./config";
+
 export enum LogLevel {
     INFO,
     WARN,
@@ -15,27 +17,37 @@ export enum LogLevel {
 }
 
 export default class Logger {
-    static info(data) {
+    static info(data: any) {
         this.trace(data, 'log');
     }
 
-    static log(data) {
+    static log(data: any) {
         this.trace(data, 'log');
     }
 
-    static warn(data) {
+    static warn(data: any) {
         this.trace(data, 'warn');
     }
 
-    static error(data) {
+    static error(data: any) {
         this.trace(data, 'error');
     }
 
-    private static trace(data, method) {
+    private static trace(data: any, method: string) {
+        if (config.logLevel === LogLevel.OFF) {
+            return;
+        }
+        if (config.logLevel === LogLevel.WARN && method === 'error') {
+            return;
+        }
+        if (config.logLevel === LogLevel.INFO && (method === 'error' || method === 'warn')) {
+            return;
+        }
+
         if (window.performance) {
             var now = (window.performance.now() / 1000).toFixed(3);
             if (data instanceof Error) {
-                console[method](now + ': ', data.toString(), data);
+                console[method](now + ': ' + data.toString(), data);
             }
             console[method](now + ': ', data);
         } else {

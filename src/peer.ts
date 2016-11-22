@@ -7,35 +7,35 @@
  * file that was distributed with this source code.
  */
 
-import {configuration} from "./config";
+import {config} from "./config";
 import {connection} from "./connection";
 import {signaling} from "./signaling";
-import DataChannelFactory from "./dataChannel";
+import DataChannelFactory from "./channel";
+import {ICaller, IMessage} from "./bridge";
 
 export interface IPeerCollection {
     [index: string]: RTCPeerConnection;
 }
 
 export default class PeerFactory {
-    static get(id): RTCPeerConnection {
-        let peer = new RTCPeerConnection(configuration.servers, configuration.constraint);
-        peer.onicecandidate = this.onIceCandidate;
+    static get(caller: ICaller): RTCPeerConnection {
+        let peer = new RTCPeerConnection(config.servers);
+
+        peer.onicecandidate = (event: RTCPeerConnectionIceEvent) => {
+            if (event.candidate) {
+                let message: IMessage = {
+                    type: 'candidate',
+                    caller: caller,
+                    data: event.candidate
+                };
+                signaling.send(message);
+            }
+        };
+
         peer.ondatachannel = (event: RTCDataChannelEvent) => {
-            connection.addChannel(id, DataChannelFactory.get(event.channel));
+            connection.addChannel(caller.id, DataChannelFactory.get(event.channel));
         };
 
         return peer;
-    }
-
-    static onIceCandidate(event: RTCIceCandidateEvent) {
-        if (event.candidate) {
-            let message = {
-                type: 'candidate',
-                label: event.candidate.sdpMLineIndex,
-                id: event.candidate.sdpMid,
-                candidate: event.candidate.candidate
-            };
-            signaling.send(message);
-        }
     }
 }

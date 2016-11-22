@@ -8,20 +8,10 @@
  */
 
 import Socket = SocketIOClient.Socket;
-import {Bridge} from "./bridge";
-
-export interface ICaller {
-    id: string;
-}
-
-export interface IMessage {
-    type: string;
-    caller: ICaller;
-    data: any;
-}
+import Bridge, {IMessage} from "./bridge";
 
 export interface ISignaling {
-    send(message);
+    send(message: IMessage): any;
 }
 
 class SocketChannel implements ISignaling {
