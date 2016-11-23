@@ -48,6 +48,7 @@
     "@types/socket.io-client": "^1.4.28",
     "@types/webrtc": "0.0.21",
     "awesome-typescript-loader": "^3.0.0-beta.3",
+    "enhanced-resolve": "^2.3.0",
     "istanbul-instrumenter-loader": "^1.0.0",
     "jasmine-core": "^2.5.2",
     "jasmine-spec-reporter": "^2.7.0",
