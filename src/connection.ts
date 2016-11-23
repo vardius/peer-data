@@ -11,20 +11,25 @@ import {IPeerCollection} from "./peer";
 import {IChannelCollection} from "./channel";
 
 export interface IConnection {
-    peers(): IPeerCollection
+    peers: IPeerCollection
+    channels: IChannelCollection
+
     addPeer(id: string, peer: RTCPeerConnection): IConnection
     removePeer(id: string): IConnection
-    channels(): IChannelCollection
     addChannel(id: string, channel: RTCDataChannel): IConnection
     removeChannel(id: string): IConnection
 }
 
-class Connection implements IConnection {
+export class Connection implements IConnection {
     private _peers: IPeerCollection;
     private _channels: IChannelCollection;
 
-    peers(): IPeerCollection {
+    get peers(): IPeerCollection {
         return this._peers;
+    }
+
+    get channels(): IChannelCollection {
+        return this._channels;
     }
 
     addPeer(id: string, peer: RTCPeerConnection): IConnection {
@@ -43,10 +48,6 @@ class Connection implements IConnection {
         return this;
     }
 
-    channels(): IChannelCollection {
-        return this._channels;
-    }
-
     addChannel(id: string, channel: RTCDataChannel): IConnection {
         if (!this._channels.hasOwnProperty(id)) {
             this._channels[id] = channel;
@@ -62,5 +63,3 @@ class Connection implements IConnection {
         return this;
     }
 }
-
-export const connection: IConnection = new Connection();

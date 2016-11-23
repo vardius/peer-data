@@ -7,11 +7,9 @@
  * file that was distributed with this source code.
  */
 
-import {connection} from "./connection";
-import {signaling} from "./signaling";
-import PeerFactory from "./peer";
-import Logger from "./logger";
-import DataChannelFactory from "./channel";
+import {CONFIG} from "./app";
+import {PeerFactory} from "./peer";
+import {DataChannelFactory} from "./channel";
 
 export interface IMessage {
     type: string;
@@ -23,50 +21,50 @@ export interface ICaller {
     id: string;
 }
 
-export default class Bridge {
+export class Bridge {
     static onConnect(caller: ICaller) {
-        let peer = connection.peers()[caller.id] = PeerFactory.get(caller);
+        let peer = CONFIG.connection.peers[caller.id] = PeerFactory.get(caller);
         let channel = peer.createDataChannel('chunks');
-        connection.channels()[caller.id] = DataChannelFactory.get(channel);
+        CONFIG.connection.channels[caller.id] = DataChannelFactory.get(channel);
         peer.createOffer((desc: RTCSessionDescription) => {
             let message: IMessage = {
                 type: 'offer',
                 caller: caller,
                 data: peer.localDescription
             };
-            peer.setLocalDescription(desc, () => signaling.send(message), Logger.error);
-        }, Logger.error);
+            peer.setLocalDescription(desc, () => CONFIG.signalling.send(message), CONFIG.logger.error);
+        }, CONFIG.logger.error);
     }
 
     static onCandidate(caller: ICaller, candidate: RTCIceCandidate) {
-        let peer = connection.peers()[caller.id];
+        let peer = CONFIG.connection.peers[caller.id];
         peer.addIceCandidate(new RTCIceCandidate(candidate));
     }
 
     static onOffer(caller: ICaller, desc: RTCSessionDescriptionInit) {
-        let peer = connection.peers()[caller.id] = PeerFactory.get(caller);
+        let peer = CONFIG.connection.peers[caller.id] = PeerFactory.get(caller);
         peer.setRemoteDescription(new RTCSessionDescription(desc), () => {
-        }, Logger.log);
+        }, CONFIG.logger.error);
         peer.createAnswer((desc: RTCSessionDescription) => {
             let message: IMessage = {
                 type: 'answer',
                 caller: caller,
                 data: peer.localDescription
             };
-            peer.setLocalDescription(desc, () => signaling.send(message), Logger.log);
-        }, Logger.log);
+            peer.setLocalDescription(desc, () => CONFIG.signalling.send(message), CONFIG.logger.error);
+        }, CONFIG.logger.error);
     }
 
     static onAnswer(caller: ICaller, desc: RTCSessionDescriptionInit) {
-        let peer = connection.peers()[caller.id];
+        let peer = CONFIG.connection.peers[caller.id];
         peer.setRemoteDescription(new RTCSessionDescription(desc), () => {
-        }, Logger.log);
+        }, CONFIG.logger.error);
     }
 
     static onDisconnect(caller: ICaller) {
-        let channel = connection.channels()[caller.id];
+        let channel = CONFIG.connection.channels[caller.id];
         channel.close();
-        let peer = connection.peers()[caller.id];
+        let peer = CONFIG.connection.peers[caller.id];
         peer.close();
     }
 }

@@ -7,14 +7,12 @@
  * file that was distributed with this source code.
  */
 
-// import "webrtc-adapter";
-import Config, {config} from "./config";
-import {connection} from "./connection";
-import EventDispatcher, {EventType, IEventHandler} from "./event";
+import "webrtc-adapter";
+import {EventType, IEventHandler, EventDispatcher} from "./event";
 import {IPeerCollection} from "./peer";
 import {IChannelCollection} from "./channel";
-import {signaling} from "./signaling";
 import {IMessage} from "./bridge";
+import {Config} from "./config";
 
 export interface IApp {
     on(event: EventType, callback: IEventHandler): void;
@@ -24,10 +22,15 @@ export interface IApp {
     channels(): IChannelCollection
 }
 
+export const CONFIG = new Config();
+
 export default class App implements IApp {
 
     constructor(conf: Config) {
-        config.config = conf;
+        CONFIG.servers = conf.servers;
+        CONFIG.logger = conf.logger;
+        CONFIG.signalling = conf.signalling;
+        CONFIG.connection = conf.connection;
     }
 
     on(event: EventType, callback: IEventHandler) {
@@ -40,21 +43,21 @@ export default class App implements IApp {
             caller: null,
             data: null
         };
-        signaling.send(message);
+        CONFIG.signalling.send(message);
     }
 
     disconnect() {
-        Object.entries(connection.channels())
+        Object.entries(CONFIG.connection.channels)
             .forEach(([key, value]) => value.close());
-        Object.entries(connection.peers())
+        Object.entries(CONFIG.connection.peers)
             .forEach(([key, value]) => value.close());
     }
 
     peers(): IPeerCollection {
-        return connection.peers();
+        return CONFIG.connection.peers;
     }
 
     channels(): IChannelCollection {
-        return connection.channels();
+        return CONFIG.connection.channels;
     }
 }

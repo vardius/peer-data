@@ -8,13 +8,13 @@
  */
 
 import Socket = SocketIOClient.Socket;
-import Bridge, {IMessage} from "./bridge";
+import {Bridge, IMessage} from "./bridge";
 
 export interface ISignaling {
-    send(message: IMessage): any;
+    send(message: IMessage): void;
 }
 
-class SocketChannel implements ISignaling {
+export class SocketChannel implements ISignaling {
     private socket: Socket;
 
     constructor() {
@@ -46,5 +46,3 @@ class SocketChannel implements ISignaling {
         }
     }
 }
-
-export const signaling: ISignaling = new SocketChannel();

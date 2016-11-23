@@ -7,19 +7,17 @@
  * file that was distributed with this source code.
  */
 
-import {config} from "./config";
-import {connection} from "./connection";
-import {signaling} from "./signaling";
-import DataChannelFactory from "./channel";
 import {ICaller, IMessage} from "./bridge";
+import {CONFIG} from "./app";
+import {DataChannelFactory} from "./channel";
 
 export interface IPeerCollection {
     [index: string]: RTCPeerConnection;
 }
 
-export default class PeerFactory {
+export class PeerFactory {
     static get(caller: ICaller): RTCPeerConnection {
-        let peer = new RTCPeerConnection(config.servers);
+        let peer = new RTCPeerConnection(CONFIG.servers);
 
         peer.onicecandidate = (event: RTCPeerConnectionIceEvent) => {
             if (event.candidate) {
@@ -28,12 +26,12 @@ export default class PeerFactory {
                     caller: caller,
                     data: event.candidate
                 };
-                signaling.send(message);
+                CONFIG.signalling.send(message);
             }
         };
 
         peer.ondatachannel = (event: RTCDataChannelEvent) => {
-            connection.addChannel(caller.id, DataChannelFactory.get(event.channel));
+            CONFIG.connection.addChannel(caller.id, DataChannelFactory.get(event.channel));
         };
 
         return peer;

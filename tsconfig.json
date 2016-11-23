@@ -1,15 +1,14 @@
 {
   "compilerOptions": {
     "outDir": "lib/",
-    "sourceMap": true,
+    "target": "es5",
     "module": "commonjs",
     "moduleResolution": "node",
+    "sourceMap": true,
     "noEmitOnError": true,
-    "target": "es5",
     "declaration": true,
-    "noImplicitAny": false, //switch to true!
-    "removeComments": true,
-    "rootDir": "."
+    "noImplicitAny": true,
+    "removeComments": true
   },
   "compileOnSave": false,
   "buildOnSave": false,

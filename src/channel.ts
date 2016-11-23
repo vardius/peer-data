@@ -7,13 +7,13 @@
  * file that was distributed with this source code.
  */
 
-import EventDispatcher, {EventType} from "./event";
+import {EventType, EventDispatcher} from "./event";
 
 export interface IChannelCollection {
     [index: string]: RTCDataChannel;
 }
 
-export default class DataChannelFactory {
+export class DataChannelFactory {
     public static get(channel: RTCDataChannel): RTCDataChannel {
         channel.onopen = this.onOpen.bind(this);
         channel.onmessage = this.onMessage.bind(this);

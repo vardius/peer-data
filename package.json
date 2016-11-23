@@ -8,8 +8,8 @@
     "test": "karma start",
     "test-watch": "karma start --no-single-run --auto-watch"
   },
-  "main": "lib/index.js",
-  "typings": "lib/index.d.ts",
+  "main": "lib/app.js",
+  "typings": "lib/app.d.ts",
   "files": [
     "lib/"
   ],
@@ -48,11 +48,9 @@
     "@types/socket.io-client": "^1.4.28",
     "@types/webrtc": "0.0.21",
     "awesome-typescript-loader": "^3.0.0-beta.3",
-    "html-loader": "^0.4.4",
     "istanbul-instrumenter-loader": "^1.0.0",
     "jasmine-core": "^2.5.2",
     "jasmine-spec-reporter": "^2.7.0",
-    "json-loader": "^0.5.4",
     "karma": "^1.3.0",
     "karma-coverage": "^1.1.1",
     "karma-jasmine": "^1.0.2",
@@ -61,16 +59,11 @@
     "karma-remap-istanbul": "^0.2.1",
     "karma-sourcemap-loader": "^0.3.7",
     "karma-webpack": "^1.8.0",
-    "node-sass": "^3.13.0",
-    "null-loader": "^0.1.1",
     "phantomjs-prebuilt": "^2.1.13",
-    "postcss-loader": "^1.1.1",
-    "raw-loader": "^0.5.1",
     "remap-istanbul": "^0.7.0",
-    "sass-loader": "^4.0.2",
-    "ts-loader": "^1.2.2",
     "typescript": "^2.0.10",
-    "webpack": "^1.13.3"
+    "webpack": "^1.13.3",
+    "zone.js": "^0.7.1"
   },
   "dependencies": {
     "core-js": "^2.4.1",

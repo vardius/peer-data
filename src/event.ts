@@ -24,7 +24,7 @@ export enum EventType {
     DATA
 }
 
-export default class EventDispatcher {
+export class EventDispatcher {
     static register(type: EventType, callback: IEventHandler) {
         if (!handlers[type]) {
             handlers[type] = [];
