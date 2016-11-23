@@ -9,3 +9,9 @@
 
 exports.PeerData = require('./lib/app').App;
 exports.Config = require('./lib/config').Config;
+
+exports.Connection = require('./lib/connection');
+exports.DataChannel = require('./lib/data-channel');
+exports.Logger = require('./lib/logger');
+exports.Peer = require('./lib/peer');
+exports.Signaling = require('./lib/signaling');

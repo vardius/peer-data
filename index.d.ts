@@ -9,3 +9,9 @@
 
 export * from './lib/app';
 export * from './lib/config';
+
+export * from './lib/connection';
+export * from './lib/data-channel';
+export * from './lib/logger';
+export * from './lib/peer';
+export * from './lib/signaling';
