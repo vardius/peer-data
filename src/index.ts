@@ -7,11 +7,5 @@
  * file that was distributed with this source code.
  */
 
-export * from './lib/app';
-export * from './lib/config';
-
-export * from './lib/connection';
-export * from './lib/data-channel';
-export * from './lib/logger';
-export * from './lib/peer';
-export * from './lib/signaling';
+export * from './app/app';
+export * from './app/config';

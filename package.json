@@ -1,6 +1,6 @@
 {
   "name": "peer-data",
-  "version": "1.0.4",
+  "version": "1.0.0",
   "description": "PeerData - library for files, media streaming/sharing using WebRTC",
   "scripts": {
     "watch": "tsc -p src -w",
@@ -8,11 +8,8 @@
     "test": "karma start",
     "test-watch": "karma start --no-single-run --auto-watch"
   },
-  "main": "index.js",
-  "typings": "index.d.ts",
-  "files": [
-    "lib/"
-  ],
+  "main": "lib/index.js",
+  "typings": "lib/index.d.ts",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/vardius/peer-data.git"
