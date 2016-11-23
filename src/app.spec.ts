@@ -7,8 +7,16 @@
  * file that was distributed with this source code.
  */
 
+import {App} from "./app";
+import {Config} from "./config";
+
 describe('App', () => {
     it('should init', () => {
-        expect(true).toBe(true);
+        let conf = new Config();
+        let app = new App(conf);
+
+        expect(app).toBeDefined();
+        expect(Object.keys(app.channels).length).toEqual(0);
+        expect(Object.keys(app.peers).length).toEqual(0);
     });
 });
