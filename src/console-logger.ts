@@ -7,25 +7,10 @@
  * file that was distributed with this source code.
  */
 
-export enum LogLevel {
-    INFO,
-    WARN,
-    ERROR,
-    OFF,
-}
-
-export interface ILogger {
-    logLevel: LogLevel;
-    info(data: any): void;
-    log(data: any): void;
-    warn(data: any): void;
-    error(data: any): void;
-}
-
 export class ConsoleLogger {
-    private _logLevel: LogLevel;
+    private _logLevel: Logger.LogLevel;
 
-    constructor(logLevel: LogLevel) {
+    constructor(logLevel: Logger.LogLevel) {
         this._logLevel = logLevel;
     }
 
@@ -46,13 +31,13 @@ export class ConsoleLogger {
     }
 
     private trace(data: any, method: string) {
-        if (this._logLevel === LogLevel.OFF) {
+        if (this._logLevel === Logger.LogLevel.OFF) {
             return;
         }
-        if (this._logLevel === LogLevel.WARN && method === 'error') {
+        if (this._logLevel === Logger.LogLevel.WARN && method === 'error') {
             return;
         }
-        if (this._logLevel === LogLevel.INFO && (method === 'error' || method === 'warn')) {
+        if (this._logLevel === Logger.LogLevel.INFO && (method === 'error' || method === 'warn')) {
             return;
         }
 
@@ -84,11 +69,11 @@ export class ConsoleLogger {
         }
     }
 
-    get logLevel(): LogLevel {
+    get logLevel(): Logger.LogLevel {
         return this._logLevel;
     }
 
-    set logLevel(value: LogLevel) {
+    set logLevel(value: Logger.LogLevel) {
         this._logLevel = value;
     }
 }

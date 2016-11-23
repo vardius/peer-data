@@ -7,21 +7,21 @@
  * file that was distributed with this source code.
  */
 
-import {ILogger, ConsoleLogger, LogLevel} from "./logger";
-import {ISignaling, SocketChannel} from "./signaling";
-import {IConnection, Connection} from "./connection";
+import {ConsoleLogger} from "./console-logger";
+import {SocketChannel} from "./socket-channel";
+import {DefaultConnection} from "./default-connection";
 
 export class Config {
     private _servers: RTCConfiguration;
-    private _logger: ILogger;
-    private _signalling: ISignaling;
-    private _connection: IConnection;
+    private _logger: Logger.Logger;
+    private _signalling: Signaling.Signaling;
+    private _connection: Connection.Connection;
 
-    constructor(servers: RTCConfiguration = {}, logLevel: LogLevel = LogLevel.ERROR) {
+    constructor(servers: RTCConfiguration = {}, logLevel: Logger.LogLevel = Logger.LogLevel.ERROR) {
         this._servers = servers;
         this._logger = new ConsoleLogger(logLevel);
         this._signalling = new SocketChannel();
-        this._connection = new Connection();
+        this._connection = new DefaultConnection();
     }
 
     get servers(): RTCConfiguration {
@@ -32,27 +32,27 @@ export class Config {
         this._servers = value;
     }
 
-    get logger(): ILogger {
+    get logger(): Logger.Logger {
         return this._logger;
     }
 
-    set logger(value: ILogger) {
+    set logger(value: Logger.Logger) {
         this._logger = value;
     }
 
-    get signalling(): ISignaling {
+    get signalling(): Signaling.Signaling {
         return this._signalling;
     }
 
-    set signalling(value: ISignaling) {
+    set signalling(value: Signaling.Signaling) {
         this._signalling = value;
     }
 
-    get connection(): IConnection {
+    get connection(): Connection.Connection {
         return this._connection;
     }
 
-    set connection(value: IConnection) {
+    set connection(value: Connection.Connection) {
         this._connection = value;
     }
 }

@@ -21,6 +21,7 @@
     "node_modules/@types/webrtc/RTCPeerConnection"
   ],
   "exclude": [
+    "index.d.ts",
     "node_modules",
     "examples",
     "lib"

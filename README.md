@@ -6,7 +6,6 @@
 $ npm install peer-data
 ```
 ## Usage
-Please check the example directory
 
 [**Docs**](doc)
 - [Usage](doc/usage.md)

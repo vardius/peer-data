@@ -8,8 +8,8 @@
     "test": "karma start",
     "test-watch": "karma start --no-single-run --auto-watch"
   },
-  "main": "lib/app.js",
-  "typings": "lib/app.d.ts",
+  "main": "index.js",
+  "typings": "index.d.ts",
   "files": [
     "lib/"
   ],

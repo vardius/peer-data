@@ -8,24 +8,11 @@
  */
 
 import "webrtc-adapter";
-import {EventType, IEventHandler, EventDispatcher} from "./event";
-import {IPeerCollection} from "./peer";
-import {IChannelCollection} from "./channel";
-import {IMessage} from "./bridge";
 import {Config} from "./config";
-
-export interface IApp {
-    on(event: EventType, callback: IEventHandler): void;
-    connect(): void;
-    disconnect(): void;
-    peers(): IPeerCollection
-    channels(): IChannelCollection
-}
 
 export const CONFIG = new Config();
 
-export default class App implements IApp {
-
+export class App {
     constructor(conf: Config) {
         CONFIG.servers = conf.servers;
         CONFIG.logger = conf.logger;
@@ -33,17 +20,17 @@ export default class App implements IApp {
         CONFIG.connection = conf.connection;
     }
 
-    on(event: EventType, callback: IEventHandler) {
-        EventDispatcher.register(event, callback);
+    on(event: DataChannel.EventType, callback: EventHandler) {
+        DataChannel.EventDispatcher.register(event, callback);
     }
 
     connect() {
-        let message: IMessage = {
+        let event: Signaling.SignalingEvent = {
             type: 'offer',
             caller: null,
             data: null
         };
-        CONFIG.signalling.send(message);
+        CONFIG.signalling.send(event);
     }
 
     disconnect() {
@@ -53,11 +40,11 @@ export default class App implements IApp {
             .forEach(([key, value]) => value.close());
     }
 
-    peers(): IPeerCollection {
+    peers(): Peer.PeerCollection {
         return CONFIG.connection.peers;
     }
 
-    channels(): IChannelCollection {
+    channels(): DataChannel.DataChannelCollection {
         return CONFIG.connection.channels;
     }
 }

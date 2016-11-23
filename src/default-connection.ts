@@ -7,39 +7,26 @@
  * file that was distributed with this source code.
  */
 
-import {IPeerCollection} from "./peer";
-import {IChannelCollection} from "./channel";
+export class DefaultConnection implements Connection.Connection {
+    private _peers: Peer.PeerCollection;
+    private _channels: DataChannel.DataChannelCollection;
 
-export interface IConnection {
-    peers: IPeerCollection
-    channels: IChannelCollection
-
-    addPeer(id: string, peer: RTCPeerConnection): IConnection
-    removePeer(id: string): IConnection
-    addChannel(id: string, channel: RTCDataChannel): IConnection
-    removeChannel(id: string): IConnection
-}
-
-export class Connection implements IConnection {
-    private _peers: IPeerCollection;
-    private _channels: IChannelCollection;
-
-    get peers(): IPeerCollection {
+    get peers(): Peer.PeerCollection {
         return this._peers;
     }
 
-    get channels(): IChannelCollection {
+    get channels(): DataChannel.DataChannelCollection {
         return this._channels;
     }
 
-    addPeer(id: string, peer: RTCPeerConnection): IConnection {
+    addPeer(id: string, peer: RTCPeerConnection): Connection.Connection {
         if (!this._peers.hasOwnProperty(id)) {
             this._peers[id] = peer;
         }
         return this;
     }
 
-    removePeer(id: string): IConnection {
+    removePeer(id: string): Connection.Connection {
         if (this._peers.hasOwnProperty(id)) {
             this._peers[id].close();
             delete this._peers[id];
@@ -48,14 +35,14 @@ export class Connection implements IConnection {
         return this;
     }
 
-    addChannel(id: string, channel: RTCDataChannel): IConnection {
+    addChannel(id: string, channel: RTCDataChannel): Connection.Connection {
         if (!this._channels.hasOwnProperty(id)) {
             this._channels[id] = channel;
         }
         return this;
     }
 
-    removeChannel(id: string): IConnection {
+    removeChannel(id: string): Connection.Connection {
         if (this._channels.hasOwnProperty(id)) {
             this._channels[id].close();
             delete this._channels[id];

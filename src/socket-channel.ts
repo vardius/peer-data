@@ -8,13 +8,9 @@
  */
 
 import Socket = SocketIOClient.Socket;
-import {Bridge, IMessage} from "./bridge";
+import {Bridge} from "./bridge";
 
-export interface ISignaling {
-    send(message: IMessage): void;
-}
-
-export class SocketChannel implements ISignaling {
+export class SocketChannel implements Signaling.Signaling {
     private socket: Socket;
 
     constructor() {
@@ -22,26 +18,26 @@ export class SocketChannel implements ISignaling {
         this.socket.on('message', this.onMessage);
     }
 
-    send(message: IMessage) {
+    send(message: Signaling.SignalingEvent) {
         this.socket.emit('message', message);
     }
 
-    private onMessage(message: IMessage) {
-        switch (message.type) {
+    private onMessage(event: Signaling.SignalingEvent) {
+        switch (event.type) {
             case 'offer':
-                Bridge.onOffer(message.caller, message.data);
+                Bridge.onOffer(event.caller, event.data);
                 break;
             case 'answer':
-                Bridge.onAnswer(message.caller, message.data);
+                Bridge.onAnswer(event.caller, event.data);
                 break;
             case 'candidate':
-                Bridge.onCandidate(message.caller, message.data);
+                Bridge.onCandidate(event.caller, event.data);
                 break;
             case 'connect':
-                Bridge.onConnect(message.caller);
+                Bridge.onConnect(event.caller);
                 break;
             case 'disconnect':
-                Bridge.onDisconnect(message.caller);
+                Bridge.onDisconnect(event.caller);
                 break;
         }
     }
