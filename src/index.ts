@@ -7,5 +7,10 @@
  * file that was distributed with this source code.
  */
 
-export * from './app/app';
-export * from './app/config';
+export {App} from './app/app';
+export {Config} from './app/config';
+export * from './app/connection';
+export * from './app/data-channel';
+export * from './app/logger';
+export * from './app/peer';
+export * from './app/signaling';
