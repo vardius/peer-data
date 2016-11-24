@@ -8,10 +8,11 @@
  */
 
 namespace Signaling {
-    export interface SignalingEvent {
-        type: string;
-        caller: Caller;
-        callee: Caller;
-        data: any;
-    }
+    export const EventType = {
+        CONNECT: 'connect',
+        DISCONNECT: 'disconnect',
+        CANDIDATE: 'candidate',
+        OFFER: 'offer',
+        ANSWER: 'answer'
+    };
 }

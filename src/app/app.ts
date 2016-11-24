@@ -7,7 +7,6 @@
  * file that was distributed with this source code.
  */
 
-import "webrtc-adapter";
 import {Config} from "./config";
 
 export const CONFIG = new Config();
@@ -26,8 +25,9 @@ export class App {
 
     connect() {
         let event: Signaling.SignalingEvent = {
-            type: 'offer',
+            type: Signaling.EventType.CONNECT,
             caller: null,
+            callee: null,
             data: null
         };
         CONFIG.signalling.send(event);
@@ -37,7 +37,16 @@ export class App {
         Object.entries(CONFIG.connection.channels)
             .forEach(([key, value]) => value.close());
         Object.entries(CONFIG.connection.peers)
-            .forEach(([key, value]) => value.close());
+            .forEach(([key, value]) => {
+                value.close();
+                let event: Signaling.SignalingEvent = {
+                    type: Signaling.EventType.DISCONNECT,
+                    caller: null,
+                    callee: null,
+                    data: null
+                };
+                CONFIG.signalling.send(event);
+            });
     }
 
     peers(): Peer.PeerCollection {

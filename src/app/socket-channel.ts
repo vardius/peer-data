@@ -9,6 +9,7 @@
 
 import Socket = SocketIOClient.Socket;
 import {Bridge} from "./bridge";
+import {CONFIG} from "./app";
 
 export class SocketChannel implements Signaling.Signaling {
     private socket: Socket;
@@ -16,28 +17,38 @@ export class SocketChannel implements Signaling.Signaling {
     constructor() {
         this.socket = io.connect();
         this.socket.on('message', this.onMessage);
+        this.socket.on('ipaddr', this.onIp);
+        this.socket.on('log', this.onLog);
     }
 
-    send(message: Signaling.SignalingEvent) {
-        this.socket.emit('message', message);
+    send(event: Signaling.SignalingEvent) {
+        this.socket.emit('message', event);
+    }
+
+    private onIp(ipaddr: string) {
+        CONFIG.logger.log('Server IP address is: ' + ipaddr);
+    }
+
+    private onLog(data: any[]) {
+        CONFIG.logger.log(data);
     }
 
     private onMessage(event: Signaling.SignalingEvent) {
         switch (event.type) {
             case 'offer':
-                Bridge.onOffer(event.caller, event.data);
+                Bridge.onOffer(event);
                 break;
             case 'answer':
-                Bridge.onAnswer(event.caller, event.data);
+                Bridge.onAnswer(event);
                 break;
             case 'candidate':
-                Bridge.onCandidate(event.caller, event.data);
+                Bridge.onCandidate(event);
                 break;
             case 'connect':
-                Bridge.onConnect(event.caller);
+                Bridge.onConnect(event);
                 break;
             case 'disconnect':
-                Bridge.onDisconnect(event.caller);
+                Bridge.onDisconnect(event);
                 break;
         }
     }

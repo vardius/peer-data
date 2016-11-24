@@ -18,8 +18,9 @@ namespace Peer {
             peer.onicecandidate = (event: RTCPeerConnectionIceEvent) => {
                 if (event.candidate) {
                     let message: Signaling.SignalingEvent = {
-                        type: 'candidate',
-                        caller: caller,
+                        type: Signaling.EventType.CANDIDATE,
+                        caller: null,
+                        callee: null,
                         data: event.candidate
                     };
                     signaling.send(message);

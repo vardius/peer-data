@@ -10,49 +10,51 @@
 import {CONFIG} from "./app";
 
 export class Bridge {
-    static onConnect(caller: Signaling.Caller) {
-        let peer = CONFIG.connection.peers[caller.id] = Peer.PeerFactory.get(caller, CONFIG.servers, CONFIG.signalling, CONFIG.connection);
+    static onConnect(event: Connection.ConnectionEvent) {
+        let peer = CONFIG.connection.peers[event.caller.id] = Peer.PeerFactory.get(event.caller, CONFIG.servers, CONFIG.signalling, CONFIG.connection);
         let channel = peer.createDataChannel('chunks');
-        CONFIG.connection.channels[caller.id] = DataChannel.DataChannelFactory.get(channel);
+        CONFIG.connection.channels[event.caller.id] = DataChannel.DataChannelFactory.get(channel);
         peer.createOffer((desc: RTCSessionDescription) => {
             let event: Signaling.SignalingEvent = {
-                type: 'offer',
-                caller: caller,
+                type: Signaling.EventType.OFFER,
+                caller: null,
+                callee: event.caller,
                 data: peer.localDescription
             };
             peer.setLocalDescription(desc, () => CONFIG.signalling.send(event), CONFIG.logger.error);
         }, CONFIG.logger.error);
     }
 
-    static onCandidate(caller: Signaling.Caller, candidate: RTCIceCandidate) {
-        let peer = CONFIG.connection.peers[caller.id];
-        peer.addIceCandidate(new RTCIceCandidate(candidate));
+    static onCandidate(event: Connection.ConnectionEvent) {
+        let peer = CONFIG.connection.peers[event.caller.id];
+        peer.addIceCandidate(new RTCIceCandidate(event.data));
     }
 
-    static onOffer(caller: Signaling.Caller, desc: RTCSessionDescription | RTCSessionDescriptionInit) {
-        let peer = CONFIG.connection.peers[caller.id] = Peer.PeerFactory.get(caller, CONFIG.servers, CONFIG.signalling, CONFIG.connection);
-        peer.setRemoteDescription(new RTCSessionDescription(desc), () => {
+    static onOffer(event: Connection.ConnectionEvent) {
+        let peer = CONFIG.connection.peers[event.caller.id] = Peer.PeerFactory.get(event.caller, CONFIG.servers, CONFIG.signalling, CONFIG.connection);
+        peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {
         }, CONFIG.logger.error);
         peer.createAnswer((desc: RTCSessionDescription) => {
             let event: Signaling.SignalingEvent = {
-                type: 'answer',
-                caller: caller,
+                type: Signaling.EventType.ANSWER,
+                caller: null,
+                callee: event.caller,
                 data: peer.localDescription
             };
             peer.setLocalDescription(desc, () => CONFIG.signalling.send(event), CONFIG.logger.error);
         }, CONFIG.logger.error);
     }
 
-    static onAnswer(caller: Signaling.Caller, desc: RTCSessionDescription | RTCSessionDescriptionInit) {
-        let peer = CONFIG.connection.peers[caller.id];
-        peer.setRemoteDescription(new RTCSessionDescription(desc), () => {
+    static onAnswer(event: Connection.ConnectionEvent) {
+        let peer = CONFIG.connection.peers[event.caller.id];
+        peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {
         }, CONFIG.logger.error);
     }
 
-    static onDisconnect(caller: Signaling.Caller) {
-        let channel = CONFIG.connection.channels[caller.id];
+    static onDisconnect(event: Connection.ConnectionEvent) {
+        let channel = CONFIG.connection.channels[event.caller.id];
         channel.close();
-        let peer = CONFIG.connection.peers[caller.id];
+        let peer = CONFIG.connection.peers[event.caller.id];
         peer.close();
     }
 }

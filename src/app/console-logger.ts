@@ -55,16 +55,16 @@ export class ConsoleLogger {
     private logToConsole(method: string, ...args: any[]) {
         switch (method) {
             case 'info':
-                console.info.apply(null, args);
+                console.info.apply(console, args);
                 break;
             case 'warn':
-                console.warn.apply(null, args);
+                console.warn.apply(console, args);
                 break;
             case 'error':
-                console.error.apply(null, args);
+                console.error.apply(console, args);
                 break;
             default:
-                console.log.apply(null, args);
+                console.log.apply(console, args);
                 break;
         }
     }
