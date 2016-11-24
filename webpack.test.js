@@ -12,7 +12,15 @@ module.exports = {
         rules: [
             {
                 test: /\.ts$/,
-                loaders: ['awesome-typescript-loader']
+                loader: 'awesome-typescript-loader',
+                query: {
+                    sourceMap: false,
+                    inlineSourceMap: false,
+                    target: "es5",
+                    compilerOptions: {
+                        removeComments: true
+                    }
+                },
             }
         ]
     },

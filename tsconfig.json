@@ -1,9 +1,10 @@
 {
   "compilerOptions": {
     "outDir": "./lib/",
-    "target": "es5",
+    "target": "es6",
     "module": "commonjs",
     "moduleResolution": "node",
+    "lib": ["es5", "dom", "scripthost"],
     "sourceMap": true,
     "declaration": true,
     "noImplicitAny": true,
