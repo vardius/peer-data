@@ -8,6 +8,7 @@
  */
 
 import Socket = SocketIOClient.Socket;
+import * as io from "socket.io-client";
 import {Bridge} from "./bridge";
 import {CONFIG} from "./app";
 import {Signaling} from "./signaling/signaling";

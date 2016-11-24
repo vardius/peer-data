@@ -8,12 +8,10 @@
  */
 
 import {App} from "./app";
-import {Config} from "./config";
 
 describe('App', () => {
     it('should init', () => {
-        let conf = new Config();
-        let app = new App(conf);
+        let app = new App();
 
         expect(app).toBeDefined();
         expect(Object.keys(app.channels).length).toEqual(0);

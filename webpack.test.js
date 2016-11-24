@@ -4,16 +4,26 @@ module.exports = {
     devtool: 'inline-source-map',
 
     resolve: {
-        extensions: ['', '.ts', '.js']
+        extensions: ['.ts', '.js'],
+        modules: [path.resolve(__dirname, 'src'), 'node_modules']
     },
 
     module: {
-        loaders: [
+        rules: [
             {
                 test: /\.ts$/,
                 loaders: ['awesome-typescript-loader']
             }
         ]
+    },
+
+    node: {
+        global: true,
+        process: false,
+        crypto: 'empty',
+        module: false,
+        clearImmediate: false,
+        setImmediate: false
     }
 };
 
