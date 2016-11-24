@@ -18,11 +18,13 @@ import {SignalingEventType} from "./signaling/event-type";
 export const CONFIG = new Config();
 
 export class App {
-    constructor(conf: Config) {
-        CONFIG.servers = conf.servers;
-        CONFIG.logger = conf.logger;
-        CONFIG.signalling = conf.signalling;
-        CONFIG.connection = conf.connection;
+    constructor(conf?: Config) {
+        if (conf) {
+            CONFIG.servers = conf.servers;
+            CONFIG.logger = conf.logger;
+            CONFIG.signalling = conf.signalling;
+            CONFIG.connection = conf.connection;
+        }
     }
 
     on(event: EventType, callback: EventHandler) {

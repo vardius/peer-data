@@ -7,9 +7,13 @@
  * file that was distributed with this source code.
  */
 
-export {App as PeerData} from './app/app';
+import {App as PeerData} from "./app/app";
+
+export default PeerData;
+
 export {Config as PeerDataConfig} from './app/config';
 export {Bridge as PeerDataBridge} from './app/bridge';
+
 export {Connection} from './app/connection/connection';
 export {Signaling} from './app/signaling/signaling';
 export {Logger} from './app/logger/logger';
