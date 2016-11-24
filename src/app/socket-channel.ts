@@ -10,8 +10,11 @@
 import Socket = SocketIOClient.Socket;
 import {Bridge} from "./bridge";
 import {CONFIG} from "./app";
+import {Signaling} from "./signaling/signaling";
+import {SignalingEvent} from "./signaling/event";
+import {SignalingEventType} from "./signaling/event-type";
 
-export class SocketChannel implements Signaling.Signaling {
+export class SocketChannel implements Signaling {
     private socket: Socket;
 
     constructor() {
@@ -21,7 +24,7 @@ export class SocketChannel implements Signaling.Signaling {
         this.socket.on('log', this.onLog);
     }
 
-    send(event: Signaling.SignalingEvent) {
+    send(event: SignalingEvent) {
         this.socket.emit('message', event);
     }
 
@@ -33,21 +36,21 @@ export class SocketChannel implements Signaling.Signaling {
         CONFIG.logger.log(data);
     }
 
-    private onMessage(event: Signaling.SignalingEvent) {
+    private onMessage(event: SignalingEvent) {
         switch (event.type) {
-            case 'offer':
+            case SignalingEventType.OFFER:
                 Bridge.onOffer(event);
                 break;
-            case 'answer':
+            case SignalingEventType.ANSWER:
                 Bridge.onAnswer(event);
                 break;
-            case 'candidate':
+            case SignalingEventType.CANDIDATE:
                 Bridge.onCandidate(event);
                 break;
-            case 'connect':
+            case SignalingEventType.CONNECT:
                 Bridge.onConnect(event);
                 break;
-            case 'disconnect':
+            case SignalingEventType.DISCONNECT:
                 Bridge.onDisconnect(event);
                 break;
         }

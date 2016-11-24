@@ -8,6 +8,12 @@
  */
 
 import {Config} from "./config";
+import {EventType} from "./data-channel/event-type";
+import {EventDispatcher} from "./data-channel/dispatcher";
+import {SignalingEvent} from "./signaling/event";
+import {PeerCollection} from "./peer/collection";
+import {DataChannelCollection} from "./data-channel/collection";
+import {SignalingEventType} from "./signaling/event-type";
 
 export const CONFIG = new Config();
 
@@ -19,13 +25,13 @@ export class App {
         CONFIG.connection = conf.connection;
     }
 
-    on(event: DataChannel.EventType, callback: EventHandler) {
-        DataChannel.EventDispatcher.register(event, callback);
+    on(event: EventType, callback: EventHandler) {
+        EventDispatcher.register(event, callback);
     }
 
     connect() {
-        let event: Signaling.SignalingEvent = {
-            type: Signaling.EventType.CONNECT,
+        let event: SignalingEvent = {
+            type: SignalingEventType.CONNECT,
             caller: null,
             callee: null,
             data: null
@@ -39,8 +45,8 @@ export class App {
         Object.entries(CONFIG.connection.peers)
             .forEach(([key, value]) => {
                 value.close();
-                let event: Signaling.SignalingEvent = {
-                    type: Signaling.EventType.DISCONNECT,
+                let event: SignalingEvent = {
+                    type: SignalingEventType.DISCONNECT,
                     caller: null,
                     callee: null,
                     data: null
@@ -49,11 +55,11 @@ export class App {
             });
     }
 
-    peers(): Peer.PeerCollection {
+    peers(): PeerCollection {
         return CONFIG.connection.peers;
     }
 
-    channels(): DataChannel.DataChannelCollection {
+    channels(): DataChannelCollection {
         return CONFIG.connection.channels;
     }
 }

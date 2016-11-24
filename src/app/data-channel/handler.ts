@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-namespace DataChannel {
-    export interface EventHandler {
-        (data?: any): any;
-    }
+export interface EventHandler {
+    (data?: any): any;
 }

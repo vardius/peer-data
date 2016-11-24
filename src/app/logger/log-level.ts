@@ -7,11 +7,9 @@
  * file that was distributed with this source code.
  */
 
-namespace Logger {
-    export enum LogLevel {
-        INFO,
-        WARN,
-        ERROR,
-        OFF,
-    }
+export enum LogLevel {
+    INFO,
+    WARN,
+    ERROR,
+    OFF,
 }

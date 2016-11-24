@@ -7,12 +7,12 @@
  * file that was distributed with this source code.
  */
 
-namespace Logger {
-    export interface Logger {
-        logLevel: LogLevel;
-        info(data: any): void;
-        log(data: any): void;
-        warn(data: any): void;
-        error(data: any): void;
-    }
+import {LogLevel} from "./log-level";
+
+export interface Logger {
+    logLevel: LogLevel;
+    info(data: any): void;
+    log(data: any): void;
+    warn(data: any): void;
+    error(data: any): void;
 }

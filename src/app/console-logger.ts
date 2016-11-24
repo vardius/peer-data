@@ -7,10 +7,13 @@
  * file that was distributed with this source code.
  */
 
-export class ConsoleLogger {
-    private _logLevel: Logger.LogLevel;
+import {LogLevel} from "./logger/log-level";
+import {Logger} from "./logger/logger";
 
-    constructor(logLevel: Logger.LogLevel) {
+export class ConsoleLogger implements Logger {
+    private _logLevel: LogLevel;
+
+    constructor(logLevel: LogLevel) {
         this._logLevel = logLevel;
     }
 
@@ -31,13 +34,13 @@ export class ConsoleLogger {
     }
 
     private trace(data: any, method: string) {
-        if (this._logLevel === Logger.LogLevel.OFF) {
+        if (this._logLevel === LogLevel.OFF) {
             return;
         }
-        if (this._logLevel === Logger.LogLevel.WARN && method === 'error') {
+        if (this._logLevel === LogLevel.WARN && method === 'error') {
             return;
         }
-        if (this._logLevel === Logger.LogLevel.INFO && (method === 'error' || method === 'warn')) {
+        if (this._logLevel === LogLevel.INFO && (method === 'error' || method === 'warn')) {
             return;
         }
 
@@ -69,11 +72,11 @@ export class ConsoleLogger {
         }
     }
 
-    get logLevel(): Logger.LogLevel {
+    get logLevel(): LogLevel {
         return this._logLevel;
     }
 
-    set logLevel(value: Logger.LogLevel) {
+    set logLevel(value: LogLevel) {
         this._logLevel = value;
     }
 }

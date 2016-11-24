@@ -7,10 +7,15 @@
  * file that was distributed with this source code.
  */
 
-export {App} from './app/app';
-export {Config} from './app/config';
-export * from './app/connection';
-export * from './app/data-channel';
-export * from './app/logger';
-export * from './app/peer';
-export * from './app/signaling';
+export {App as PeerData} from './app/app';
+export {Config as PeerDataConfig} from './app/config';
+export {Bridge as PeerDataBridge} from './app/bridge';
+export {Connection} from './app/connection/connection';
+export {Signaling} from './app/signaling/signaling';
+export {Logger} from './app/logger/logger';
+export {LogLevel} from './app/logger/log-level';
+export {PeerCollection} from './app/peer/collection';
+export {DataChannelCollection} from './app/data-channel/collection';
+export {SignalingEvent} from './app/signaling/event';
+export {SignalingEventType} from './app/signaling/event-type';
+export {EventType} from './app/data-channel/event-type';

@@ -7,31 +7,36 @@
  * file that was distributed with this source code.
  */
 
-namespace Peer {
-    export class PeerFactory {
-        static get(caller: Signaling.Caller,
-                   servers: RTCConfiguration,
-                   signaling: Signaling.Signaling,
-                   connection: Connection.Connection): RTCPeerConnection {
-            let peer = new RTCPeerConnection(servers);
+import {Caller} from "../signaling/caller";
+import {Signaling} from "../signaling/signaling";
+import {Connection} from "../connection/connection";
+import {SignalingEvent} from "../signaling/event";
+import {SignalingEventType} from "../signaling/event-type";
+import {DataChannelFactory} from "../data-channel/factory";
 
-            peer.onicecandidate = (event: RTCPeerConnectionIceEvent) => {
-                if (event.candidate) {
-                    let message: Signaling.SignalingEvent = {
-                        type: Signaling.EventType.CANDIDATE,
-                        caller: null,
-                        callee: null,
-                        data: event.candidate
-                    };
-                    signaling.send(message);
-                }
-            };
+export class PeerFactory {
+    static get(caller: Caller,
+               servers: RTCConfiguration,
+               signaling: Signaling,
+               connection: Connection): RTCPeerConnection {
+        let peer = new RTCPeerConnection(servers);
 
-            peer.ondatachannel = (event: RTCDataChannelEvent) => {
-                connection.addChannel(caller.id, DataChannel.DataChannelFactory.get(event.channel));
-            };
+        peer.onicecandidate = (event: RTCPeerConnectionIceEvent) => {
+            if (event.candidate) {
+                let message: SignalingEvent = {
+                    type: SignalingEventType.CANDIDATE,
+                    caller: null,
+                    callee: null,
+                    data: event.candidate
+                };
+                signaling.send(message);
+            }
+        };
 
-            return peer;
-        }
+        peer.ondatachannel = (event: RTCDataChannelEvent) => {
+            connection.addChannel(caller.id, DataChannelFactory.get(event.channel));
+        };
+
+        return peer;
     }
 }

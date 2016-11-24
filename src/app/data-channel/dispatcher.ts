@@ -7,19 +7,20 @@
  * file that was distributed with this source code.
  */
 
-namespace DataChannel {
-    export const HANDLERS: EventHandlerCollection = {};
+import {EventType} from "./event-type";
+import {EventHandlerCollection} from "./handler.collection";
 
-    export class EventDispatcher {
-        static register(type: EventType, callback: EventHandler) {
-            if (!HANDLERS[type]) {
-                HANDLERS[type] = [];
-            }
-            HANDLERS[type].push(callback);
-        }
+export const HANDLERS: EventHandlerCollection = {};
 
-        static dispatch(type: EventType, data?: any) {
-            HANDLERS[type].forEach(h => h(data));
+export class EventDispatcher {
+    static register(type: EventType, callback: EventHandler) {
+        if (!HANDLERS[type]) {
+            HANDLERS[type] = [];
         }
+        HANDLERS[type].push(callback);
+    }
+
+    static dispatch(type: EventType, data?: any) {
+        HANDLERS[type].forEach(h => h(data));
     }
 }

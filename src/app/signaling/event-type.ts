@@ -7,12 +7,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Signaling {
-    export const EventType = {
-        CONNECT: 'connect',
-        DISCONNECT: 'disconnect',
-        CANDIDATE: 'candidate',
-        OFFER: 'offer',
-        ANSWER: 'answer'
-    };
-}
+export const SignalingEventType = {
+    CONNECT: 'connect',
+    DISCONNECT: 'disconnect',
+    CANDIDATE: 'candidate',
+    OFFER: 'offer',
+    ANSWER: 'answer'
+};

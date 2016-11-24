@@ -7,11 +7,9 @@
  * file that was distributed with this source code.
  */
 
-namespace DataChannel {
-    export enum EventType {
-        OPEN,
-        CLOSE,
-        ERROR,
-        DATA
-    }
+export enum EventType {
+    OPEN,
+    CLOSE,
+    ERROR,
+    DATA
 }

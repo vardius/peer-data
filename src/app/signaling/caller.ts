@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-namespace Signaling {
-    export interface Caller {
-        id: string;
-    }
+export interface Caller {
+    id: string;
 }

@@ -7,8 +7,8 @@
  * file that was distributed with this source code.
  */
 
-namespace Signaling {
-    export interface Signaling {
-        send(message: SignalingEvent): void;
-    }
+import {SignalingEvent} from "./event";
+
+export interface Signaling {
+    send(message: SignalingEvent): void;
 }

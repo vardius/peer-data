@@ -7,10 +7,10 @@
  * file that was distributed with this source code.
  */
 
-namespace Connection {
-    export interface ConnectionEvent {
-        caller: Signaling.Caller;
-        callee: Signaling.Caller;
-        data: any;
-    }
+import {Caller} from "../signaling/caller";
+
+export interface ConnectionEvent {
+    caller: Caller;
+    callee: Caller;
+    data: any;
 }

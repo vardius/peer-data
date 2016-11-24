@@ -7,14 +7,15 @@
  * file that was distributed with this source code.
  */
 
-namespace Connection {
-    export interface Connection {
-        peers: Peer.PeerCollection
-        channels: DataChannel.DataChannelCollection
+import {PeerCollection} from "../peer/collection";
+import {DataChannelCollection} from "../data-channel/collection";
 
-        addPeer(id: string, peer: RTCPeerConnection): Connection
-        removePeer(id: string): Connection
-        addChannel(id: string, channel: RTCDataChannel): Connection
-        removeChannel(id: string): Connection
-    }
+export interface Connection {
+    peers: PeerCollection
+    channels: DataChannelCollection
+
+    addPeer(id: string, peer: RTCPeerConnection): Connection
+    removePeer(id: string): Connection
+    addChannel(id: string, channel: RTCDataChannel): Connection
+    removeChannel(id: string): Connection
 }

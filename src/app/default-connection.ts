@@ -7,26 +7,30 @@
  * file that was distributed with this source code.
  */
 
-export class DefaultConnection implements Connection.Connection {
-    private _peers: Peer.PeerCollection;
-    private _channels: DataChannel.DataChannelCollection;
+import {Connection} from "./connection/connection";
+import {PeerCollection} from "./peer/collection";
+import {DataChannelCollection} from "./data-channel/collection";
 
-    get peers(): Peer.PeerCollection {
+export class DefaultConnection implements Connection {
+    private _peers: PeerCollection;
+    private _channels: DataChannelCollection;
+
+    get peers(): PeerCollection {
         return this._peers;
     }
 
-    get channels(): DataChannel.DataChannelCollection {
+    get channels(): DataChannelCollection {
         return this._channels;
     }
 
-    addPeer(id: string, peer: RTCPeerConnection): Connection.Connection {
+    addPeer(id: string, peer: RTCPeerConnection): Connection {
         if (!this._peers.hasOwnProperty(id)) {
             this._peers[id] = peer;
         }
         return this;
     }
 
-    removePeer(id: string): Connection.Connection {
+    removePeer(id: string): Connection {
         if (this._peers.hasOwnProperty(id)) {
             this._peers[id].close();
             delete this._peers[id];
@@ -35,14 +39,14 @@ export class DefaultConnection implements Connection.Connection {
         return this;
     }
 
-    addChannel(id: string, channel: RTCDataChannel): Connection.Connection {
+    addChannel(id: string, channel: RTCDataChannel): Connection {
         if (!this._channels.hasOwnProperty(id)) {
             this._channels[id] = channel;
         }
         return this;
     }
 
-    removeChannel(id: string): Connection.Connection {
+    removeChannel(id: string): Connection {
         if (this._channels.hasOwnProperty(id)) {
             this._channels[id].close();
             delete this._channels[id];

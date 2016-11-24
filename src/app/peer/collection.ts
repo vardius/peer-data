@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-namespace Peer {
-    export interface PeerCollection {
-        [index: string]: RTCPeerConnection;
-    }
+export interface PeerCollection {
+    [index: string]: RTCPeerConnection;
 }

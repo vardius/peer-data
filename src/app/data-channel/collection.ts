@@ -7,8 +7,6 @@
  * file that was distributed with this source code.
  */
 
-namespace DataChannel {
-    export interface DataChannelCollection {
-        [index: string]: RTCDataChannel;
-    }
+export interface DataChannelCollection {
+    [index: string]: RTCDataChannel;
 }

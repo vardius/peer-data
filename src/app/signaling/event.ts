@@ -7,11 +7,11 @@
  * file that was distributed with this source code.
  */
 
-namespace Signaling {
-    export interface SignalingEvent {
-        type: string;
-        caller: Caller;
-        callee: Caller;
-        data: any;
-    }
+import {Caller} from "./caller";
+
+export interface SignalingEvent {
+    type: string;
+    caller: Caller;
+    callee: Caller;
+    data: any;
 }

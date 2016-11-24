@@ -10,14 +10,18 @@
 import {ConsoleLogger} from "./console-logger";
 import {SocketChannel} from "./socket-channel";
 import {DefaultConnection} from "./default-connection";
+import {Logger} from "./logger/logger";
+import {Signaling} from "./signaling/signaling";
+import {Connection} from "./connection/connection";
+import {LogLevel} from "./logger/log-level";
 
 export class Config {
     private _servers: RTCConfiguration;
-    private _logger: Logger.Logger;
-    private _signalling: Signaling.Signaling;
-    private _connection: Connection.Connection;
+    private _logger: Logger;
+    private _signalling: Signaling;
+    private _connection: Connection;
 
-    constructor(servers: RTCConfiguration = {}, logLevel: Logger.LogLevel = Logger.LogLevel.ERROR) {
+    constructor(servers: RTCConfiguration = {}, logLevel: LogLevel = LogLevel.ERROR) {
         this._servers = servers;
         this._logger = new ConsoleLogger(logLevel);
         this._signalling = new SocketChannel();
@@ -32,27 +36,27 @@ export class Config {
         this._servers = value;
     }
 
-    get logger(): Logger.Logger {
+    get logger(): Logger {
         return this._logger;
     }
 
-    set logger(value: Logger.Logger) {
+    set logger(value: Logger) {
         this._logger = value;
     }
 
-    get signalling(): Signaling.Signaling {
+    get signalling(): Signaling {
         return this._signalling;
     }
 
-    set signalling(value: Signaling.Signaling) {
+    set signalling(value: Signaling) {
         this._signalling = value;
     }
 
-    get connection(): Connection.Connection {
+    get connection(): Connection {
         return this._connection;
     }
 
-    set connection(value: Connection.Connection) {
+    set connection(value: Connection) {
         this._connection = value;
     }
 }
