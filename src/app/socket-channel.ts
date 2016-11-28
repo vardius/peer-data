@@ -30,11 +30,11 @@ export class SocketChannel implements Signaling {
     }
 
     private onIp(ipaddr: string) {
-        CONFIG.logger.log('Server IP address is: ' + ipaddr);
+        CONFIG.logger.log.apply(CONFIG.logger, ['Server IP address is: ' + ipaddr]);
     }
 
     private onLog(data: any[]) {
-        CONFIG.logger.log(data);
+        CONFIG.logger.log.apply(CONFIG.logger, [data]);
     }
 
     private onMessage(event: SignalingEvent) {

@@ -26,8 +26,8 @@ export class Bridge {
                 callee: event.caller,
                 data: desc
             };
-            peer.setLocalDescription(desc, () => CONFIG.signalling.send(message), CONFIG.logger.error);
-        }, CONFIG.logger.error);
+            peer.setLocalDescription(desc, () => CONFIG.signalling.send(message), CONFIG.logger.error.bind(CONFIG.logger));
+        }, CONFIG.logger.error.bind(CONFIG.logger));
     }
 
     static onCandidate(event: ConnectionEvent) {
@@ -38,7 +38,7 @@ export class Bridge {
     static onOffer(event: ConnectionEvent) {
         let peer = CONFIG.connection.peers[event.caller.id] = PeerFactory.get(event.caller, CONFIG.servers, CONFIG.signalling, CONFIG.connection);
         peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {
-        }, CONFIG.logger.error);
+        }, CONFIG.logger.error.bind(CONFIG.logger));
         peer.createAnswer((desc: RTCSessionDescription) => {
             let message: SignalingEvent = {
                 type: SignalingEventType.ANSWER,
@@ -46,14 +46,14 @@ export class Bridge {
                 callee: event.caller,
                 data: desc
             };
-            peer.setLocalDescription(desc, () => CONFIG.signalling.send(message), CONFIG.logger.error);
-        }, CONFIG.logger.error);
+            peer.setLocalDescription(desc, () => CONFIG.signalling.send(message), CONFIG.logger.error.bind(CONFIG.logger));
+        }, CONFIG.logger.error.bind(CONFIG.logger));
     }
 
     static onAnswer(event: ConnectionEvent) {
         let peer = CONFIG.connection.peers[event.caller.id];
         peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {
-        }, CONFIG.logger.error);
+        }, CONFIG.logger.error.bind(CONFIG.logger));
     }
 
     static onDisconnect(event: ConnectionEvent) {
