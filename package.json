@@ -1,6 +1,6 @@
 {
   "name": "peer-data",
-  "version": "1.0.9",
+  "version": "1.0.10",
   "description": "PeerData - library for files, media streaming/sharing using WebRTC",
   "scripts": {
     "watch": "tsc -p src -w",
