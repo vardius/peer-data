@@ -21,10 +21,12 @@ export class Config {
     private _signalling: Signaling;
     private _connection: Connection;
 
-    constructor(servers: RTCConfiguration = {}, logLevel: LogLevel = LogLevel.ERROR) {
+    constructor(servers: RTCConfiguration = {}, logLevel: LogLevel = LogLevel.ERROR, signalling?: Signaling) {
+        if (!signalling) {
+            this._signalling = new SocketChannel();
+        }
         this._servers = servers;
         this._logger = new ConsoleLogger(logLevel);
-        this._signalling = new SocketChannel();
         this._connection = new DefaultConnection();
     }
 

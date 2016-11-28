@@ -12,8 +12,8 @@ import {PeerCollection} from "./peer/collection";
 import {DataChannelCollection} from "./data-channel/collection";
 
 export class DefaultConnection implements Connection {
-    private _peers: PeerCollection;
-    private _channels: DataChannelCollection;
+    private _peers: PeerCollection = {};
+    private _channels: DataChannelCollection = {};
 
     get peers(): PeerCollection {
         return this._peers;
