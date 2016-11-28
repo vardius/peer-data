@@ -17,7 +17,7 @@ import {DataChannelFactory} from "./data-channel/factory";
 export class Bridge {
     static onConnect(event: ConnectionEvent) {
         let peer = CONFIG.connection.peers[event.caller.id] = PeerFactory.get(event.caller, CONFIG.servers, CONFIG.signalling, CONFIG.connection);
-        let channel = peer.createDataChannel('chunks');
+        let channel = peer.createDataChannel('chunks', CONFIG.dataConstraints);
         CONFIG.connection.channels[event.caller.id] = DataChannelFactory.get(channel);
         peer.createOffer((desc: RTCSessionDescription) => {
             let message: SignalingEvent = {

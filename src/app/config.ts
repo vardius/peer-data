@@ -17,6 +17,7 @@ import {LogLevel} from "./logger/log-level";
 
 export class Config {
     private _servers: RTCConfiguration;
+    private _dataConstraints?: RTCDataChannelInit = null;
     private _logger: Logger;
     private _signalling: Signaling;
     private _connection: Connection;
@@ -58,5 +59,13 @@ export class Config {
 
     set connection(value: Connection) {
         this._connection = value;
+    }
+
+    get dataConstraints(): RTCDataChannelInit {
+        return this._dataConstraints;
+    }
+
+    set dataConstraints(value: RTCDataChannelInit) {
+        this._dataConstraints = value;
     }
 }

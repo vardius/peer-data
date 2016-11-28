@@ -36,6 +36,11 @@ export class App {
         EventDispatcher.register(event, callback);
     }
 
+    send(data: any) {
+        Object.entries(CONFIG.connection.channels)
+            .forEach(([key, value]) => value.send(data));
+    }
+
     connect() {
         let event: SignalingEvent = {
             type: SignalingEventType.CONNECT,
