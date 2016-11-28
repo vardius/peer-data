@@ -24,7 +24,7 @@ export class Bridge {
                 type: SignalingEventType.OFFER,
                 caller: null,
                 callee: event.caller,
-                data: peer.localDescription
+                data: desc
             };
             peer.setLocalDescription(desc, () => CONFIG.signalling.send(message), CONFIG.logger.error);
         }, CONFIG.logger.error);
@@ -44,7 +44,7 @@ export class Bridge {
                 type: SignalingEventType.ANSWER,
                 caller: null,
                 callee: event.caller,
-                data: peer.localDescription
+                data: desc
             };
             peer.setLocalDescription(desc, () => CONFIG.signalling.send(message), CONFIG.logger.error);
         }, CONFIG.logger.error);
