@@ -22,10 +22,8 @@ export class Config {
     private _connection: Connection;
 
     constructor(servers: RTCConfiguration = {}, logLevel: LogLevel = LogLevel.ERROR, signalling?: Signaling) {
-        if (!signalling) {
-            this._signalling = new SocketChannel();
-        }
         this._servers = servers;
+        this._signalling = signalling ? signalling : new SocketChannel();
         this._logger = new ConsoleLogger(logLevel);
         this._connection = new DefaultConnection();
     }
