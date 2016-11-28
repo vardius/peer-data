@@ -15,7 +15,12 @@ import {PeerCollection} from "./peer/collection";
 import {DataChannelCollection} from "./data-channel/collection";
 import {SignalingEventType} from "./signaling/event-type";
 
-export const CONFIG = new Config();
+export const CONFIG = <Config>{
+    servers: null,
+    logger: null,
+    signalling: null,
+    connection: null,
+};
 
 export class App {
     constructor(conf?: Config) {
