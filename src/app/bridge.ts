@@ -16,7 +16,7 @@ import {DataChannelFactory} from "./data-channel/factory";
 
 export class Bridge {
     static onConnect(event: ConnectionEvent) {
-        let peer = CONFIG.connection.peers[event.caller.id] = PeerFactory.get(event.caller, CONFIG.servers, CONFIG.signalling, CONFIG.connection);
+        let peer = CONFIG.connection.peers[event.caller.id] = PeerFactory.get(CONFIG.servers, CONFIG.signalling);
         let channel = peer.createDataChannel('chunks', CONFIG.dataConstraints);
         CONFIG.connection.channels[event.caller.id] = DataChannelFactory.get(channel);
         peer.createOffer((desc: RTCSessionDescription) => {
@@ -36,7 +36,10 @@ export class Bridge {
     }
 
     static onOffer(event: ConnectionEvent) {
-        let peer = CONFIG.connection.peers[event.caller.id] = PeerFactory.get(event.caller, CONFIG.servers, CONFIG.signalling, CONFIG.connection);
+        let peer = CONFIG.connection.peers[event.caller.id] = PeerFactory.get(CONFIG.servers, CONFIG.signalling);
+        peer.ondatachannel = (dataChannelEvent: RTCDataChannelEvent) => {
+            CONFIG.connection.addChannel(event.caller.id, DataChannelFactory.get(dataChannelEvent.channel));
+        };
         peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {
         }, CONFIG.logger.error.bind(CONFIG.logger));
         peer.createAnswer((desc: RTCSessionDescription) => {
