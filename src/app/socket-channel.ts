@@ -18,8 +18,8 @@ import {SignalingEventType} from "./signaling/event-type";
 export class SocketChannel implements Signaling {
     private socket: Socket;
 
-    constructor() {
-        this.socket = io.connect();
+    constructor(opts?: SocketIOClient.ConnectOpts) {
+        this.socket = io.connect(opts);
         this.socket.on('message', this.onMessage);
         this.socket.on('ipaddr', this.onIp);
         this.socket.on('log', this.onLog);
