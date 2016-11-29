@@ -30,9 +30,9 @@ export class Bridge {
     }
 
     static onCandidate(event: ConnectionEvent) {
-        if (event.data.candidate) {
+        if (event.data) {
             let peer = CONFIG.connection.peers[event.caller.id];
-            peer.addIceCandidate(new RTCIceCandidate(event.data.candidate));
+            peer.addIceCandidate(new RTCIceCandidate(event.data));
         }
     }
 

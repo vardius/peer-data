@@ -20,7 +20,7 @@ export class PeerFactory {
                 type: SignalingEventType.CANDIDATE,
                 caller: null,
                 callee: null,
-                data: event
+                data: event.candidate
             };
             signaling.send(message);
         };
