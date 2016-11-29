@@ -44,7 +44,7 @@ export class ConsoleLogger implements Logger {
         }
 
         if (window.performance) {
-            var now = (window.performance.now() / 1000).toFixed(3);
+            let now = (window.performance.now() / 1000).toFixed(3);
             if (data instanceof Error) {
                 this.logToConsole(method, now + ': ' + data.toString(), data);
             }
