@@ -6,7 +6,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 import {ConsoleLogger} from "./console-logger";
 import {SocketChannel} from "./socket-channel";
 import {DefaultConnection} from "./default-connection";

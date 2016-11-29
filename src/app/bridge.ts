@@ -6,7 +6,6 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 import {CONFIG} from "./app";
 import {ConnectionEvent} from "./connection/event";
 import {SignalingEvent} from "./signaling/event";
@@ -31,8 +30,10 @@ export class Bridge {
     }
 
     static onCandidate(event: ConnectionEvent) {
-        let peer = CONFIG.connection.peers[event.caller.id];
-        peer.addIceCandidate(new RTCIceCandidate(event.data));
+        if (event.data.candidate) {
+            let peer = CONFIG.connection.peers[event.caller.id];
+            peer.addIceCandidate(new RTCIceCandidate(event.data.candidate));
+        }
     }
 
     static onOffer(event: ConnectionEvent) {
