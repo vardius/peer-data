@@ -23,13 +23,17 @@ export class Config {
 
     constructor(servers: RTCConfiguration = {},
                 constraints: RTCDataChannelInit = null,
-                logLevel: LogLevel = LogLevel.ERROR,
+                logLevel: LogLevel | Logger = LogLevel.ERROR,
                 signalling?: Signaling) {
         this._servers = servers;
         this._dataConstraints = constraints;
         this._signalling = signalling ? signalling : new SocketChannel();
-        this._logger = new ConsoleLogger(logLevel);
+        this._logger = this.isLogger(logLevel) ? logLevel : new ConsoleLogger(logLevel);
         this._connection = new DefaultConnection();
+    }
+
+    private isLogger(logger: any): logger is Logger {
+        return 'logLevel' in logger;
     }
 
     get servers(): RTCConfiguration {

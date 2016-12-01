@@ -40,6 +40,12 @@ export class App {
             .forEach(([key, value]) => value.send(data));
     }
 
+    sendByIds(ids: string[], data: any) {
+        for (let i = 0; i < ids.length; i++) {
+            CONFIG.connection.channels[ids[i]].send(data);
+        }
+    }
+
     connect() {
         let event: SignalingEvent = {
             type: SignalingEventType.CONNECT,
