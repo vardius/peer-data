@@ -6,44 +6,39 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import {Config} from "./config";
 import {EventType} from "./data-channel/event-type";
 import {EventDispatcher} from "./data-channel/dispatcher";
 import {SignalingEvent} from "./signaling/event";
-import {PeerCollection} from "./peer/collection";
-import {DataChannelCollection} from "./data-channel/collection";
 import {SignalingEventType} from "./signaling/event-type";
-
-export const CONFIG = <Config>{
-    servers: null,
-    logger: null,
-    signalling: null,
-    connection: null,
-};
+import {Logger} from "./logger/logger";
+import {Signaling} from "./signaling/signaling";
+import {Connection} from "./connection/connection";
+import {DefaultConnection} from "./default-connection";
+import {ConsoleLogger} from "./console-logger";
+import {LogLevel} from "./logger/log-level";
+import {Bridge} from "./bridge";
 
 export class App {
-    constructor(conf?: Config) {
-        if (conf) {
-            CONFIG.servers = conf.servers;
-            CONFIG.logger = conf.logger;
-            CONFIG.signalling = conf.signalling;
-            CONFIG.connection = conf.connection;
-        }
+    private bridge: Bridge;
+    private _connection: Connection;
+    private _signalling: Signaling;
+
+    constructor() {
+        this._connection = new DefaultConnection();
+        this.bridge = new Bridge(this.connection, new ConsoleLogger(LogLevel.ERROR));
     }
 
     on(event: EventType, callback: EventHandler) {
         EventDispatcher.register(event, callback);
     }
 
-    send(data: any) {
-        Object.entries(CONFIG.connection.channels)
-            .forEach(([key, value]) => value.send(data));
-    }
-
-    sendByIds(ids: string[], data: any) {
-        for (let i = 0; i < ids.length; i++) {
-            CONFIG.connection.channels[ids[i]].send(data);
-        }
+    send(data: any, ids?: string []) {
+        Object.entries(this._connection.channels)
+            .forEach(([key, value]) => {
+                if (!ids || (ids.length > 1 && ids.indexOf(key) !== -1)) {
+                    value.send(data)
+                }
+            });
     }
 
     connect() {
@@ -53,30 +48,70 @@ export class App {
             callee: null,
             data: null
         };
-        CONFIG.signalling.send(event);
+        this._signalling.send(event);
     }
 
-    disconnect() {
-        Object.entries(CONFIG.connection.channels)
-            .forEach(([key, value]) => value.close());
-        Object.entries(CONFIG.connection.peers)
+    disconnect(ids?: string[]) {
+        Object.entries(this._connection.channels)
             .forEach(([key, value]) => {
-                value.close();
-                let event: SignalingEvent = {
-                    type: SignalingEventType.DISCONNECT,
-                    caller: null,
-                    callee: null,
-                    data: null
-                };
-                CONFIG.signalling.send(event);
+                if (!ids || (ids.length > 1 && ids.indexOf(key) !== -1)) {
+                    value.close();
+                    delete this._connection.channels[key];
+                }
+            });
+        Object.entries(this._connection.peers)
+            .forEach(([key, value]) => {
+                if (!ids || (ids.length > 1 && ids.indexOf(key) !== -1)) {
+                    value.close();
+                    delete this._connection.peers[key];
+                    let event: SignalingEvent = {
+                        type: SignalingEventType.DISCONNECT,
+                        caller: null,
+                        callee: null,
+                        data: null
+                    };
+                    this._signalling.send(event);
+                }
             });
     }
 
-    peers(): PeerCollection {
-        return CONFIG.connection.peers;
+    get servers(): RTCConfiguration {
+        return this.bridge.servers;
     }
 
-    channels(): DataChannelCollection {
-        return CONFIG.connection.channels;
+    set servers(value: RTCConfiguration) {
+        this.bridge.servers = value;
+    }
+
+    get dataConstraints(): RTCDataChannelInit {
+        return this.bridge.dataConstraints;
+    }
+
+    set dataConstraints(value: RTCDataChannelInit) {
+        this.bridge.dataConstraints = value;
+    }
+
+    get logger(): Logger {
+        return this.bridge.logger;
+    }
+
+    set logger(value: Logger) {
+        this.bridge.logger = value;
+    }
+
+    get signalling(): Signaling {
+        return this._signalling;
+    }
+
+    set signalling(value: Signaling) {
+        this._signalling = value;
+    }
+
+    get connection(): Connection {
+        return this._connection;
+    }
+
+    set connection(value: Connection) {
+        this._connection = value;
     }
 }

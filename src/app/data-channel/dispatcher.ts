@@ -9,7 +9,7 @@
 import {EventType} from "./event-type";
 import {EventHandlerCollection} from "./handler.collection";
 
-export const HANDLERS: EventHandlerCollection = {};
+const HANDLERS: EventHandlerCollection = {};
 
 export class EventDispatcher {
     static register(type: EventType, callback: EventHandler) {

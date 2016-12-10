@@ -10,16 +10,25 @@
 import Socket = SocketIOClient.Socket;
 import * as io from "socket.io-client";
 import {Bridge} from "./bridge";
-import {CONFIG} from "./app";
 import {Signaling} from "./signaling/signaling";
 import {SignalingEvent} from "./signaling/event";
 import {SignalingEventType} from "./signaling/event-type";
+import {Logger} from "./logger/logger";
 
 export class SocketChannel implements Signaling {
     private socket: Socket;
+    private bridge: Bridge;
+    private _logger: Logger;
 
-    constructor(opts?: SocketIOClient.ConnectOpts) {
+    constructor(bridge: Bridge, logger: Logger, opts?: SocketIOClient.ConnectOpts) {
         this.socket = io.connect(opts);
+        this.bridge = bridge;
+        this._logger = logger;
+
+        this.subscribeEvents();
+    }
+
+    private subscribeEvents() {
         this.socket.on('message', this.onMessage);
         this.socket.on('ipaddr', this.onIp);
         this.socket.on('log', this.onLog);
@@ -30,30 +39,38 @@ export class SocketChannel implements Signaling {
     }
 
     private onIp(ipaddr: string) {
-        CONFIG.logger.log.apply(CONFIG.logger, ['Server IP address is: ' + ipaddr]);
+        this._logger.log.apply(this._logger, ['Server IP address is: ' + ipaddr]);
     }
 
     private onLog(data: any[]) {
-        CONFIG.logger.log.apply(CONFIG.logger, [data]);
+        this._logger.log.apply(this._logger, [data]);
     }
 
     private onMessage(event: SignalingEvent) {
         switch (event.type) {
             case SignalingEventType.OFFER:
-                Bridge.onOffer(event);
+                this.bridge.onOffer(event, this);
                 break;
             case SignalingEventType.ANSWER:
-                Bridge.onAnswer(event);
+                this.bridge.onAnswer(event);
                 break;
             case SignalingEventType.CANDIDATE:
-                Bridge.onCandidate(event);
+                this.bridge.onCandidate(event);
                 break;
             case SignalingEventType.CONNECT:
-                Bridge.onConnect(event);
+                this.bridge.onConnect(event, this);
                 break;
             case SignalingEventType.DISCONNECT:
-                Bridge.onDisconnect(event);
+                this.bridge.onDisconnect(event);
                 break;
         }
+    }
+
+    get logger(): Logger {
+        return this._logger;
+    }
+
+    set logger(value: Logger) {
+        this._logger = value;
     }
 }

@@ -6,16 +6,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
+import {App} from "./app/app";
 
-export {App as PeerData} from "./app/app";
-export {Config as PeerDataConfig} from './app/config';
-export {Bridge as PeerDataBridge} from './app/bridge';
+const PeerData = new App();
+
+export default PeerData;
+
 export {Connection} from './app/connection/connection';
 export {Signaling} from './app/signaling/signaling';
 export {Logger} from './app/logger/logger';
 export {LogLevel} from './app/logger/log-level';
-export {PeerCollection} from './app/peer/collection';
-export {DataChannelCollection} from './app/data-channel/collection';
 export {SignalingEvent} from './app/signaling/event';
 export {SignalingEventType} from './app/signaling/event-type';
 export {EventType} from './app/data-channel/event-type';
