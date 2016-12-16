@@ -14,6 +14,18 @@ For this, we use a signaling server: a server that can pass messages between *We
 ```bash
 $ npm install peer-data
 ```
+
 ## Usage
 [**Docs**](doc)
 - [Usage](doc/usage.md)
+
+ABOUT
+==================================================
+Contributors:
+
+* [Rafał Lorenz](http://rafallorenz.com)
+
+Want to contribute ? Feel free to send pull requests!
+
+Have problems, bugs, feature ideas?
+We are using the github [issue tracker](https://github.com/vardius/peer-data/issues) to manage them.

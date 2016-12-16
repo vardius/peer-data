@@ -6,14 +6,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import {ConnectionEvent} from "./connection/event";
-import {SignalingEvent} from "./signaling/event";
-import {SignalingEventType} from "./signaling/event-type";
-import {PeerFactory} from "./peer/factory";
-import {DataChannelFactory} from "./data-channel/factory";
-import {Logger} from "./logger/logger";
-import {Signaling} from "./signaling/signaling";
-import {Connection} from "./connection/connection";
+import {SignalingEvent} from './signaling/event';
+import {SignalingEventType} from './signaling/event-type';
+import {PeerFactory} from './peer/factory';
+import {DataChannelFactory} from './data-channel/factory';
+import {Logger} from './logger/logger';
+import {Signaling} from './signaling/signaling';
+import {Connection} from './connection/connection';
 
 export class Bridge {
     private label = 'chunks';
@@ -28,7 +27,7 @@ export class Bridge {
         this._logger = logger;
     }
 
-    onConnect(event: ConnectionEvent, signalling: Signaling) {
+    onConnect(event: SignalingEvent, signalling: Signaling) {
         let peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._servers, signalling);
         let channel = peer.createDataChannel(this.label, this._dataConstraints);
         this._connection.channels[event.caller.id] = DataChannelFactory.get(channel);
@@ -43,14 +42,14 @@ export class Bridge {
         }, this._logger.error.bind(this._logger));
     }
 
-    onCandidate(event: ConnectionEvent) {
+    onCandidate(event: SignalingEvent) {
         if (event.data) {
             let peer = this._connection.peers[event.caller.id];
             peer.addIceCandidate(new RTCIceCandidate(event.data));
         }
     }
 
-    onOffer(event: ConnectionEvent, signalling: Signaling) {
+    onOffer(event: SignalingEvent, signalling: Signaling) {
         let peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._servers, signalling);
         peer.ondatachannel = (dataChannelEvent: RTCDataChannelEvent) => {
             this._connection.addChannel(event.caller.id, DataChannelFactory.get(dataChannelEvent.channel));
@@ -68,13 +67,13 @@ export class Bridge {
         }, this._logger.error.bind(this._logger));
     }
 
-    onAnswer(event: ConnectionEvent) {
+    onAnswer(event: SignalingEvent) {
         let peer = this._connection.peers[event.caller.id];
         peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {
         }, this._logger.error.bind(this._logger));
     }
 
-    onDisconnect(event: ConnectionEvent) {
+    onDisconnect(event: SignalingEvent) {
         let channel = this._connection.channels[event.caller.id];
         channel.close();
         let peer = this._connection.peers[event.caller.id];

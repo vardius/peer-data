@@ -6,7 +6,10 @@
     "watch": "tsc -p src -w",
     "build": "rm -rf lib && tsc",
     "test": "karma start",
-    "test-watch": "karma start --no-single-run --auto-watch"
+    "test-watch": "karma start --no-single-run --auto-watch",
+    "lint": "npm run tslint \"src/**/*.ts\"",
+    "tslint": "tslint",
+    "ci": "npm run lint && npm test"
   },
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
@@ -59,6 +62,7 @@
     "karma-webpack": "^1.8.0",
     "phantomjs-prebuilt": "^2.1.13",
     "remap-istanbul": "^0.7.0",
+    "tslint": "^4.1.0",
     "typescript": "^2.0.10",
     "webpack": "2.1.0-beta.25",
     "zone.js": "^0.7.1"

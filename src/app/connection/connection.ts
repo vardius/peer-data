@@ -6,15 +6,49 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import {PeerCollection} from "../peer/collection";
-import {DataChannelCollection} from "../data-channel/collection";
+import {PeerCollection} from '../peer/collection';
+import {DataChannelCollection} from '../data-channel/collection';
 
-export interface Connection {
-    peers: PeerCollection
-    channels: DataChannelCollection
+export class Connection {
+    private _peers: PeerCollection = {};
+    private _channels: DataChannelCollection = {};
 
-    addPeer(id: string, peer: RTCPeerConnection): Connection
-    removePeer(id: string): Connection
-    addChannel(id: string, channel: RTCDataChannel): Connection
-    removeChannel(id: string): Connection
+    get peers(): PeerCollection {
+        return this._peers;
+    }
+
+    get channels(): DataChannelCollection {
+        return this._channels;
+    }
+
+    addPeer(id: string, peer: RTCPeerConnection): Connection {
+        if (!this._peers.hasOwnProperty(id)) {
+            this._peers[id] = peer;
+        }
+        return this;
+    }
+
+    removePeer(id: string): Connection {
+        if (this._peers.hasOwnProperty(id)) {
+            this._peers[id].close();
+            delete this._peers[id];
+            delete this._peers[id];
+        }
+        return this;
+    }
+
+    addChannel(id: string, channel: RTCDataChannel): Connection {
+        if (!this._channels.hasOwnProperty(id)) {
+            this._channels[id] = channel;
+        }
+        return this;
+    }
+
+    removeChannel(id: string): Connection {
+        if (this._channels.hasOwnProperty(id)) {
+            this._channels[id].close();
+            delete this._channels[id];
+        }
+        return this;
+    }
 }

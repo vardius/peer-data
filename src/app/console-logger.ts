@@ -6,8 +6,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import {LogLevel} from "./logger/log-level";
-import {Logger} from "./logger/logger";
+import {LogLevel} from './logger/log-level';
+import {Logger} from './logger/logger';
 
 export class ConsoleLogger implements Logger {
     private _logLevel: LogLevel;

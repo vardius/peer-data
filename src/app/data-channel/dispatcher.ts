@@ -6,8 +6,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import {EventType} from "./event-type";
-import {EventHandlerCollection} from "./handler.collection";
+import {EventType} from './event-type';
+import {EventHandlerCollection} from './handler.collection';
 
 const HANDLERS: EventHandlerCollection = {};
 

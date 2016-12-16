@@ -6,9 +6,9 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import {Signaling} from "../signaling/signaling";
-import {SignalingEvent} from "../signaling/event";
-import {SignalingEventType} from "../signaling/event-type";
+import {Signaling} from '../signaling/signaling';
+import {SignalingEvent} from '../signaling/event';
+import {SignalingEventType} from '../signaling/event-type';
 
 export class PeerFactory {
     static get(servers: RTCConfiguration,

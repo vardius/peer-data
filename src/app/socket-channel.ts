@@ -8,12 +8,12 @@
  */
 
 import Socket = SocketIOClient.Socket;
-import * as io from "socket.io-client";
-import {Bridge} from "./bridge";
-import {Signaling} from "./signaling/signaling";
-import {SignalingEvent} from "./signaling/event";
-import {SignalingEventType} from "./signaling/event-type";
-import {Logger} from "./logger/logger";
+import * as io from 'socket.io-client';
+import {Bridge} from './bridge';
+import {Signaling} from './signaling/signaling';
+import {SignalingEvent} from './signaling/event';
+import {SignalingEventType} from './signaling/event-type';
+import {Logger} from './logger/logger';
 
 export class SocketChannel implements Signaling {
     private socket: Socket;
@@ -28,14 +28,14 @@ export class SocketChannel implements Signaling {
         this.subscribeEvents();
     }
 
+    send(event: SignalingEvent) {
+        this.socket.emit('message', event);
+    }
+
     private subscribeEvents() {
         this.socket.on('message', this.onMessage);
         this.socket.on('ipaddr', this.onIp);
         this.socket.on('log', this.onLog);
-    }
-
-    send(event: SignalingEvent) {
-        this.socket.emit('message', event);
     }
 
     private onIp(ipaddr: string) {

@@ -6,17 +6,16 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import {EventType} from "./data-channel/event-type";
-import {EventDispatcher} from "./data-channel/dispatcher";
-import {SignalingEvent} from "./signaling/event";
-import {SignalingEventType} from "./signaling/event-type";
-import {Logger} from "./logger/logger";
-import {Signaling} from "./signaling/signaling";
-import {Connection} from "./connection/connection";
-import {DefaultConnection} from "./default-connection";
-import {ConsoleLogger} from "./console-logger";
-import {LogLevel} from "./logger/log-level";
-import {Bridge} from "./bridge";
+import {EventType} from './data-channel/event-type';
+import {EventDispatcher} from './data-channel/dispatcher';
+import {SignalingEvent} from './signaling/event';
+import {SignalingEventType} from './signaling/event-type';
+import {Logger} from './logger/logger';
+import {Signaling} from './signaling/signaling';
+import {Connection} from './connection/connection';
+import {ConsoleLogger} from './console-logger';
+import {LogLevel} from './logger/log-level';
+import {Bridge} from './bridge';
 
 export class App {
     private bridge: Bridge;
@@ -24,7 +23,7 @@ export class App {
     private _signalling: Signaling;
 
     constructor() {
-        this._connection = new DefaultConnection();
+        this._connection = new Connection();
         this.bridge = new Bridge(this.connection, new ConsoleLogger(LogLevel.ERROR));
     }
 
@@ -36,7 +35,7 @@ export class App {
         Object.entries(this._connection.channels)
             .forEach(([key, value]) => {
                 if (!ids || (ids.length > 1 && ids.indexOf(key) !== -1)) {
-                    value.send(data)
+                    value.send(data);
                 }
             });
     }
