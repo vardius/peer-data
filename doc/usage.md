@@ -13,7 +13,21 @@ let servers = {
     {url: "stun:stun.1.google.com:19302"}
   ]
 };
-PeerData.servers = servers;
+let peerData = new PeerData(servers);
+```
+
+Or after initialization
+
+```javascript
+import PeerData from 'peer-data';
+
+let servers = {
+  iceServers: [
+    {url: "stun:stun.1.google.com:19302"}
+  ]
+};
+let peerData = new PeerData();
+peerData.servers = servers;
 ```
 
 ###Set data channels configuration
@@ -21,7 +35,17 @@ PeerData.servers = servers;
 import PeerData from 'peer-data';
 
 let constraints = {ordered: true};
-PeerData.dataConstraints = constraints;
+let peerData = new PeerData({}, constraints);
+```
+
+Or after initialization
+
+```javascript
+import PeerData from 'peer-data';
+
+let constraints = {ordered: true};
+let peerData = new PeerData();
+peerData.dataConstraints = constraints;
 ```
 
 ## Connect to signaling server
@@ -34,9 +58,10 @@ You can use default signaling server.
 import PeerData, {SocketChannel} from 'peer-data';
 
 let signaling = new SocketChannel();
-PeerData.signaling = signaling;
+let peerData = new PeerData();
 
-PeerData.connect();
+peerData.signaling = signaling;
+peerData.connect();
 ```
 
 [PeerDataServer](https://github.com/Vardius/peer-data-server) example of socket.io signaling server implementation for `SocketChannel`. 
@@ -45,10 +70,12 @@ PeerData.connect();
 ```javascript
 import PeerData, {EventType} from 'peer-data';
 
-PeerData.on(EventType.OPEN, () => console.log('New peer connected'));
-PeerData.on(EventType.CLOSE, () => console.log('Peer disconected'));
-PeerData.on(EventType.DATA, event => console.log(event));
-PeerData.on(EventType.ERROR, event => console.log(event));
+let peerData = new PeerData();
+
+peerData.on(EventType.OPEN, () => console.log('New peer connected'));
+peerData.on(EventType.CLOSE, () => console.log('Peer disconected'));
+peerData.on(EventType.DATA, event => console.log(event));
+peerData.on(EventType.ERROR, event => console.log(event));
 ```
 
 ## Send data
