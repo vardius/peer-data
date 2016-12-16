@@ -86,5 +86,5 @@ PeerData.disconnect(ids);
 ```
 
 ## Advance configuration
-- [Signaling](doc/signaling.md)
-- [Logger](doc/logger.md)
+- [Signaling](signaling.md)
+- [Logger](logger.md)
