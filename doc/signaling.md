@@ -4,7 +4,7 @@
 
 ###Override signaling
 
-Create custom signaling class remember to implement [Signaling](src/app/signaling/signaling.ts) interface
+Create custom signaling class remember to implement [Signaling](../src/app/signaling/signaling.ts) interface
 
 ```javascript
 import PeerData from 'peer-data';

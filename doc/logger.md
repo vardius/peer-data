@@ -14,7 +14,7 @@ logger.logLevel = LogLevel.INFO;
 
 ###Override logger
 
-Create custom logger class remember to implement [Logger](src/app/logger/logger.ts) interface
+Create custom logger class remember to implement [Logger](../src/app/logger/logger.ts) interface
 
 ```javascript
 import PeerData from 'peer-data';
