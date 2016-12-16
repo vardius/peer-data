@@ -5,7 +5,7 @@
 ##Configure PeerData client
 
 ###Set connection configuration
-```ecmascript 6
+```javascript
 import PeerData from 'peer-data';
 
 let servers = {
@@ -17,7 +17,7 @@ PeerData.servers = servers;
 ```
 
 ###Set data channels configuration
-```ecmascript 6
+```javascript
 import PeerData from 'peer-data';
 
 let constraints = {ordered: true};
@@ -30,7 +30,7 @@ PeerData.dataConstraints = constraints;
 Before `connect` you need to set signaling server.
 You can use default signaling server.
 
-```ecmascript 6
+```javascript
 import PeerData, {SocketChannel} from 'peer-data';
 
 let signaling = new SocketChannel();
@@ -42,7 +42,7 @@ PeerData.connect();
 [PeerDataServer](https://github.com/Vardius/peer-data-server) example of socket.io signaling server implementation for `SocketChannel`. 
 
 ## Subscribe Data Channel Events
-```ecmascript 6
+```javascript
 import PeerData, {EventType} from 'peer-data';
 
 PeerData.on(EventType.OPEN, () => console.log('New peer connected'));
@@ -52,7 +52,7 @@ PeerData.on(EventType.ERROR, event => console.log(event));
 ```
 
 ## Send data
-```ecmascript 6
+```javascript
 import PeerData from 'peer-data';
 
 let data = {message: 'Hi there!'};
@@ -61,7 +61,7 @@ PeerData.send(data);
 
 or send it do specific peers only
 
-```ecmascript 6
+```javascript
 import PeerData from 'peer-data';
 
 let ids = ['123', '321'];
@@ -70,7 +70,7 @@ PeerData.send(data, ids);
 ```
 
 ## Disconnect
-```ecmascript 6
+```javascript
 import PeerData from 'peer-data';
 
 PeerData.disconnect();
@@ -78,7 +78,7 @@ PeerData.disconnect();
 
 or disconnect specific peers only
 
-```ecmascript 6
+```javascript
 import PeerData from 'peer-data';
 
 let ids = ['123', '321'];
