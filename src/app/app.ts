@@ -19,7 +19,7 @@ import {Bridge} from './bridge';
 
 export class App {
   private bridge: Bridge;
-  private _signalling: Signaling;
+  private _signalling: Signaling = null;
 
   constructor(servers: RTCConfiguration = {}, dataConstraints: RTCDataChannelInit = null) {
     const connection = new Connection(servers, dataConstraints);
