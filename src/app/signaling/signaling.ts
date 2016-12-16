@@ -9,5 +9,5 @@
 import {SignalingEvent} from './event';
 
 export interface Signaling {
-    send(message: SignalingEvent): void;
+  send(message: SignalingEvent): void;
 }

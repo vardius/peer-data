@@ -8,5 +8,5 @@
  */
 
 export interface EventHandler {
-    (data?: any): any;
+  (data?: any): any;
 }

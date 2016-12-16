@@ -11,20 +11,20 @@ import {SignalingEvent} from '../signaling/event';
 import {SignalingEventType} from '../signaling/event-type';
 
 export class PeerFactory {
-    static get(servers: RTCConfiguration,
-               signaling: Signaling): RTCPeerConnection {
-        let peer = new RTCPeerConnection(servers);
+  static get(servers: RTCConfiguration,
+             signaling: Signaling): RTCPeerConnection {
+    let peer = new RTCPeerConnection(servers);
 
-        peer.onicecandidate = (event: RTCPeerConnectionIceEvent) => {
-            let message: SignalingEvent = {
-                type: SignalingEventType.CANDIDATE,
-                caller: null,
-                callee: null,
-                data: event.candidate
-            };
-            signaling.send(message);
-        };
+    peer.onicecandidate = (event: RTCPeerConnectionIceEvent) => {
+      let message: SignalingEvent = {
+        type: SignalingEventType.CANDIDATE,
+        caller: null,
+        callee: null,
+        data: event.candidate
+      };
+      signaling.send(message);
+    };
 
-        return peer;
-    }
+    return peer;
+  }
 }

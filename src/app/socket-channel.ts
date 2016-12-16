@@ -16,61 +16,61 @@ import {SignalingEventType} from './signaling/event-type';
 import {Logger} from './logger/logger';
 
 export class SocketChannel implements Signaling {
-    private socket: Socket;
-    private bridge: Bridge;
-    private _logger: Logger;
+  private socket: Socket;
+  private bridge: Bridge;
+  private _logger: Logger;
 
-    constructor(bridge: Bridge, logger: Logger, opts?: SocketIOClient.ConnectOpts) {
-        this.socket = io.connect(opts);
-        this.bridge = bridge;
-        this._logger = logger;
+  constructor(bridge: Bridge, logger: Logger, opts?: SocketIOClient.ConnectOpts) {
+    this.socket = io.connect(opts);
+    this.bridge = bridge;
+    this._logger = logger;
 
-        this.subscribeEvents();
+    this.subscribeEvents();
+  }
+
+  send(event: SignalingEvent) {
+    this.socket.emit('message', event);
+  }
+
+  private subscribeEvents() {
+    this.socket.on('message', this.onMessage);
+    this.socket.on('ipaddr', this.onIp);
+    this.socket.on('log', this.onLog);
+  }
+
+  private onIp(ipaddr: string) {
+    this._logger.log.apply(this._logger, ['Server IP address is: ' + ipaddr]);
+  }
+
+  private onLog(data: any[]) {
+    this._logger.log.apply(this._logger, [data]);
+  }
+
+  private onMessage(event: SignalingEvent) {
+    switch (event.type) {
+      case SignalingEventType.OFFER:
+        this.bridge.onOffer(event, this);
+        break;
+      case SignalingEventType.ANSWER:
+        this.bridge.onAnswer(event);
+        break;
+      case SignalingEventType.CANDIDATE:
+        this.bridge.onCandidate(event);
+        break;
+      case SignalingEventType.CONNECT:
+        this.bridge.onConnect(event, this);
+        break;
+      case SignalingEventType.DISCONNECT:
+        this.bridge.onDisconnect(event);
+        break;
     }
+  }
 
-    send(event: SignalingEvent) {
-        this.socket.emit('message', event);
-    }
+  get logger(): Logger {
+    return this._logger;
+  }
 
-    private subscribeEvents() {
-        this.socket.on('message', this.onMessage);
-        this.socket.on('ipaddr', this.onIp);
-        this.socket.on('log', this.onLog);
-    }
-
-    private onIp(ipaddr: string) {
-        this._logger.log.apply(this._logger, ['Server IP address is: ' + ipaddr]);
-    }
-
-    private onLog(data: any[]) {
-        this._logger.log.apply(this._logger, [data]);
-    }
-
-    private onMessage(event: SignalingEvent) {
-        switch (event.type) {
-            case SignalingEventType.OFFER:
-                this.bridge.onOffer(event, this);
-                break;
-            case SignalingEventType.ANSWER:
-                this.bridge.onAnswer(event);
-                break;
-            case SignalingEventType.CANDIDATE:
-                this.bridge.onCandidate(event);
-                break;
-            case SignalingEventType.CONNECT:
-                this.bridge.onConnect(event, this);
-                break;
-            case SignalingEventType.DISCONNECT:
-                this.bridge.onDisconnect(event);
-                break;
-        }
-    }
-
-    get logger(): Logger {
-        return this._logger;
-    }
-
-    set logger(value: Logger) {
-        this._logger = value;
-    }
+  set logger(value: Logger) {
+    this._logger = value;
+  }
 }

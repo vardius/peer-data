@@ -9,8 +9,8 @@
 import {Caller} from './caller';
 
 export interface SignalingEvent {
-    type: string;
-    caller: Caller;
-    callee: Caller;
-    data: any;
+  type: string;
+  caller: Caller;
+  callee: Caller;
+  data: any;
 }

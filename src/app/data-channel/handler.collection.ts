@@ -8,5 +8,5 @@
  */
 
 export interface EventHandlerCollection {
-    [index: string]: EventHandler[];
+  [index: string]: EventHandler[];
 }

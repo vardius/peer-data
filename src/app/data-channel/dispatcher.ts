@@ -12,14 +12,14 @@ import {EventHandlerCollection} from './handler.collection';
 const HANDLERS: EventHandlerCollection = {};
 
 export class EventDispatcher {
-    static register(type: EventType, callback: EventHandler) {
-        if (!HANDLERS[type]) {
-            HANDLERS[type] = [];
-        }
-        HANDLERS[type].push(callback);
+  static register(type: EventType, callback: EventHandler) {
+    if (!HANDLERS[type]) {
+      HANDLERS[type] = [];
     }
+    HANDLERS[type].push(callback);
+  }
 
-    static dispatch(type: EventType, data?: any) {
-        HANDLERS[type].forEach(h => h(data));
-    }
+  static dispatch(type: EventType, data?: any) {
+    HANDLERS[type].forEach(h => h(data));
+  }
 }

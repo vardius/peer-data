@@ -8,5 +8,5 @@
  */
 
 export interface PeerCollection {
-    [index: string]: RTCPeerConnection;
+  [index: string]: RTCPeerConnection;
 }

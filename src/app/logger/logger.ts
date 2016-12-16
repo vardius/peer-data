@@ -9,9 +9,9 @@
 import {LogLevel} from './log-level';
 
 export interface Logger {
-    logLevel: LogLevel;
-    info(data: any): void;
-    log(data: any): void;
-    warn(data: any): void;
-    error(data: any): void;
+  logLevel: LogLevel;
+  info(data: any): void;
+  log(data: any): void;
+  warn(data: any): void;
+  error(data: any): void;
 }

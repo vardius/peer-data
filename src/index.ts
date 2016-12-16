@@ -6,12 +6,8 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import {App} from './app/app';
-
-const PeerData = new App();
-
+import {App as PeerData} from './app/app';
 export default PeerData;
-
 export {Signaling} from './app/signaling/signaling';
 export {Logger} from './app/logger/logger';
 export {LogLevel} from './app/logger/log-level';

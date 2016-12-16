@@ -8,8 +8,8 @@
  */
 
 export enum EventType {
-    OPEN,
-    CLOSE,
-    ERROR,
-    DATA
+  OPEN,
+  CLOSE,
+  ERROR,
+  DATA
 }

@@ -56,7 +56,8 @@ PeerData.on(EventType.ERROR, event => console.log(event));
 import PeerData from 'peer-data';
 
 let data = {message: 'Hi there!'};
-PeerData.send(data);
+let peerData = new PeerData();
+peerData.send(data);
 ```
 
 or send it do specific peers only
@@ -66,14 +67,16 @@ import PeerData from 'peer-data';
 
 let ids = ['123', '321'];
 let data = {message: 'Hi there!'};
-PeerData.send(data, ids);
+let peerData = new PeerData();
+peerData.send(data, ids);
 ```
 
 ## Disconnect
 ```javascript
 import PeerData from 'peer-data';
 
-PeerData.disconnect();
+let peerData = new PeerData();
+peerData.disconnect();
 ```
 
 or disconnect specific peers only
@@ -82,7 +85,8 @@ or disconnect specific peers only
 import PeerData from 'peer-data';
 
 let ids = ['123', '321'];
-PeerData.disconnect(ids);
+let peerData = new PeerData();
+peerData.disconnect(ids);
 ```
 
 ## Advance configuration

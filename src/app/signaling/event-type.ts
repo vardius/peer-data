@@ -8,9 +8,9 @@
  */
 
 export const SignalingEventType = {
-    CONNECT: 'connect',
-    DISCONNECT: 'disconnect',
-    CANDIDATE: 'candidate',
-    OFFER: 'offer',
-    ANSWER: 'answer'
+  CONNECT: 'connect',
+  DISCONNECT: 'disconnect',
+  CANDIDATE: 'candidate',
+  OFFER: 'offer',
+  ANSWER: 'answer'
 };

@@ -8,8 +8,8 @@
  */
 
 export enum LogLevel {
-    INFO,
-    WARN,
-    ERROR,
-    OFF,
+  INFO,
+  WARN,
+  ERROR,
+  OFF,
 }

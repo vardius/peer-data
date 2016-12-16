@@ -8,7 +8,8 @@ By default `PeerData` uses `ConsoleLogger` with log level **Error**
 ```javascript
 import PeerData, {LogLevel} from 'peer-data';
 
-let logger = PeerData.logger;
+let peerData = new PeerData();
+let logger = peerData.logger;
 logger.logLevel = LogLevel.INFO;
 ```
 
@@ -21,5 +22,6 @@ import PeerData from 'peer-data';
 
 class Logger{}
 
-PeerData.logger = new Logger();
+let peerData = new PeerData();
+peerData.logger = new Logger();
 ```

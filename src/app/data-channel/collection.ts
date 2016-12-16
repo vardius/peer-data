@@ -8,5 +8,5 @@
  */
 
 export interface DataChannelCollection {
-    [index: string]: RTCDataChannel;
+  [index: string]: RTCDataChannel;
 }
