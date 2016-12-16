@@ -8,7 +8,6 @@
  */
 import {App as PeerData} from './app/app';
 export default PeerData;
-export {Bridge as PeerDataBridge} from './app/bridge';
 export {Signaling} from './app/signaling/signaling';
 export {Logger} from './app/logger/logger';
 export {LogLevel} from './app/logger/log-level';
