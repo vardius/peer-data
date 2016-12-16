@@ -14,6 +14,6 @@ describe('App', () => {
 
     expect(app).toBeDefined();
     expect(app.logger).toBeDefined();
-    expect(app.signalling).toEqual(null);
+    expect(app.signaling).toEqual(null);
   });
 });

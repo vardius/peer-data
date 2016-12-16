@@ -19,7 +19,7 @@ import {Bridge} from './bridge';
 
 export class App {
   private bridge: Bridge;
-  private _signalling: Signaling = null;
+  private _signaling: Signaling = null;
 
   constructor(servers: RTCConfiguration = {}, dataConstraints: RTCDataChannelInit = null) {
     const connection = new Connection(servers, dataConstraints);
@@ -47,7 +47,7 @@ export class App {
       callee: null,
       data: null
     };
-    this._signalling.send(event);
+    this._signaling.send(event);
   }
 
   disconnect(ids?: string[]) {
@@ -69,7 +69,7 @@ export class App {
             callee: null,
             data: null
           };
-          this._signalling.send(event);
+          this._signaling.send(event);
         }
       });
   }
@@ -98,11 +98,11 @@ export class App {
     this.bridge.logger = value;
   }
 
-  get signalling(): Signaling {
-    return this._signalling;
+  get signaling(): Signaling {
+    return this._signaling;
   }
 
-  set signalling(value: Signaling) {
-    this._signalling = value;
+  set signaling(value: Signaling) {
+    this._signaling = value;
   }
 }

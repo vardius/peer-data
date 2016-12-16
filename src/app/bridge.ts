@@ -25,8 +25,8 @@ export class Bridge {
     this._logger = logger;
   }
 
-  onConnect(event: SignalingEvent, signalling: Signaling) {
-    let peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._connection.servers, signalling);
+  onConnect(event: SignalingEvent, signaling: Signaling) {
+    let peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._connection.servers, signaling);
     let channel = peer.createDataChannel(LABEL, this._connection.dataConstraints);
     this._connection.channels[event.caller.id] = DataChannelFactory.get(channel);
     peer.createOffer((desc: RTCSessionDescription) => {
@@ -36,7 +36,7 @@ export class Bridge {
         callee: event.caller,
         data: desc
       };
-      peer.setLocalDescription(desc, () => signalling.send(message), this._logger.error.bind(this._logger));
+      peer.setLocalDescription(desc, () => signaling.send(message), this._logger.error.bind(this._logger));
     }, this._logger.error.bind(this._logger));
   }
 
@@ -47,8 +47,8 @@ export class Bridge {
     }
   }
 
-  onOffer(event: SignalingEvent, signalling: Signaling) {
-    let peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._connection.servers, signalling);
+  onOffer(event: SignalingEvent, signaling: Signaling) {
+    let peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._connection.servers, signaling);
     peer.ondatachannel = (dataChannelEvent: RTCDataChannelEvent) => {
       this._connection.addChannel(event.caller.id, DataChannelFactory.get(dataChannelEvent.channel));
     };
@@ -61,7 +61,7 @@ export class Bridge {
         callee: event.caller,
         data: desc
       };
-      peer.setLocalDescription(desc, () => signalling.send(message), this._logger.error.bind(this._logger));
+      peer.setLocalDescription(desc, () => signaling.send(message), this._logger.error.bind(this._logger));
     }, this._logger.error.bind(this._logger));
   }
 
