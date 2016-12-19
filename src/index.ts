@@ -9,8 +9,6 @@
 import {App as PeerData} from './app/app';
 export default PeerData;
 export {Signaling} from './app/signaling/signaling';
-export {Logger} from './app/logger/logger';
-export {LogLevel} from './app/logger/log-level';
 export {SignalingEvent} from './app/signaling/event';
 export {SignalingEventType} from './app/signaling/event-type';
 export {EventType} from './app/data-channel/event-type';

@@ -76,6 +76,7 @@ peerData.on(EventType.OPEN, () => console.log('New peer connected'));
 peerData.on(EventType.CLOSE, () => console.log('Peer disconected'));
 peerData.on(EventType.DATA, event => console.log(event));
 peerData.on(EventType.ERROR, event => console.log(event));
+peerData.on(EventType.LOG, event => console.log(event));
 ```
 
 ## Send data
@@ -87,17 +88,6 @@ let peerData = new PeerData();
 peerData.send(data);
 ```
 
-or send it do specific peers only
-
-```javascript
-import PeerData from 'peer-data';
-
-let ids = ['123', '321'];
-let data = {message: 'Hi there!'};
-let peerData = new PeerData();
-peerData.send(data, ids);
-```
-
 ## Disconnect
 ```javascript
 import PeerData from 'peer-data';
@@ -106,16 +96,5 @@ let peerData = new PeerData();
 peerData.disconnect();
 ```
 
-or disconnect specific peers only
-
-```javascript
-import PeerData from 'peer-data';
-
-let ids = ['123', '321'];
-let peerData = new PeerData();
-peerData.disconnect(ids);
-```
-
 ## Advance configuration
 - [Signaling](signaling.md)
-- [Logger](logger.md)

@@ -10,11 +10,8 @@ import {EventType} from './data-channel/event-type';
 import {EventDispatcher} from './data-channel/dispatcher';
 import {SignalingEvent} from './signaling/event';
 import {SignalingEventType} from './signaling/event-type';
-import {Logger} from './logger/logger';
 import {Signaling} from './signaling/signaling';
 import {Connection} from './connection/connection';
-import {ConsoleLogger} from './console-logger';
-import {LogLevel} from './logger/log-level';
 import {Bridge} from './bridge';
 
 export class App {
@@ -23,21 +20,16 @@ export class App {
 
   constructor(servers: RTCConfiguration = {}, dataConstraints: RTCDataChannelInit = null) {
     const connection = new Connection(servers, dataConstraints);
-    const logger = new ConsoleLogger(LogLevel.ERROR);
-    this.bridge = new Bridge(connection, logger);
+    this.bridge = new Bridge(connection);
   }
 
   on(event: EventType, callback: EventHandler) {
     EventDispatcher.register(event, callback);
   }
 
-  send(data: any, ids?: string []) {
+  send(data: any) {
     Object.entries(this.bridge.connection.channels)
-      .forEach(([key, value]) => {
-        if (!ids || (ids.length > 1 && ids.indexOf(key) !== -1)) {
-          value.send(data);
-        }
-      });
+      .forEach(([key, value]) => value.send(data));
   }
 
   connect() {
@@ -50,28 +42,18 @@ export class App {
     this._signaling.send(event);
   }
 
-  disconnect(ids?: string[]) {
-    Object.entries(this.bridge.connection.channels)
-      .forEach(([key, value]) => {
-        if (!ids || (ids.length > 1 && ids.indexOf(key) !== -1)) {
-          value.close();
-          delete this.bridge.connection.channels[key];
-        }
-      });
-    Object.entries(this.bridge.connection.peers)
-      .forEach(([key, value]) => {
-        if (!ids || (ids.length > 1 && ids.indexOf(key) !== -1)) {
-          value.close();
-          delete this.bridge.connection.peers[key];
-          let event: SignalingEvent = {
-            type: SignalingEventType.DISCONNECT,
-            caller: null,
-            callee: null,
-            data: null
-          };
-          this._signaling.send(event);
-        }
-      });
+  disconnect() {
+    Object.entries(this.bridge.connection.channels).forEach(([key, value]) => value.close());
+
+    Object.entries(this.bridge.connection.peers).forEach(([key, value]) => value.close());
+
+    const event: SignalingEvent = {
+      type: SignalingEventType.DISCONNECT,
+      caller: null,
+      callee: null,
+      data: null
+    };
+    this._signaling.send(event);
   }
 
   get servers(): RTCConfiguration {
@@ -88,14 +70,6 @@ export class App {
 
   set dataConstraints(value: RTCDataChannelInit) {
     this.bridge.connection.dataConstraints = value;
-  }
-
-  get logger(): Logger {
-    return this.bridge.logger;
-  }
-
-  set logger(value: Logger) {
-    this.bridge.logger = value;
   }
 
   get signaling(): Signaling {

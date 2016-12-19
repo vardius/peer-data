@@ -13,17 +13,16 @@ import {Bridge} from './bridge';
 import {Signaling} from './signaling/signaling';
 import {SignalingEvent} from './signaling/event';
 import {SignalingEventType} from './signaling/event-type';
-import {Logger} from './logger/logger';
+import {EventDispatcher} from './data-channel/dispatcher';
+import {EventType} from './data-channel/event-type';
 
 export class SocketChannel implements Signaling {
   private socket: Socket;
   private bridge: Bridge;
-  private _logger: Logger;
 
-  constructor(bridge: Bridge, logger: Logger, opts?: SocketIOClient.ConnectOpts) {
+  constructor(bridge: Bridge, opts?: SocketIOClient.ConnectOpts) {
     this.socket = io.connect(opts);
     this.bridge = bridge;
-    this._logger = logger;
 
     this.subscribeEvents();
   }
@@ -39,11 +38,11 @@ export class SocketChannel implements Signaling {
   }
 
   private onIp(ipaddr: string) {
-    this._logger.log.apply(this._logger, ['Server IP address is: ' + ipaddr]);
+    EventDispatcher.dispatch(EventType.LOG, 'Server IP address is: ' + ipaddr);
   }
 
   private onLog(data: any[]) {
-    this._logger.log.apply(this._logger, [data]);
+    EventDispatcher.dispatch(EventType.LOG, data);
   }
 
   private onMessage(event: SignalingEvent) {
@@ -64,13 +63,5 @@ export class SocketChannel implements Signaling {
         this.bridge.onDisconnect(event);
         break;
     }
-  }
-
-  get logger(): Logger {
-    return this._logger;
-  }
-
-  set logger(value: Logger) {
-    this._logger = value;
   }
 }
