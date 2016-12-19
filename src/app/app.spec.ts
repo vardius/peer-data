@@ -13,7 +13,6 @@ describe('App', () => {
     let app = new App();
 
     expect(app).toBeDefined();
-    expect(app.logger).toBeDefined();
     expect(app.signaling).toEqual(null);
   });
 });
