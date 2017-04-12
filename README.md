@@ -1,5 +1,5 @@
 # PeerData
-[![Build Status](https://travis-ci.org/Vardius/peer-data.svg?branch=master)](https://travis-ci.org/Vardius/peer-data)
+[![Build Status](https://travis-ci.org/vardius/peer-data.svg?branch=master)](https://travis-ci.org/Vardius/peer-data)
 
 PeerData is a library for bidirectional peer-to-peer transfers of arbitrary data using [RTCDataChannel](https://developer.mozilla.org/pl/docs/Web/API/RTCDataChannel). Simple *WebRTC* wrapper providing data channel abstraction.
 
