@@ -1,10 +1,10 @@
-#Usage
+# Usage
 
 [WebRTC Chat](https://github.com/Vardius/webrtc-chat) server-less example application.
 
-##Configure PeerData client
+## Configure PeerData client
 
-###Set connection configuration
+### Set connection configuration
 ```javascript
 import PeerData from 'peer-data';
 
@@ -30,7 +30,7 @@ let peerData = new PeerData();
 peerData.servers = servers;
 ```
 
-###Set data channels configuration
+### Set data channels configuration
 ```javascript
 import PeerData from 'peer-data';
 
