@@ -1,8 +1,8 @@
-#Usage
+# Usage
 
-##Configure Signaling
+## Configure Signaling
 
-###Override signaling
+### Override signaling
 
 Create custom signaling class remember to implement [Signaling](../src/app/signaling/signaling.ts) interface
 
