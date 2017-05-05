@@ -1,6 +1,9 @@
+.idea
 doc
 coverage
 examples
 node_modules
 typings
 src
+jspm_packages
+npm-debug.log
