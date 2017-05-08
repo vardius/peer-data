@@ -17,9 +17,7 @@ For this, we use a signaling server: a server that can pass messages between *We
 $ npm install peer-data
 ```
 
-## Usage
-[**Docs**](doc)
-- [Usage](doc/usage.md)
+## [Documentation](https://github.com/vardius/peer-data/wiki)
 
 ABOUT
 ==================================================
