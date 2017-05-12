@@ -6,15 +6,14 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-
 import Socket = SocketIOClient.Socket;
 import * as io from 'socket.io-client';
-import {Bridge} from './bridge';
-import {Signaling} from './signaling/signaling';
-import {SignalingEvent} from './signaling/event';
-import {SignalingEventType} from './signaling/event-type';
-import {EventDispatcher} from './data-channel/dispatcher';
-import {EventType} from './data-channel/event-type';
+import { Bridge } from './bridge';
+import { Signaling } from './signaling/signaling';
+import { SignalingEvent } from './signaling/event';
+import { SignalingEventType } from './signaling/event-type';
+import { EventDispatcher } from './data-channel/dispatcher';
+import { EventType } from './data-channel/event-type';
 
 export class SocketChannel implements Signaling {
   private socket: Socket;
@@ -41,8 +40,8 @@ export class SocketChannel implements Signaling {
     EventDispatcher.dispatch(EventType.LOG, 'Server IP address is: ' + ipaddr);
   }
 
-  private onLog(data: any[]) {
-    EventDispatcher.dispatch(EventType.LOG, data);
+  private onLog(...args: any[]) {
+    EventDispatcher.dispatch(EventType.LOG, args);
   }
 
   private onMessage(event: SignalingEvent) {

@@ -6,13 +6,13 @@
  * For the full copyright and license information, please view the LICENSE
  * file that was distributed with this source code.
  */
-import {EventType} from './data-channel/event-type';
-import {EventDispatcher} from './data-channel/dispatcher';
-import {SignalingEvent} from './signaling/event';
-import {SignalingEventType} from './signaling/event-type';
-import {Signaling} from './signaling/signaling';
-import {Connection} from './connection/connection';
-import {Bridge} from './bridge';
+import { EventType } from './data-channel/event-type';
+import { EventDispatcher } from './data-channel/dispatcher';
+import { SignalingEvent } from './signaling/event';
+import { SignalingEventType } from './signaling/event-type';
+import { Signaling } from './signaling/signaling';
+import { Connection } from './connection/connection';
+import { Bridge } from './bridge';
 
 export class App {
   private bridge: Bridge;

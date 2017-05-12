@@ -7,9 +7,9 @@
     "build": "rm -rf lib && tsc",
     "test": "karma start",
     "test-watch": "karma start --no-single-run --auto-watch",
-    "lint": "npm run tslint \"src/**/*.ts\"",
+    "lint": "yarn run tslint \"src/**/*.ts\"",
     "tslint": "tslint",
-    "ci": "npm run lint && npm test"
+    "ci": "yarn run lint && yarn test"
   },
   "main": "lib/index.js",
   "typings": "lib/index.d.ts",
