@@ -19,7 +19,7 @@
     "preversion": "npm test",
     "postversion": "git push && git push --tags"
   },
-  "browser": "dist/index.js",
+  "browser": "dist/peer-data.js",
   "main": "lib/index.js",
   "module": "es/index.js",
   "jsnext:main": "es/index.js",

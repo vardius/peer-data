@@ -1,0 +1,1 @@
+{"version":3,"file":"room.js","sourceRoot":"","sources":["../../../src/app/connection/room.ts"],"names":[],"mappings":"","sourcesContent":["export interface Room {\n  id: string;\n}\n"]}

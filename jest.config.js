@@ -18,22 +18,19 @@ function getSupportedTypescriptTarget() {
 }
 
 var jestConfig = {
-  transform: {
-    '.(tsx?)': '<rootDir>/node_modules/ts-jest/preprocessor.js'
-  },
   testResultsProcessor: '<rootDir>/node_modules/ts-jest/coverageprocessor.js',
   testMatch: [
-    '**/__tests__/**/*.{t,j}s?(x)',
-    '**/?(*.)(spec|test).{t,j}s?(x)'
+    '**/__tests__/**/*.{t,j}s',
+    '**/?(*.)(spec|test).{t,j}s'
   ],
   testPathIgnorePatterns: [
     '<rootDir>/(node_modules|lib|es|dist)'
   ],
   collectCoverageFrom: [
-    'src/**/*.{t,j}s?(x)',
+    'src/**/*.{t,j}s',
     '!src/**/*.d.ts',
   ],
-  moduleFileExtensions: ['js', 'jsx', 'json', 'ts', 'tsx'],
+  moduleFileExtensions: ['js', 'json', 'ts'],
   globals: {
     __TS_CONFIG__: {
       target: getSupportedTypescriptTarget(),

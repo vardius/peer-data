@@ -1,0 +1,1 @@
+{"version":3,"file":"signaling.js","sourceRoot":"","sources":["../../../src/app/signaling/signaling.ts"],"names":[],"mappings":"","sourcesContent":["import { Event } from './../connection/event';\n\nexport interface Signaling {\n  onSend(message: Event): void;\n}\n"]}

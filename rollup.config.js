@@ -6,14 +6,11 @@ import commonjs from 'rollup-plugin-commonjs';
 import uglify from 'rollup-plugin-uglify';
 import pascalCase from 'pascal-case';
 
-const pkg = require('./package');
-
 export default {
-  moduleId: pkg.name,
-  moduleName: pascalCase(pkg.name),
-  entry: 'es/index.js',
-  dest: 'dist/bundle.js',
   format: 'umd',
+  moduleName: 'peer-data',
+  entry: 'es/index.js',
+  dest: 'dist/peer-data.js',
   exports: 'named',
   sourceMap: true,
   plugins: [

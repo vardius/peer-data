@@ -1,0 +1,1 @@
+{"version":3,"file":"collection.js","sourceRoot":"","sources":["../../../src/app/peer/collection.ts"],"names":[],"mappings":"","sourcesContent":["export interface PeerCollection {\n  [index: string]: RTCPeerConnection;\n}\n"]}

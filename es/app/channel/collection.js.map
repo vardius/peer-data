@@ -1,0 +1,1 @@
+{"version":3,"file":"collection.js","sourceRoot":"","sources":["../../../src/app/channel/collection.ts"],"names":[],"mappings":"","sourcesContent":["export interface DataChannelCollection {\n  [index: string]: RTCDataChannel;\n}\n"]}

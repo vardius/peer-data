@@ -1,0 +1,1 @@
+{"version":3,"file":"handler.js","sourceRoot":"","sources":["../../../src/app/dispatcher/handler.ts"],"names":[],"mappings":"","sourcesContent":["export interface EventHandler {\n  (data?: any): any;\n}\n"]}
