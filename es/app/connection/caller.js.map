@@ -1,1 +1,0 @@
-{"version":3,"file":"caller.js","sourceRoot":"","sources":["../../../src/app/connection/caller.ts"],"names":[],"mappings":"","sourcesContent":["export interface Caller {\n  id: string;\n}\n"]}

@@ -1,1 +1,0 @@
-{"version":3,"file":"event-type.js","sourceRoot":"","sources":["../../../src/app/channel/event-type.ts"],"names":[],"mappings":"AAAA,MAAM,CAAN,IAAY,SAMX;AAND,WAAY,SAAS;IACnB,uCAAG,CAAA;IACH,yCAAI,CAAA;IACJ,2CAAK,CAAA;IACL,2CAAK,CAAA;IACL,yCAAI,CAAA;AACN,CAAC,EANW,SAAS,KAAT,SAAS,QAMpB","sourcesContent":["export enum EventType {\n  LOG,\n  OPEN,\n  CLOSE,\n  ERROR,\n  DATA\n}\n"]}
