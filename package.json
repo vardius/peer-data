@@ -19,7 +19,10 @@
     "preversion": "npm test",
     "postversion": "git push && git push --tags"
   },
+  "browser": "dist/index.js",
   "main": "lib/index.js",
+  "module": "es/index.js",
+  "jsnext:main": "es/index.js",
   "typings": "lib/index.d.ts",
   "repository": {
     "type": "git",
