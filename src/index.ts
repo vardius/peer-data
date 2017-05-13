@@ -1,15 +1,9 @@
-/**
- * This file is part of the peer-data package.
- *
- * (c) Rafał Lorenz <vardius@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
 import { App as PeerData } from './app/app';
+
 export default PeerData;
+export { Event } from './app/connection/event';
+export { EventDispatcher } from './app/dispatcher/dispatcher';
+export { EventType as ConnectionEventType } from './app/connection/event-type';
+export { EventType as DataEventType } from './app/channel/event-type';
 export { Signaling } from './app/signaling/signaling';
-export { SignalingEvent } from './app/signaling/event';
-export { SignalingEventType } from './app/signaling/event-type';
-export { EventType } from './app/data-channel/event-type';
-export { SocketChannel } from './app/socket-channel';
+export { SocketChannel } from './app/signaling/socket-channel';

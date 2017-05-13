@@ -1,29 +1,23 @@
 {
   "compilerOptions": {
-    "outDir": "./lib/",
     "target": "es6",
     "module": "commonjs",
+    "rootDir": "src",
+    "outDir": ".code",
+    "newLine": "LF",
+    "lib": ["es2015", "es2016", "es2017", "dom.iterable", "dom", "scripthost"],
     "moduleResolution": "node",
-    "lib": ["es5", "dom", "scripthost"],
-    "sourceMap": true,
+    "importHelpers": true,
     "declaration": true,
-    "noImplicitAny": true,
-    "removeComments": true,
-    "noEmitOnError": true,
-    "noImplicitReturns": true,
-    "forceConsistentCasingInFileNames": true
+    "pretty": true,
+    "sourceMap": true,
+    "inlineSources": true,
+    "noUnusedLocals": true
   },
-  "compileOnSave": false,
-  "buildOnSave": false,
-  "include": [
-    "src/**/*.ts",
-    "./node_modules/@types/**/*.d.ts"
-  ],
   "exclude": [
-    "index.d.ts",
-    "src/**/*.spec.ts",
     "node_modules",
-    "examples",
+    "dist",
+    "es",
     "lib"
   ]
 }

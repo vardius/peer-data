@@ -1,20 +1,11 @@
-dist: trusty
-sudo: required
 language: node_js
 node_js:
-  - "node"
-  - "6"
-  - "5"
-os:
-  - linux
-env:
-  global:
-    - DBUS_SESSION_BUS_ADDRESS=/dev/null
-    - DISPLAY=:99.0
-    - CHROME_BIN=chromium-browser
-install:
-  - npm install
-before_script:
-  - sh -e /etc/init.d/xvfb start
-script:
-  - npm run ci
+  - lts/argon
+  - lts/boron
+  - stable
+cache:
+  directories:
+    - node_modules
+after_success:
+  - npm i -g coveralls
+  - cat coverage/remapped/lcov.info | coveralls

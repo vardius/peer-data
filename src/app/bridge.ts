@@ -1,19 +1,11 @@
-/**
- * This file is part of the peer-data package.
- *
- * (c) Rafał Lorenz <vardius@gmail.com>
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
-import {SignalingEvent} from './signaling/event';
-import {SignalingEventType} from './signaling/event-type';
-import {PeerFactory} from './peer/factory';
-import {DataChannelFactory} from './data-channel/factory';
-import {Signaling} from './signaling/signaling';
-import {Connection} from './connection/connection';
-import {EventDispatcher} from './data-channel/dispatcher';
-import {EventType} from './data-channel/event-type';
+import { Event } from './connection/event';
+import { EventType } from './connection/event-type';
+import { PeerFactory } from './peer/factory';
+import { DataChannelFactory } from './channel/factory';
+import { Signaling } from './signaling/signaling';
+import { Connection } from './connection/connection';
+import { EventDispatcher } from './dispatcher/dispatcher';
+import { EventType as DataEventType } from './channel/event-type';
 
 const LABEL = 'chunks';
 
@@ -22,59 +14,12 @@ export class Bridge {
 
   constructor(connection: Connection) {
     this._connection = connection;
-  }
 
-  onConnect(event: SignalingEvent, signaling: Signaling) {
-    let peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._connection.servers, signaling);
-    let channel = peer.createDataChannel(LABEL, this._connection.dataConstraints);
-    this._connection.channels[event.caller.id] = DataChannelFactory.get(channel);
-    peer.createOffer((desc: RTCSessionDescription) => {
-      let message: SignalingEvent = {
-        type: SignalingEventType.OFFER,
-        caller: null,
-        callee: event.caller,
-        data: desc
-      };
-      peer.setLocalDescription(desc, () => signaling.send(message), this.dispatchError);
-    }, this.dispatchError);
-  }
-
-  onCandidate(event: SignalingEvent) {
-    if (event.data) {
-      let peer = this._connection.peers[event.caller.id];
-      peer.addIceCandidate(new RTCIceCandidate(event.data));
-    }
-  }
-
-  onOffer(event: SignalingEvent, signaling: Signaling) {
-    let peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._connection.servers, signaling);
-    peer.ondatachannel = (dataChannelEvent: RTCDataChannelEvent) => {
-      this._connection.addChannel(event.caller.id, DataChannelFactory.get(dataChannelEvent.channel));
-    };
-    peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {
-    }, this.dispatchError);
-    peer.createAnswer((desc: RTCSessionDescription) => {
-      let message: SignalingEvent = {
-        type: SignalingEventType.ANSWER,
-        caller: null,
-        callee: event.caller,
-        data: desc
-      };
-      peer.setLocalDescription(desc, () => signaling.send(message), this.dispatchError);
-    }, this.dispatchError);
-  }
-
-  onAnswer(event: SignalingEvent) {
-    let peer = this._connection.peers[event.caller.id];
-    peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {
-    }, this.dispatchError);
-  }
-
-  onDisconnect(event: SignalingEvent) {
-    let channel = this._connection.channels[event.caller.id];
-    channel.close();
-    let peer = this._connection.peers[event.caller.id];
-    peer.close();
+    EventDispatcher.register(EventType.CONNECT, this.onConnect.bind(this));
+    EventDispatcher.register(EventType.DISCONNECT, this.onDisconnect.bind(this));
+    EventDispatcher.register(EventType.OFFER, this.onOffer.bind(this));
+    EventDispatcher.register(EventType.ANSWER, this.onAnswer.bind(this));
+    EventDispatcher.register(EventType.CANDIDATE, this.onCandidate.bind(this));
   }
 
   get connection(): Connection {
@@ -85,7 +30,65 @@ export class Bridge {
     this._connection = value;
   }
 
+  onConnect(event: Event) {
+    let peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._connection.servers, event);
+    let channel = peer.createDataChannel(LABEL, this._connection.dataConstraints);
+    this._connection.channels[event.caller.id] = DataChannelFactory.get(channel);
+    peer.createOffer((desc: RTCSessionDescription) => {
+      let message: Event = {
+        type: EventType.OFFER,
+        caller: null,
+        callee: event.caller,
+        room: event.room,
+        data: desc
+      };
+      peer.setLocalDescription(desc, () => this.dispatchEvent(message), this.dispatchError);
+    }, this.dispatchError);
+  }
+
+  onDisconnect(event: Event) {
+    let channel = this._connection.channels[event.caller.id];
+    channel.close();
+    let peer = this._connection.peers[event.caller.id];
+    peer.close();
+  }
+
+  onOffer(event: Event, signaling: Signaling) {
+    let peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._connection.servers, event);
+    peer.ondatachannel = (dataChannelEvent: RTCDataChannelEvent) => {
+      this._connection.addChannel(event.caller.id, DataChannelFactory.get(dataChannelEvent.channel));
+    };
+    peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {
+    }, this.dispatchError);
+    peer.createAnswer((desc: RTCSessionDescription) => {
+      let message: Event = {
+        type: EventType.ANSWER,
+        caller: null,
+        callee: event.caller,
+        room: event.room,
+        data: desc
+      };
+      peer.setLocalDescription(desc, () => this.dispatchEvent(message), this.dispatchError);
+    }, this.dispatchError);
+  }
+
+  onAnswer(event: Event) {
+    let peer = this._connection.peers[event.caller.id];
+    peer.setRemoteDescription(new RTCSessionDescription(event.data), () => { }, this.dispatchError);
+  }
+
+  onCandidate(event: Event) {
+    if (event.data) {
+      let peer = this._connection.peers[event.caller.id];
+      peer.addIceCandidate(new RTCIceCandidate(event.data));
+    }
+  }
+
+  private dispatchEvent(event: Event) {
+    EventDispatcher.dispatch('send', event);
+  }
+
   private dispatchError(event: DOMException) {
-    EventDispatcher.dispatch(EventType.ERROR, event);
+    EventDispatcher.dispatch(DataEventType.ERROR, event);
   }
 }
