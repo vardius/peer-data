@@ -1,10 +1,9 @@
 import sourcemaps from 'rollup-plugin-sourcemaps';
-import nodeResolve from 'rollup-plugin-node-resolve';
-import nodeGlobals from 'rollup-plugin-node-globals';
-import nodeBuiltins from 'rollup-plugin-node-builtins';
+import resolve from 'rollup-plugin-node-resolve';
+import globals from 'rollup-plugin-node-globals';
+import builtins from 'rollup-plugin-node-builtins';
 import commonjs from 'rollup-plugin-commonjs';
 import uglify from 'rollup-plugin-uglify';
-import pascalCase from 'pascal-case';
 
 export default {
   format: 'umd',
@@ -13,12 +12,17 @@ export default {
   dest: 'dist/peer-data.js',
   exports: 'named',
   sourceMap: true,
+  globals: {
+    'socket.io-client': 'io'
+  },
   plugins: [
     sourcemaps(),
-    nodeResolve(),
-    nodeGlobals(),
-    nodeBuiltins(),
+    resolve({
+      jsnext: true
+    }),
+    globals(),
+    builtins(),
     commonjs(),
-    // uglify()
+    uglify()
   ]
 };
