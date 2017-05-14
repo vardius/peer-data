@@ -18,7 +18,6 @@ function getSupportedTypescriptTarget() {
 }
 
 var jestConfig = {
-  testResultsProcessor: '<rootDir>/node_modules/ts-jest/coverageprocessor.js',
   testMatch: [
     '**/__tests__/**/*.{t,j}s',
     '**/?(*.)(spec|test).{t,j}s'
