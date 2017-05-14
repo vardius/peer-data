@@ -48,9 +48,13 @@ export class Bridge {
 
   onDisconnect(event: Event) {
     const channel = this._connection.channels[event.caller.id];
-    channel.close();
     const peer = this._connection.peers[event.caller.id];
+
+    channel.close();
     peer.close();
+
+    delete this._connection.channels[event.caller.id];
+    delete this._connection.peers[event.caller.id];
   }
 
   onOffer(event: Event, signaling: Signaling) {

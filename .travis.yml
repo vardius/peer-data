@@ -6,6 +6,8 @@ node_js:
 cache:
   directories:
     - node_modules
+before_install:
+  - npm install -g yarn
 after_success:
   - npm i -g coveralls
   - cat coverage/remapped/lcov.info | coveralls
