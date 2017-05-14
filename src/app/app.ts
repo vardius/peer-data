@@ -1,6 +1,6 @@
 import { EventDispatcher } from './dispatcher/dispatcher';
-import { Event } from './connection/event';
-import { EventType } from './connection/event-type';
+import { ConnectionEvent } from './connection/event';
+import { ConnectionEventType } from './connection/event-type';
 import { Connection } from './connection/connection';
 import { Bridge } from './bridge';
 import { EventHandler } from './dispatcher/handler';
@@ -31,8 +31,8 @@ export class App {
   }
 
   connect(roomId?: string) {
-    const event: Event = {
-      type: EventType.CONNECT,
+    const event: ConnectionEvent = {
+      type: ConnectionEventType.CONNECT,
       caller: null,
       callee: null,
       room: { id: roomId },
@@ -50,8 +50,8 @@ export class App {
       .entries(this.bridge.connection.peers)
       .forEach(([key, value]) => value.close());
 
-    const event: Event = {
-      type: EventType.DISCONNECT,
+    const event: ConnectionEvent = {
+      type: ConnectionEventType.DISCONNECT,
       caller: null,
       callee: null,
       room: { id: roomId },

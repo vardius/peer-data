@@ -1,7 +1,7 @@
 import { Caller } from './caller';
 import { Room } from './room';
 
-export interface Event {
+export interface ConnectionEvent {
   type: string;
   room: Room;
   caller: Caller;

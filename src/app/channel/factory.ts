@@ -1,29 +1,48 @@
-import { EventType } from './event-type';
+import { DataEventType } from './event-type';
+import { DataEvent } from './event';
+import { ConnectionEvent } from './../connection/event';
 import { EventDispatcher } from './../dispatcher/dispatcher';
 
+const LABEL = 'chunks';
+
 export class DataChannelFactory {
-  public static get(channel: RTCDataChannel): RTCDataChannel {
-    channel.onopen = this.onOpen.bind(this);
-    channel.onmessage = this.onMessage.bind(this);
-    channel.onerror = this.onError.bind(this);
-    channel.onclose = this.onClose.bind(this);
+  public static get(peer: RTCPeerConnection, dataConstraints: RTCDataChannelInit): RTCDataChannel {
+    return peer.createDataChannel(LABEL, dataConstraints);
+  }
+
+  public static subscribeToEvents(channel: RTCDataChannel, event: ConnectionEvent) {
+    channel.onmessage = (channelEvent: MessageEvent) => {
+      const message: DataEvent = {
+        id: event.caller.id,
+        event: channelEvent,
+      };
+      EventDispatcher.dispatch(DataEventType.DATA, message);
+    };
+
+    channel.onopen = (channelEvent: Event) => {
+      const message: DataEvent = {
+        id: event.caller.id,
+        event: channelEvent,
+      };
+      EventDispatcher.dispatch(DataEventType.OPEN, message);
+    };
+
+    channel.onclose = (channelEvent: Event) => {
+      const message: DataEvent = {
+        id: event.caller.id,
+        event: channelEvent,
+      };
+      EventDispatcher.dispatch(DataEventType.CLOSE, message);
+    };
+
+    channel.onerror = (channelEvent: Event) => {
+      const message: DataEvent = {
+        id: event.caller.id,
+        event: channelEvent,
+      };
+      EventDispatcher.dispatch(DataEventType.ERROR, message);
+    };
 
     return channel;
-  }
-
-  private static onMessage(event: MessageEvent) {
-    EventDispatcher.dispatch(EventType.DATA, event);
-  }
-
-  private static onOpen(event: Event) {
-    EventDispatcher.dispatch(EventType.OPEN, event);
-  }
-
-  private static onClose(event: Event) {
-    EventDispatcher.dispatch(EventType.CLOSE, event);
-  }
-
-  private static onError(event: Event) {
-    EventDispatcher.dispatch(EventType.ERROR, event);
   }
 }

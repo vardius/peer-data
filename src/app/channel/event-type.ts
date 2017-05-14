@@ -1,4 +1,4 @@
-export class EventType {
+export class DataEventType {
   public static LOG = 'LOG';
   public static OPEN = 'OPEN';
   public static CLOSE = 'CLOSE';

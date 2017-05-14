@@ -1,4 +1,4 @@
-export class EventType {
+export class ConnectionEventType {
   public static CONNECT = 'CONNECT';
   public static DISCONNECT = 'DISCONNECT';
   public static CANDIDATE = 'CANDIDATE';

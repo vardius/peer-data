@@ -1,13 +1,10 @@
-import { Event } from './connection/event';
-import { EventType } from './connection/event-type';
-import { PeerFactory } from './peer/factory';
-import { DataChannelFactory } from './channel/factory';
-import { Signaling } from './signaling/signaling';
 import { Connection } from './connection/connection';
 import { EventDispatcher } from './dispatcher/dispatcher';
-import { EventType as DataEventType } from './channel/event-type';
-
-const LABEL = 'chunks';
+import { ConnectionEvent } from './connection/event';
+import { ConnectionEventType } from './connection/event-type';
+import { DataEventType } from './channel/event-type';
+import { PeerFactory } from './peer/factory';
+import { DataChannelFactory } from './channel/factory';
 
 export class Bridge {
   private _connection: Connection;
@@ -15,11 +12,11 @@ export class Bridge {
   constructor(connection: Connection) {
     this._connection = connection;
 
-    EventDispatcher.register(EventType.CONNECT, this.onConnect.bind(this));
-    EventDispatcher.register(EventType.DISCONNECT, this.onDisconnect.bind(this));
-    EventDispatcher.register(EventType.OFFER, this.onOffer.bind(this));
-    EventDispatcher.register(EventType.ANSWER, this.onAnswer.bind(this));
-    EventDispatcher.register(EventType.CANDIDATE, this.onCandidate.bind(this));
+    EventDispatcher.register(ConnectionEventType.CONNECT, this.onConnect.bind(this));
+    EventDispatcher.register(ConnectionEventType.DISCONNECT, this.onDisconnect.bind(this));
+    EventDispatcher.register(ConnectionEventType.OFFER, this.onOffer.bind(this));
+    EventDispatcher.register(ConnectionEventType.ANSWER, this.onAnswer.bind(this));
+    EventDispatcher.register(ConnectionEventType.CANDIDATE, this.onCandidate.bind(this));
   }
 
   get connection(): Connection {
@@ -30,13 +27,16 @@ export class Bridge {
     this._connection = value;
   }
 
-  onConnect(event: Event) {
+  onConnect(event: ConnectionEvent) {
     const peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._connection.servers, event);
-    const channel = peer.createDataChannel(LABEL, this._connection.dataConstraints);
-    this._connection.channels[event.caller.id] = DataChannelFactory.get(channel);
+    const channel = DataChannelFactory.get(peer, this._connection.dataConstraints);
+
+    this._connection.channels[event.caller.id] = DataChannelFactory.subscribeToEvents(channel, event);
+    this._connection.peers[event.caller.id] = peer;
+
     peer.createOffer((desc: RTCSessionDescription) => {
-      const message: Event = {
-        type: EventType.OFFER,
+      const message: ConnectionEvent = {
+        type: ConnectionEventType.OFFER,
         caller: null,
         callee: event.caller,
         room: event.room,
@@ -46,7 +46,7 @@ export class Bridge {
     }, this.dispatchError);
   }
 
-  onDisconnect(event: Event) {
+  onDisconnect(event: ConnectionEvent) {
     const channel = this._connection.channels[event.caller.id];
     const peer = this._connection.peers[event.caller.id];
 
@@ -57,15 +57,20 @@ export class Bridge {
     delete this._connection.peers[event.caller.id];
   }
 
-  onOffer(event: Event, signaling: Signaling) {
-    const peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._connection.servers, event);
+  onOffer(event: ConnectionEvent) {
+    const peer = PeerFactory.get(this._connection.servers, event);
+    this._connection.peers[event.caller.id] = peer;
+
     peer.ondatachannel = (dataChannelEvent: RTCDataChannelEvent) => {
-      this._connection.addChannel(event.caller.id, DataChannelFactory.get(dataChannelEvent.channel));
+      const channel = DataChannelFactory.subscribeToEvents(dataChannelEvent.channel, event);
+      this._connection.addChannel(event.caller.id, channel);
     };
+
     peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {}, this.dispatchError);
+
     peer.createAnswer((desc: RTCSessionDescription) => {
-      const message: Event = {
-        type: EventType.ANSWER,
+      const message: ConnectionEvent = {
+        type: ConnectionEventType.ANSWER,
         caller: null,
         callee: event.caller,
         room: event.room,
@@ -75,19 +80,19 @@ export class Bridge {
     }, this.dispatchError);
   }
 
-  onAnswer(event: Event) {
+  onAnswer(event: ConnectionEvent) {
     const peer = this._connection.peers[event.caller.id];
     peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {}, this.dispatchError);
   }
 
-  onCandidate(event: Event) {
+  onCandidate(event: ConnectionEvent) {
     if (event.data) {
       const peer = this._connection.peers[event.caller.id];
       peer.addIceCandidate(new RTCIceCandidate(event.data));
     }
   }
 
-  private dispatchEvent(event: Event) {
+  private dispatchEvent(event: ConnectionEvent) {
     EventDispatcher.dispatch('send', event);
   }
 

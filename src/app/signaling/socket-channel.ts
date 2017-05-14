@@ -1,9 +1,9 @@
 import Socket = SocketIOClient.Socket;
 import * as io from 'socket.io-client';
 import { Signaling } from './signaling';
-import { Event } from './../connection/event';
+import { ConnectionEvent } from './../connection/event';
 import { EventDispatcher } from './../dispatcher/dispatcher';
-import { EventType } from './../channel/event-type';
+import { DataEventType } from './../channel/event-type';
 
 export class SocketChannel implements Signaling {
   private socket: Socket;
@@ -14,7 +14,7 @@ export class SocketChannel implements Signaling {
     this.subscribeEvents();
   }
 
-  onSend(event: Event) {
+  onSend(event: ConnectionEvent) {
     this.socket.emit('message', event);
   }
 
@@ -26,14 +26,14 @@ export class SocketChannel implements Signaling {
   }
 
   private onIp(ipaddr: string) {
-    EventDispatcher.dispatch(EventType.LOG, 'Server IP address is: ' + ipaddr);
+    EventDispatcher.dispatch(DataEventType.LOG, 'Server IP address is: ' + ipaddr);
   }
 
   private onLog(...args: any[]) {
-    EventDispatcher.dispatch(EventType.LOG, args);
+    EventDispatcher.dispatch(DataEventType.LOG, args);
   }
 
-  private onMessage(event: Event) {
+  private onMessage(event: ConnectionEvent) {
     EventDispatcher.dispatch(event.type, event);
   }
 }

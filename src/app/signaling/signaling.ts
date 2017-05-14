@@ -1,5 +1,5 @@
-import { Event } from './../connection/event';
+import { ConnectionEvent } from './../connection/event';
 
 export interface Signaling {
-  onSend(message: Event): void;
+  onSend(message: ConnectionEvent): void;
 }
