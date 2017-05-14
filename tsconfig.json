@@ -12,7 +12,8 @@
     "pretty": true,
     "sourceMap": true,
     "inlineSources": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "skipLibCheck": true
   },
   "include": [
     "src/**/*"
