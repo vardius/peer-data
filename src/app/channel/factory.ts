@@ -2,6 +2,7 @@ import { DataEventType } from './event-type';
 import { DataEvent } from './event';
 import { ConnectionEvent } from './../connection/event';
 import { EventDispatcher } from './../dispatcher/dispatcher';
+import { DataChannelCollection } from './collection';
 
 const LABEL = 'chunks';
 
@@ -10,7 +11,7 @@ export class DataChannelFactory {
     return peer.createDataChannel(LABEL, dataConstraints);
   }
 
-  public static subscribeToEvents(channel: RTCDataChannel, event: ConnectionEvent) {
+  public static subscribeToEvents(channel: RTCDataChannel, channels: DataChannelCollection, event: ConnectionEvent) {
     channel.onmessage = (channelEvent: MessageEvent) => {
       const message: DataEvent = {
         id: event.caller.id,
@@ -33,6 +34,8 @@ export class DataChannelFactory {
         event: channelEvent,
       };
       EventDispatcher.dispatch(DataEventType.CLOSE, message);
+
+      delete channels[event.caller.id];
     };
 
     channel.onerror = (channelEvent: Event) => {

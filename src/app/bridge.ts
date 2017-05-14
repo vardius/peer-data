@@ -5,12 +5,19 @@ import { ConnectionEventType } from './connection/event-type';
 import { DataEventType } from './channel/event-type';
 import { PeerFactory } from './peer/factory';
 import { DataChannelFactory } from './channel/factory';
+import { PeerCollection } from './peer/collection';
+import { DataChannelCollection } from './channel/collection';
 
 export class Bridge {
   private _connection: Connection;
+  private _peers: PeerCollection = {};
+  private _channels: DataChannelCollection = {};
 
   constructor(connection: Connection) {
     this._connection = connection;
+
+    this._peers = this._connection.peers;
+    this._channels = this._connection.channels;
 
     EventDispatcher.register(ConnectionEventType.CONNECT, this.onConnect.bind(this));
     EventDispatcher.register(ConnectionEventType.DISCONNECT, this.onDisconnect.bind(this));
@@ -28,11 +35,11 @@ export class Bridge {
   }
 
   onConnect(event: ConnectionEvent) {
-    const peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._connection.servers, event);
+    const peer = this._peers[event.caller.id] = PeerFactory.get(this._connection.servers, event);
     const channel = DataChannelFactory.get(peer, this._connection.dataConstraints);
 
-    this._connection.channels[event.caller.id] = DataChannelFactory.subscribeToEvents(channel, event);
-    this._connection.peers[event.caller.id] = peer;
+    this._channels[event.caller.id] = DataChannelFactory.subscribeToEvents(channel, this._channels, event);
+    this._peers[event.caller.id] = peer;
 
     peer.createOffer((desc: RTCSessionDescription) => {
       const message: ConnectionEvent = {
@@ -47,22 +54,22 @@ export class Bridge {
   }
 
   onDisconnect(event: ConnectionEvent) {
-    const channel = this._connection.channels[event.caller.id];
-    const peer = this._connection.peers[event.caller.id];
+    const channel = this._channels[event.caller.id];
+    const peer = this._peers[event.caller.id];
 
     channel.close();
     peer.close();
 
-    delete this._connection.channels[event.caller.id];
-    delete this._connection.peers[event.caller.id];
+    delete this._channels[event.caller.id];
+    delete this._peers[event.caller.id];
   }
 
   onOffer(event: ConnectionEvent) {
     const peer = PeerFactory.get(this._connection.servers, event);
-    this._connection.peers[event.caller.id] = peer;
+    this._peers[event.caller.id] = peer;
 
     peer.ondatachannel = (dataChannelEvent: RTCDataChannelEvent) => {
-      const channel = DataChannelFactory.subscribeToEvents(dataChannelEvent.channel, event);
+      const channel = DataChannelFactory.subscribeToEvents(dataChannelEvent.channel, this._channels, event);
       this._connection.addChannel(event.caller.id, channel);
     };
 
@@ -81,13 +88,13 @@ export class Bridge {
   }
 
   onAnswer(event: ConnectionEvent) {
-    const peer = this._connection.peers[event.caller.id];
+    const peer = this._peers[event.caller.id];
     peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {}, this.dispatchError);
   }
 
   onCandidate(event: ConnectionEvent) {
     if (event.data) {
-      const peer = this._connection.peers[event.caller.id];
+      const peer = this._peers[event.caller.id];
       peer.addIceCandidate(new RTCIceCandidate(event.data));
     }
   }
