@@ -1,7 +1,6 @@
-import { EventType } from './channel/event-type';
 import { EventDispatcher } from './dispatcher/dispatcher';
 import { Event } from './connection/event';
-import { EventType as SignalingEventType } from './connection/event-type';
+import { EventType } from './connection/event-type';
 import { Connection } from './connection/connection';
 import { Bridge } from './bridge';
 import { EventHandler } from './dispatcher/handler';
@@ -14,7 +13,7 @@ export class App {
     this.bridge = new Bridge(connection);
   }
 
-  on(event: EventType, callback: EventHandler) {
+  on(event: string, callback: EventHandler) {
     EventDispatcher.register(event, callback);
   }
 
@@ -33,7 +32,7 @@ export class App {
 
   connect(roomId?: string) {
     const event: Event = {
-      type: SignalingEventType.CONNECT,
+      type: EventType.CONNECT,
       caller: null,
       callee: null,
       room: { id: roomId },
@@ -52,7 +51,7 @@ export class App {
       .forEach(([key, value]) => value.close());
 
     const event: Event = {
-      type: SignalingEventType.DISCONNECT,
+      type: EventType.DISCONNECT,
       caller: null,
       callee: null,
       room: { id: roomId },

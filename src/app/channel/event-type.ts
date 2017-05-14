@@ -1,7 +1,7 @@
-export enum EventType {
-  LOG = 'LOG',
-  OPEN = 'OPEN',
-  CLOSE = 'CLOSE',
-  ERROR = 'ERROR',
-  DATA = 'DATA',
+export class EventType {
+  public static LOG = 'LOG';
+  public static OPEN = 'OPEN';
+  public static CLOSE = 'CLOSE';
+  public static ERROR = 'ERROR';
+  public static DATA = 'DATA';
 }

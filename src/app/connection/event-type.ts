@@ -1,7 +1,7 @@
-export enum EventType {
-  CONNECT = 'CONNECT',
-  DISCONNECT = 'DISCONNECT',
-  CANDIDATE = 'CANDIDATE',
-  OFFER = 'OFFER',
-  ANSWER = 'ANSWER',
+export class EventType {
+  public static CONNECT = 'CONNECT';
+  public static DISCONNECT = 'DISCONNECT';
+  public static CANDIDATE = 'CANDIDATE';
+  public static OFFER = 'OFFER';
+  public static ANSWER = 'ANSWER';
 }
