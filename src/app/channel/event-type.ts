@@ -1,7 +1,7 @@
 export enum EventType {
-  LOG,
-  OPEN,
-  CLOSE,
-  ERROR,
-  DATA,
+  LOG = 'LOG',
+  OPEN = 'OPEN',
+  CLOSE = 'CLOSE',
+  ERROR = 'ERROR',
+  DATA = 'DATA',
 }
