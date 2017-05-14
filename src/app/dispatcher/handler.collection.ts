@@ -1,4 +1,4 @@
-import { EventHandler } from './handler'
+import { EventHandler } from './handler';
 
 export interface EventHandlerCollection {
   [index: string]: EventHandler[];

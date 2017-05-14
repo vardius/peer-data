@@ -1,6 +1,7 @@
 {
   "extends": ["tslint:recommended"],
   "rules": {
+    "no-empty": false,
     "arrow-parens": false,
     "arrow-return-shorthand": [true],
     "import-spacing": true,

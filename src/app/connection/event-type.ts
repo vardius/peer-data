@@ -3,5 +3,5 @@ export enum EventType {
   DISCONNECT,
   CANDIDATE,
   OFFER,
-  ANSWER
+  ANSWER,
 }

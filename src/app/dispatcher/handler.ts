@@ -1,3 +1,1 @@
-export interface EventHandler {
-  (data?: any): any;
-}
+export type EventHandler = (data?: any) => any;

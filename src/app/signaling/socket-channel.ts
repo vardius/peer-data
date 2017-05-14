@@ -14,15 +14,15 @@ export class SocketChannel implements Signaling {
     this.subscribeEvents();
   }
 
+  onSend(event: Event) {
+    this.socket.emit('message', event);
+  }
+
   private subscribeEvents() {
     this.socket.on('message', this.onMessage.bind(this));
     this.socket.on('ipaddr', this.onIp.bind(this));
     this.socket.on('log', this.onLog.bind(this));
     EventDispatcher.register('send', this.onSend.bind(this));
-  }
-
-  onSend(event: Event) {
-    this.socket.emit('message', event);
   }
 
   private onIp(ipaddr: string) {

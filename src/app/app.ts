@@ -4,7 +4,7 @@ import { Event } from './connection/event';
 import { EventType as SignalingEventType } from './connection/event-type';
 import { Connection } from './connection/connection';
 import { Bridge } from './bridge';
-import { EventHandler } from './dispatcher/handler'
+import { EventHandler } from './dispatcher/handler';
 
 export class App {
   private bridge: Bridge;
@@ -32,12 +32,12 @@ export class App {
   }
 
   connect(roomId?: string) {
-    let event: Event = {
+    const event: Event = {
       type: SignalingEventType.CONNECT,
       caller: null,
       callee: null,
       room: { id: roomId },
-      data: null
+      data: null,
     };
     EventDispatcher.dispatch('send', event);
   }
@@ -56,7 +56,7 @@ export class App {
       caller: null,
       callee: null,
       room: { id: roomId },
-      data: null
+      data: null,
     };
     EventDispatcher.dispatch('send', event);
   }

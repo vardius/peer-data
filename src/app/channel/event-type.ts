@@ -3,5 +3,5 @@ export enum EventType {
   OPEN,
   CLOSE,
   ERROR,
-  DATA
+  DATA,
 }

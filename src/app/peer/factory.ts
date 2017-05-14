@@ -4,15 +4,15 @@ import { EventType } from './../connection/event-type';
 
 export class PeerFactory {
   static get(servers: RTCConfiguration, event: Event): RTCPeerConnection {
-    let peer = new RTCPeerConnection(servers);
+    const peer = new RTCPeerConnection(servers);
 
     peer.onicecandidate = (ideEvent: RTCPeerConnectionIceEvent) => {
-      let message: Event = {
+      const message: Event = {
         type: EventType.CANDIDATE,
         caller: null,
         callee: event.caller,
         room: event.room,
-        data: ideEvent.candidate
+        data: ideEvent.candidate,
       };
       EventDispatcher.dispatch('send', message);
     };

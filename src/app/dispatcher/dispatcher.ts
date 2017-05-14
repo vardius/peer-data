@@ -1,5 +1,5 @@
 import { EventHandlerCollection } from './handler.collection';
-import { EventHandler } from './handler'
+import { EventHandler } from './handler';
 
 const HANDLERS: EventHandlerCollection = {};
 

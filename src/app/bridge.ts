@@ -31,55 +31,54 @@ export class Bridge {
   }
 
   onConnect(event: Event) {
-    let peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._connection.servers, event);
-    let channel = peer.createDataChannel(LABEL, this._connection.dataConstraints);
+    const peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._connection.servers, event);
+    const channel = peer.createDataChannel(LABEL, this._connection.dataConstraints);
     this._connection.channels[event.caller.id] = DataChannelFactory.get(channel);
     peer.createOffer((desc: RTCSessionDescription) => {
-      let message: Event = {
+      const message: Event = {
         type: EventType.OFFER,
         caller: null,
         callee: event.caller,
         room: event.room,
-        data: desc
+        data: desc,
       };
       peer.setLocalDescription(desc, () => this.dispatchEvent(message), this.dispatchError);
     }, this.dispatchError);
   }
 
   onDisconnect(event: Event) {
-    let channel = this._connection.channels[event.caller.id];
+    const channel = this._connection.channels[event.caller.id];
     channel.close();
-    let peer = this._connection.peers[event.caller.id];
+    const peer = this._connection.peers[event.caller.id];
     peer.close();
   }
 
   onOffer(event: Event, signaling: Signaling) {
-    let peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._connection.servers, event);
+    const peer = this._connection.peers[event.caller.id] = PeerFactory.get(this._connection.servers, event);
     peer.ondatachannel = (dataChannelEvent: RTCDataChannelEvent) => {
       this._connection.addChannel(event.caller.id, DataChannelFactory.get(dataChannelEvent.channel));
     };
-    peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {
-    }, this.dispatchError);
+    peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {}, this.dispatchError);
     peer.createAnswer((desc: RTCSessionDescription) => {
-      let message: Event = {
+      const message: Event = {
         type: EventType.ANSWER,
         caller: null,
         callee: event.caller,
         room: event.room,
-        data: desc
+        data: desc,
       };
       peer.setLocalDescription(desc, () => this.dispatchEvent(message), this.dispatchError);
     }, this.dispatchError);
   }
 
   onAnswer(event: Event) {
-    let peer = this._connection.peers[event.caller.id];
-    peer.setRemoteDescription(new RTCSessionDescription(event.data), () => { }, this.dispatchError);
+    const peer = this._connection.peers[event.caller.id];
+    peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {}, this.dispatchError);
   }
 
   onCandidate(event: Event) {
     if (event.data) {
-      let peer = this._connection.peers[event.caller.id];
+      const peer = this._connection.peers[event.caller.id];
       peer.addIceCandidate(new RTCIceCandidate(event.data));
     }
   }
