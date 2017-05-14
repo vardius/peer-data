@@ -23,6 +23,6 @@ export default {
     globals(),
     builtins(),
     commonjs(),
-    // uglify()
+    uglify()
   ]
 };
