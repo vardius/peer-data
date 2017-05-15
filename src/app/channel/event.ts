@@ -1,4 +1,4 @@
 export interface DataEvent {
   id: string;
-  event: MessageEvent|Event;
+  event: MessageEvent|Event|DOMException;
 }

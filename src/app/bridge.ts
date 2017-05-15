@@ -7,6 +7,8 @@ import { PeerFactory } from './peer/factory';
 import { DataChannelFactory } from './channel/factory';
 import { PeerCollection } from './peer/collection';
 import { DataChannelCollection } from './channel/collection';
+import { Caller } from './connection/caller';
+import { DataEvent } from './channel/event';
 
 export class Bridge {
   private _connection: Connection;
@@ -49,8 +51,8 @@ export class Bridge {
         room: event.room,
         data: desc,
       };
-      peer.setLocalDescription(desc, () => this.dispatchEvent(message), this.dispatchError);
-    }, this.dispatchError);
+      peer.setLocalDescription(desc, () => this.dispatchEvent(message), (evnt: DOMException) => this.dispatchError(event.caller, evnt));
+    }, (evnt: DOMException) => this.dispatchError(event.caller, evnt));
   }
 
   onDisconnect(event: ConnectionEvent) {
@@ -73,7 +75,7 @@ export class Bridge {
       this._connection.addChannel(event.caller.id, channel);
     };
 
-    peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {}, this.dispatchError);
+    peer.setRemoteDescription(new RTCSessionDescription(event.data), () => { }, (evnt: DOMException) => this.dispatchError(event.caller, evnt));
 
     peer.createAnswer((desc: RTCSessionDescription) => {
       const message: ConnectionEvent = {
@@ -83,13 +85,13 @@ export class Bridge {
         room: event.room,
         data: desc,
       };
-      peer.setLocalDescription(desc, () => this.dispatchEvent(message), this.dispatchError);
-    }, this.dispatchError);
+      peer.setLocalDescription(desc, () => this.dispatchEvent(message), (evnt: DOMException) => this.dispatchError(event.caller, evnt));
+    }, (evnt: DOMException) => this.dispatchError(event.caller, evnt));
   }
 
   onAnswer(event: ConnectionEvent) {
     const peer = this._peers[event.caller.id];
-    peer.setRemoteDescription(new RTCSessionDescription(event.data), () => {}, this.dispatchError);
+    peer.setRemoteDescription(new RTCSessionDescription(event.data), () => { }, (evnt: DOMException) => this.dispatchError(event.caller, evnt));
   }
 
   onCandidate(event: ConnectionEvent) {
@@ -103,7 +105,11 @@ export class Bridge {
     EventDispatcher.dispatch('send', event);
   }
 
-  private dispatchError(event: DOMException) {
-    EventDispatcher.dispatch(DataEventType.ERROR, event);
+  private dispatchError(caller: Caller, event: DOMException) {
+    const message: DataEvent = {
+      id: caller.id,
+      event: event,
+    };
+    EventDispatcher.dispatch(DataEventType.ERROR, message);
   }
 }
