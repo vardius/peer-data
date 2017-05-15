@@ -11,8 +11,8 @@
     "max-classes-per-file": [false],
     "member-access": [false],
     "no-require-imports": true,
-    "object-literal-sort-keys": true,
-    "ordered-imports": [true],
+    "object-literal-sort-keys": false,
+    "ordered-imports": [false],
     "prefer-const": true,
     "quotemark": [true, "single", "jsx-double"],
     "space-before-function-paren": [true, {
