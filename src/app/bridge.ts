@@ -43,16 +43,24 @@ export class Bridge {
     this._channels[event.caller.id] = DataChannelFactory.subscribeToEvents(channel, this._channels, event);
     this._peers[event.caller.id] = peer;
 
-    peer.createOffer((desc: RTCSessionDescription) => {
-      const message: ConnectionEvent = {
-        type: ConnectionEventType.OFFER,
-        caller: null,
-        callee: event.caller,
-        room: event.room,
-        data: desc,
-      };
-      peer.setLocalDescription(desc, () => this.dispatchEvent(message), (evnt: DOMException) => this.dispatchError(event.caller, evnt));
-    }, (evnt: DOMException) => this.dispatchError(event.caller, evnt));
+    peer.createOffer(
+      (desc: RTCSessionDescription) => {
+        const message: ConnectionEvent = {
+          type: ConnectionEventType.OFFER,
+          caller: null,
+          callee: event.caller,
+          room: event.room,
+          data: desc,
+        };
+
+        peer.setLocalDescription(
+          desc,
+          () => this.dispatchEvent(message),
+          (evnt: DOMException) => this.dispatchError(event.caller, evnt)
+        );
+      },
+      (evnt: DOMException) => this.dispatchError(event.caller, evnt)
+    );
   }
 
   onDisconnect(event: ConnectionEvent) {
@@ -75,23 +83,39 @@ export class Bridge {
       this._connection.addChannel(event.caller.id, channel);
     };
 
-    peer.setRemoteDescription(new RTCSessionDescription(event.data), () => { }, (evnt: DOMException) => this.dispatchError(event.caller, evnt));
+    peer.setRemoteDescription(
+      new RTCSessionDescription(event.data),
+      () => { },
+      (evnt: DOMException) => this.dispatchError(event.caller, evnt)
+    );
 
-    peer.createAnswer((desc: RTCSessionDescription) => {
-      const message: ConnectionEvent = {
-        type: ConnectionEventType.ANSWER,
-        caller: null,
-        callee: event.caller,
-        room: event.room,
-        data: desc,
-      };
-      peer.setLocalDescription(desc, () => this.dispatchEvent(message), (evnt: DOMException) => this.dispatchError(event.caller, evnt));
-    }, (evnt: DOMException) => this.dispatchError(event.caller, evnt));
+    peer.createAnswer(
+      (desc: RTCSessionDescription) => {
+        const message: ConnectionEvent = {
+          type: ConnectionEventType.ANSWER,
+          caller: null,
+          callee: event.caller,
+          room: event.room,
+          data: desc,
+        };
+
+        peer.setLocalDescription(
+          desc,
+          () => this.dispatchEvent(message),
+          (evnt: DOMException) => this.dispatchError(event.caller, evnt)
+        );
+      },
+      (evnt: DOMException) => this.dispatchError(event.caller, evnt)
+    );
   }
 
   onAnswer(event: ConnectionEvent) {
     const peer = this._peers[event.caller.id];
-    peer.setRemoteDescription(new RTCSessionDescription(event.data), () => { }, (evnt: DOMException) => this.dispatchError(event.caller, evnt));
+    peer.setRemoteDescription(
+      new RTCSessionDescription(event.data),
+      () => { },
+      (evnt: DOMException) => this.dispatchError(event.caller, evnt)
+    );
   }
 
   onCandidate(event: ConnectionEvent) {
@@ -108,7 +132,7 @@ export class Bridge {
   private dispatchError(caller: Caller, event: DOMException) {
     const message: DataEvent = {
       id: caller.id,
-      event: event,
+      event,
     };
     EventDispatcher.dispatch(DataEventType.ERROR, message);
   }
