@@ -4,11 +4,11 @@ import { ConnectionEvent } from './../connection/event';
 import { EventDispatcher } from './../dispatcher/dispatcher';
 import { DataChannelCollection } from './collection';
 
-const LABEL = 'chunks';
-
 export class DataChannelFactory {
   public static get(peer: RTCPeerConnection, dataConstraints: RTCDataChannelInit): RTCDataChannel {
-    return peer.createDataChannel(LABEL, dataConstraints);
+    const label = Math.floor((1 + Math.random()) * 1e16).toString(16).substring(1);
+
+    return peer.createDataChannel(label, dataConstraints);
   }
 
   public static subscribeToEvents(channel: RTCDataChannel, channels: DataChannelCollection, event: ConnectionEvent) {
