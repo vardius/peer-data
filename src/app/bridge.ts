@@ -56,10 +56,10 @@ export class Bridge {
         peer.setLocalDescription(
           desc,
           () => this.dispatchEvent(message),
-          (evnt: DOMException) => this.dispatchError(event.caller, evnt)
+          (evnt: DOMException) => this.dispatchError(event.caller, evnt),
         );
       },
-      (evnt: DOMException) => this.dispatchError(event.caller, evnt)
+      (evnt: DOMException) => this.dispatchError(event.caller, evnt),
     );
   }
 
@@ -86,7 +86,7 @@ export class Bridge {
     peer.setRemoteDescription(
       new RTCSessionDescription(event.data),
       () => { },
-      (evnt: DOMException) => this.dispatchError(event.caller, evnt)
+      (evnt: DOMException) => this.dispatchError(event.caller, evnt),
     );
 
     peer.createAnswer(
@@ -102,10 +102,10 @@ export class Bridge {
         peer.setLocalDescription(
           desc,
           () => this.dispatchEvent(message),
-          (evnt: DOMException) => this.dispatchError(event.caller, evnt)
+          (evnt: DOMException) => this.dispatchError(event.caller, evnt),
         );
       },
-      (evnt: DOMException) => this.dispatchError(event.caller, evnt)
+      (evnt: DOMException) => this.dispatchError(event.caller, evnt),
     );
   }
 
@@ -114,7 +114,7 @@ export class Bridge {
     peer.setRemoteDescription(
       new RTCSessionDescription(event.data),
       () => { },
-      (evnt: DOMException) => this.dispatchError(event.caller, evnt)
+      (evnt: DOMException) => this.dispatchError(event.caller, evnt),
     );
   }
 
