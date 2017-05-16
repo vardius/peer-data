@@ -6,15 +6,14 @@ export class PeerFactory {
   static get(servers: RTCConfiguration, event: ConnectionEvent): RTCPeerConnection {
     const peer = new RTCPeerConnection(servers);
 
-    peer.onicecandidate = (iceEvent: RTCIceCandidate | RTCPeerConnectionIceEvent) => {
+    peer.onicecandidate = (iceEvent: RTCPeerConnectionIceEvent) => {
       if (iceEvent.candidate) {
-        const sdp: RTCIceCandidate = iceEvent instanceof RTCIceCandidate ? iceEvent : iceEvent.candidate;
         const message: ConnectionEvent = {
           type: ConnectionEventType.CANDIDATE,
           caller: null,
           callee: event.caller,
           room: event.room,
-          data: sdp,
+          data: iceEvent.candidate,
         };
 
         EventDispatcher.dispatch('send', message);
