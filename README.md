@@ -19,6 +19,8 @@ $ npm install peer-data
 
 ## [Documentation](https://github.com/vardius/peer-data/wiki)
 
+1. [Chat Example](https://github.com/vardius/webrtc-chat)
+
 ABOUT
 ==================================================
 Contributors:
