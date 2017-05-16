@@ -119,10 +119,13 @@ export class Bridge {
   }
 
   onCandidate(event: ConnectionEvent) {
-    if (event.data) {
-      const peer = this._peers[event.caller.id];
-      peer.addIceCandidate(new RTCIceCandidate(event.data));
-    }
+    const peer = this._peers[event.caller.id];
+    const candidate = new RTCIceCandidate(event.data);
+
+    peer.addIceCandidate(candidate).then(
+      () => { },
+      (evnt: DOMException) => this.dispatchError(event.caller, evnt),
+    );
   }
 
   private dispatchEvent(event: ConnectionEvent) {
