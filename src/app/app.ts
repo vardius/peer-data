@@ -4,6 +4,8 @@ import { ConnectionEventType } from './connection/event-type';
 import { Connection } from './connection/connection';
 import { Bridge } from './bridge';
 import { EventHandler } from './dispatcher/handler';
+import { PeerCollection } from './peer/collection';
+import { DataChannelCollection } from './channel/collection';
 
 export class App {
   private bridge: Bridge;
@@ -64,15 +66,19 @@ export class App {
     EventDispatcher.dispatch('send', event);
   }
 
-  peers(id?: string) {
+  peers(id?: string): PeerCollection | RTCPeerConnection {
     if (id) {
       return this.bridge.connection.peers[id];
     }
+
+    return this.bridge.connection.peers;
   }
 
-  channels(id?: string) {
+  channels(id?: string): DataChannelCollection | RTCDataChannel {
     if (id) {
       return this.bridge.connection.channels[id];
     }
+
+    return this.bridge.connection.channels;
   }
 }

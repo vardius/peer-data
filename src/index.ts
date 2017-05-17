@@ -8,3 +8,5 @@ export { ConnectionEventType } from './app/connection/event-type';
 export { DataEventType } from './app/channel/event-type';
 export { Signaling } from './app/signaling/signaling';
 export { SocketChannel } from './app/signaling/socket-channel';
+export { PeerCollection } from './app/peer/collection';
+export { DataChannelCollection } from './app/channel/collection';
