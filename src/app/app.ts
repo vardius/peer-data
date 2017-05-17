@@ -20,13 +20,17 @@ export class App {
   send(data: any, id?: string) {
     if (id) {
       const channel = this.bridge.connection.channels[id];
-      if (channel) {
+      if (channel && channel.readyState === 'open') {
         channel.send(data);
       }
     } else {
       Object
         .entries(this.bridge.connection.channels)
-        .forEach(([key, value]) => value.send(data));
+        .forEach(([key, value]) => {
+          if (value.readyState === 'open') {
+            value.send(data);
+          }
+        });
     }
   }
 
@@ -58,5 +62,17 @@ export class App {
       data: null,
     };
     EventDispatcher.dispatch('send', event);
+  }
+
+  peers(id?: string) {
+    if (id) {
+      return this.bridge.connection.peers[id];
+    }
+  }
+
+  channels(id?: string) {
+    if (id) {
+      return this.bridge.connection.channels[id];
+    }
   }
 }
