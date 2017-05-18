@@ -1,4 +1,8 @@
+import { Caller } from './../connection/caller';
+import { Room } from './../connection/room';
+
 export interface DataEvent {
-  id: string;
-  event: MessageEvent|Event|DOMException;
+  room: Room;
+  caller: Caller;
+  event: MessageEvent | Event | DOMException;
 }

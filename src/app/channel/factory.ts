@@ -14,7 +14,8 @@ export class DataChannelFactory {
   public static subscribeToEvents(channel: RTCDataChannel, channels: DataChannelCollection, event: ConnectionEvent) {
     channel.onmessage = (channelEvent: MessageEvent) => {
       const message: DataEvent = {
-        id: event.caller.id,
+        caller: event.caller,
+        room: event.room,
         event: channelEvent,
       };
       EventDispatcher.dispatch(DataEventType.DATA, message);
@@ -22,7 +23,8 @@ export class DataChannelFactory {
 
     channel.onopen = (channelEvent: Event) => {
       const message: DataEvent = {
-        id: event.caller.id,
+        caller: event.caller,
+        room: event.room,
         event: channelEvent,
       };
       EventDispatcher.dispatch(DataEventType.OPEN, message);
@@ -30,7 +32,8 @@ export class DataChannelFactory {
 
     channel.onclose = (channelEvent: Event) => {
       const message: DataEvent = {
-        id: event.caller.id,
+        caller: event.caller,
+        room: event.room,
         event: channelEvent,
       };
       EventDispatcher.dispatch(DataEventType.CLOSE, message);
@@ -40,7 +43,8 @@ export class DataChannelFactory {
 
     channel.onerror = (channelEvent: Event) => {
       const message: DataEvent = {
-        id: event.caller.id,
+        caller: event.caller,
+        room: event.room,
         event: channelEvent,
       };
       EventDispatcher.dispatch(DataEventType.ERROR, message);

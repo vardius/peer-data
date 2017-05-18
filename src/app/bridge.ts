@@ -7,7 +7,6 @@ import { PeerFactory } from './peer/factory';
 import { DataChannelFactory } from './channel/factory';
 import { PeerCollection } from './peer/collection';
 import { DataChannelCollection } from './channel/collection';
-import { Caller } from './connection/caller';
 import { DataEvent } from './channel/event';
 
 export class Bridge {
@@ -56,10 +55,10 @@ export class Bridge {
         peer.setLocalDescription(
           desc,
           () => this.dispatchEvent(message),
-          (evnt: DOMException) => this.dispatchError(event.caller, evnt),
+          (evnt: DOMException) => this.dispatchError(event, evnt),
         );
       },
-      (evnt: DOMException) => this.dispatchError(event.caller, evnt),
+      (evnt: DOMException) => this.dispatchError(event, evnt),
     );
   }
 
@@ -86,7 +85,7 @@ export class Bridge {
     peer.setRemoteDescription(
       new RTCSessionDescription(event.data),
       () => { },
-      (evnt: DOMException) => this.dispatchError(event.caller, evnt),
+      (evnt: DOMException) => this.dispatchError(event, evnt),
     );
 
     peer.createAnswer(
@@ -102,10 +101,10 @@ export class Bridge {
         peer.setLocalDescription(
           desc,
           () => this.dispatchEvent(message),
-          (evnt: DOMException) => this.dispatchError(event.caller, evnt),
+          (evnt: DOMException) => this.dispatchError(event, evnt),
         );
       },
-      (evnt: DOMException) => this.dispatchError(event.caller, evnt),
+      (evnt: DOMException) => this.dispatchError(event, evnt),
     );
   }
 
@@ -114,7 +113,7 @@ export class Bridge {
     peer.setRemoteDescription(
       new RTCSessionDescription(event.data),
       () => { },
-      (evnt: DOMException) => this.dispatchError(event.caller, evnt),
+      (evnt: DOMException) => this.dispatchError(event, evnt),
     );
   }
 
@@ -124,7 +123,7 @@ export class Bridge {
 
     peer.addIceCandidate(candidate).then(
       () => { },
-      (evnt: DOMException) => this.dispatchError(event.caller, evnt),
+      (evnt: DOMException) => this.dispatchError(event, evnt),
     );
   }
 
@@ -132,9 +131,10 @@ export class Bridge {
     EventDispatcher.dispatch('send', event);
   }
 
-  private dispatchError(caller: Caller, event: DOMException) {
+  private dispatchError(cEvent: ConnectionEvent, event: DOMException) {
     const message: DataEvent = {
-      id: caller.id,
+      caller: cEvent.caller,
+      room: cEvent.room,
       event,
     };
     EventDispatcher.dispatch(DataEventType.ERROR, message);
