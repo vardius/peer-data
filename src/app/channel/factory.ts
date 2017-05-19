@@ -16,7 +16,7 @@ export class DataChannelFactory {
       const message: DataEvent = {
         caller: event.caller,
         room: event.room,
-        event: channelEvent,
+        data: channelEvent.data,
       };
       EventDispatcher.dispatch(DataEventType.DATA, message);
     };
@@ -25,7 +25,7 @@ export class DataChannelFactory {
       const message: DataEvent = {
         caller: event.caller,
         room: event.room,
-        event: channelEvent,
+        data: channelEvent.type,
       };
       EventDispatcher.dispatch(DataEventType.OPEN, message);
     };
@@ -34,7 +34,7 @@ export class DataChannelFactory {
       const message: DataEvent = {
         caller: event.caller,
         room: event.room,
-        event: channelEvent,
+        data: channelEvent.type,
       };
       EventDispatcher.dispatch(DataEventType.CLOSE, message);
 
@@ -45,7 +45,7 @@ export class DataChannelFactory {
       const message: DataEvent = {
         caller: event.caller,
         room: event.room,
-        event: channelEvent,
+        data: channelEvent.type,
       };
       EventDispatcher.dispatch(DataEventType.ERROR, message);
     };

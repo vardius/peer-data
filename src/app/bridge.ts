@@ -135,7 +135,7 @@ export class Bridge {
     const message: DataEvent = {
       caller: cEvent.caller,
       room: cEvent.room,
-      event,
+      data: event.message,
     };
     EventDispatcher.dispatch(DataEventType.ERROR, message);
   }
