@@ -35,6 +35,10 @@ export class Bridge {
     this._connection = value;
   }
 
+  setLocalDescription(peer: RTCPeerConnection, desc: RTCSessionDescription): Promise<void> {
+    return peer.setLocalDescription(desc);
+  }
+
   onConnect(event: ConnectionEvent) {
     const peer = this._peers[event.caller.id] = PeerFactory.get(this._connection.servers, event);
     const channel = DataChannelFactory.get(peer, this._connection.dataConstraints);
@@ -52,8 +56,7 @@ export class Bridge {
           data: desc,
         };
 
-        peer.setLocalDescription(
-          desc,
+        this.setLocalDescription(peer, desc).then(
           () => this.dispatchEvent(message),
           (evnt: DOMException) => this.dispatchError(event, evnt),
         );
@@ -98,8 +101,7 @@ export class Bridge {
           data: desc,
         };
 
-        peer.setLocalDescription(
-          desc,
+        this.setLocalDescription(peer, desc).then(
           () => this.dispatchEvent(message),
           (evnt: DOMException) => this.dispatchError(event, evnt),
         );
