@@ -2,12 +2,14 @@ import { Connection } from './connection/connection';
 import { EventDispatcher } from './dispatcher/dispatcher';
 import { ConnectionEvent } from './connection/event';
 import { ConnectionEventType } from './connection/event-type';
-import { DataEventType } from './channel/event-type';
 import { PeerFactory } from './peer/factory';
 import { DataChannelFactory } from './channel/factory';
 import { PeerCollection } from './peer/collection';
 import { DataChannelCollection } from './channel/collection';
 import { DataEvent } from './channel/event';
+import { DataEventType } from './channel/event-type';
+import { PeerEvent } from './peer/event';
+import { PeerEventType } from './peer/event-type';
 
 export class Bridge {
   private _connection: Connection;
@@ -35,16 +37,6 @@ export class Bridge {
     this._connection = value;
   }
 
-  onNewPeer(peer: RTCPeerConnection) { }
-
-  setLocalDescription(peer: RTCPeerConnection, desc: RTCSessionDescription): Promise<void> {
-    return peer.setLocalDescription(desc);
-  }
-
-  setRemoteDescription(peer: RTCPeerConnection, desc: RTCSessionDescription): Promise<void> {
-    return peer.setRemoteDescription(desc);
-  }
-
   onConnect(event: ConnectionEvent) {
     const peer = this._peers[event.caller.id] = PeerFactory.get(this._connection.servers, event);
     const channel = DataChannelFactory.get(peer, this._connection.dataConstraints);
@@ -52,7 +44,7 @@ export class Bridge {
     this._channels[event.caller.id] = DataChannelFactory.subscribeToEvents(channel, this._channels, event);
     this._peers[event.caller.id] = peer;
 
-    this.onNewPeer(peer);
+    this.dispatchPeerEvent(peer, event);
 
     peer.createOffer(
       (desc: RTCSessionDescription) => {
@@ -88,7 +80,7 @@ export class Bridge {
     const peer = PeerFactory.get(this._connection.servers, event);
     this._peers[event.caller.id] = peer;
 
-    this.onNewPeer(peer);
+    this.dispatchPeerEvent(peer, event);
 
     peer.ondatachannel = (dataChannelEvent: RTCDataChannelEvent) => {
       const channel = DataChannelFactory.subscribeToEvents(dataChannelEvent.channel, this._channels, event);
@@ -135,6 +127,22 @@ export class Bridge {
       () => { },
       (evnt: DOMException) => this.dispatchError(event, evnt),
     );
+  }
+
+  private setLocalDescription(peer: RTCPeerConnection, desc: RTCSessionDescription): Promise<void> {
+    return peer.setLocalDescription(desc);
+  }
+
+  private setRemoteDescription(peer: RTCPeerConnection, desc: RTCSessionDescription): Promise<void> {
+    return peer.setRemoteDescription(desc);
+  }
+
+  private dispatchPeerEvent(peer: RTCPeerConnection, event: ConnectionEvent) {
+    const message: PeerEvent = {
+      peer,
+      caller: event.caller,
+    };
+    EventDispatcher.dispatch(PeerEventType.CREATED, message);
   }
 
   private dispatchEvent(event: ConnectionEvent) {
