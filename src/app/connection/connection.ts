@@ -23,24 +23,50 @@ export class Connection {
   addPeer(id: string, peer: RTCPeerConnection): Connection {
     if (!this._peers.hasOwnProperty(id)) {
       this._peers[id] = peer;
+
+      peer.onconnectionstatechange = (event: Event) => {
+        if (peer.connectionState === 'closed') {
+          this.removePeer(id);
+        }
+      };
     }
+
     return this;
+  }
+
+  getPeer(id: string): RTCPeerConnection {
+    if (this._peers.hasOwnProperty(id)) {
+      return this._peers[id];
+    }
+
+    return null;
   }
 
   removePeer(id: string): Connection {
     if (this._peers.hasOwnProperty(id)) {
       this._peers[id].close();
       delete this._peers[id];
-      delete this._peers[id];
     }
+
     return this;
   }
 
   addChannel(id: string, channel: RTCDataChannel): Connection {
     if (!this._channels.hasOwnProperty(id)) {
       this._channels[id] = channel;
+
+      channel.onclose = (event: Event) => this.removeChannel(id);
     }
+
     return this;
+  }
+
+  getChannel(id: string): RTCDataChannel {
+    if (this._channels.hasOwnProperty(id)) {
+      return this._channels[id];
+    }
+
+    return null;
   }
 
   removeChannel(id: string): Connection {
@@ -48,6 +74,7 @@ export class Connection {
       this._channels[id].close();
       delete this._channels[id];
     }
+
     return this;
   }
 
