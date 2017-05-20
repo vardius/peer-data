@@ -141,6 +141,7 @@ export class Bridge {
     const message: PeerEvent = {
       peer,
       caller: event.caller,
+      room: event.room,
     };
     EventDispatcher.dispatch(PeerEventType.CREATED, message);
   }
