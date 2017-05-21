@@ -49,7 +49,7 @@ export class App {
 
   disconnect(roomId?: string) {
     const connection = this.bridge.connection;
-a
+
     Object
       .entries(connection.channels)
       .forEach(([key, value]) => connection.removeChannel(key));
