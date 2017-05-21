@@ -48,13 +48,15 @@ export class App {
   }
 
   disconnect(roomId?: string) {
+    const connection = this.bridge.connection;
+a
     Object
-      .entries(this.bridge.connection.channels)
-      .forEach(([key, value]) => value.close());
+      .entries(connection.channels)
+      .forEach(([key, value]) => connection.removeChannel(key));
 
     Object
-      .entries(this.bridge.connection.peers)
-      .forEach(([key, value]) => value.close());
+      .entries(connection.peers)
+      .forEach(([key, value]) => connection.removePeer(key));
 
     const event: SignalingEvent = {
       type: SignalingEventType.DISCONNECT,
