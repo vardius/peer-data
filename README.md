@@ -32,3 +32,7 @@ Want to contribute ? Feel free to send pull requests!
 
 Have problems, bugs, feature ideas?
 We are using the github [issue tracker](https://github.com/vardius/peer-data/issues) to manage them.
+
+## License
+
+The code is available under the [MIT license](LICENSE.md).
