@@ -1,4 +1,5 @@
 #!/usr/bin/env node
+
 var semver = require('semver');
 
 function getSupportedTypescriptTarget() {
@@ -18,6 +19,9 @@ function getSupportedTypescriptTarget() {
 }
 
 var jestConfig = {
+  transform: {
+    '.(ts?)': '<rootDir>/node_modules/ts-jest/preprocessor.js'
+  },
   testMatch: [
     '**/__tests__/**/*.{t,j}s',
     '**/?(*.)(spec|test).{t,j}s'

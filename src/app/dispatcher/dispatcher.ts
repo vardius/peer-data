@@ -1,7 +1,7 @@
 import { EventHandlerCollection } from './handler.collection';
 import { EventHandler } from './handler';
 
-const HANDLERS: EventHandlerCollection = {};
+export const HANDLERS: EventHandlerCollection = {};
 
 export class EventDispatcher {
   static register(type: any, callback: EventHandler) {
