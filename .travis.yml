@@ -7,5 +7,6 @@ cache:
     - node_modules
 before_install:
   - npm install -g yarn
-after_success:
   - npm i -g codecov
+after_success:
+  - bash <(curl -s https://codecov.io/bash) -e TRAVIS_NODE_VERSION
