@@ -6,8 +6,8 @@ cache:
   directories:
     - node_modules
 script:
-  - yarn run lint
   - yarn run test:cov
+  - yarn run posttest
 before_install:
   - npm install -g yarn
   - npm i -g codecov
