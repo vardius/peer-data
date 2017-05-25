@@ -6,7 +6,7 @@ const servers = {
   ]
 };
 const constraints = { ordered: true };
-  const app = new App(servers, constraints);
+const app = new App(servers, constraints);
 
 test('App init', () => {
   expect(app).toBeDefined();

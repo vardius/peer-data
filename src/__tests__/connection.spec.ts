@@ -24,7 +24,7 @@ test('Connection constraints', () => {
 });
 
 test('Connection peers', () => {
-  const pc = {id: 'test-peer', close: function(){}};
+  const pc = { id: 'test-peer', close: function () { } };
 
   connection.addPeer('test', pc);
   expect(connection.peers['test']).toBeDefined();
@@ -37,7 +37,7 @@ test('Connection peers', () => {
 });
 
 test('Connection channels', () => {
-  const chan = {id: 'test-channel', close: function(){}};
+  const chan = { id: 'test-channel', close: function () { } };
 
   connection.addChannel('test', chan);
   expect(connection.channels['test']).toBeDefined();
