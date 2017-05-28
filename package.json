@@ -1,6 +1,6 @@
 {
   "name": "peer-data",
-  "version": "1.2.4",
+  "version": "1.2.5",
   "description": "PeerData - library for files, media streaming/sharing using WebRTC",
   "scripts": {
     "build": "yarn run build:lib & yarn run build:umd",
