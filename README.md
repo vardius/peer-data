@@ -5,6 +5,11 @@
 [![npm downloads](https://img.shields.io/npm/dm/peer-data.svg)](https://www.npmjs.com/package/peer-data)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
 
+## Support on Beerpay
+Hey dude! Help me out for a couple of :beers:!
+
+[![Beerpay](https://beerpay.io/vardius/peer-data/badge.svg?style=beer-square)](https://beerpay.io/vardius/peer-data)  [![Beerpay](https://beerpay.io/vardius/peer-data/make-wish.svg?style=flat-square)](https://beerpay.io/vardius/peer-data?focus=wish)
+
 PeerData is a library for bidirectional peer-to-peer transfers of arbitrary data using [RTCDataChannel](https://developer.mozilla.org/pl/docs/Web/API/RTCDataChannel). Simple *WebRTC* wrapper providing data channel abstraction.
 
 [WebRTC](https://webrtc.org/) needs a messaging service to set up and maintain a *WebRTC* call.
@@ -37,8 +42,3 @@ We are using the github [issue tracker](https://github.com/vardius/peer-data/iss
 ## License
 
 The code is available under the [MIT license](LICENSE).
-
-## Support on Beerpay
-Hey dude! Help me out for a couple of :beers:!
-
-[![Beerpay](https://beerpay.io/vardius/peer-data/badge.svg?style=beer-square)](https://beerpay.io/vardius/peer-data)  [![Beerpay](https://beerpay.io/vardius/peer-data/make-wish.svg?style=flat-square)](https://beerpay.io/vardius/peer-data?focus=wish)
