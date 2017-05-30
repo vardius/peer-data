@@ -37,3 +37,8 @@ We are using the github [issue tracker](https://github.com/vardius/peer-data/iss
 ## License
 
 The code is available under the [MIT license](LICENSE).
+
+## Support on Beerpay
+Hey dude! Help me out for a couple of :beers:!
+
+[![Beerpay](https://beerpay.io/vardius/peer-data/badge.svg?style=beer-square)](https://beerpay.io/vardius/peer-data)  [![Beerpay](https://beerpay.io/vardius/peer-data/make-wish.svg?style=flat-square)](https://beerpay.io/vardius/peer-data?focus=wish)
