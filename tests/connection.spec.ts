@@ -1,5 +1,5 @@
-import { Connection } from './../app/connection/connection';
-import * from '@types/webrtc';
+import { Connection } from './../src/app/connection/connection';
+// import * from '@types/webrtc';
 
 const servers = {
   iceServers: [

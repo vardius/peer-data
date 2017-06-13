@@ -1,4 +1,4 @@
-import { App } from './../app/app';
+import { App } from './../src/app/app';
 
 const servers = {
   iceServers: [

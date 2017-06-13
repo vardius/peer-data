@@ -1,12 +1,11 @@
-import Socket = SocketIOClient.Socket;
-import * as io from 'socket.io-client';
+import 'socket.io-client';
 import { Signaling } from './signaling';
 import { SignalingEvent } from './event';
 import { EventDispatcher } from './../dispatcher/dispatcher';
 import { AppEventType } from './../event-type';
 
 export class SocketChannel implements Signaling {
-  private socket: Socket;
+  private socket: SocketIOClient.Socket;
 
   constructor(opts?: SocketIOClient.ConnectOpts) {
     this.socket = io.connect(opts);

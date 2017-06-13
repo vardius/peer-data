@@ -1,4 +1,4 @@
-import { EventDispatcher, HANDLERS } from './../app/dispatcher/dispatcher';
+import { EventDispatcher, HANDLERS } from './../src/app/dispatcher/dispatcher';
 
 let works = 0;
 
