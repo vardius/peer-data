@@ -1,4 +1,4 @@
-import 'socket.io-client';
+import * as io from 'socket.io-client';
 import { Signaling } from './signaling';
 import { SignalingEvent } from './event';
 import { EventDispatcher } from './../dispatcher/dispatcher';

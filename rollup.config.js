@@ -1,20 +1,36 @@
 import resolve from "rollup-plugin-node-resolve";
 import globals from "rollup-plugin-node-globals";
 import builtins from "rollup-plugin-node-builtins";
-import commonjs from "rollup-plugin-commonjs";
 import uglify from "rollup-plugin-uglify";
 
-export default {
+var env = process.env.NODE_ENV;
+var config = {
   format: "umd",
   moduleName: "peer-data",
-  entry: "es/index.js",
-  dest: "dist/peer-data.js",
   exports: "named",
   plugins: [
-    resolve({ jsnext: true }),
+    resolve({
+      module: true,
+      jsnext: true,
+      main: true,
+      browser: true
+    }),
     globals(),
-    builtins(),
-    commonjs(),
-    uglify()
+    builtins()
   ]
 };
+
+if (env === "production") {
+  config.plugins.push(
+    uglify({
+      compress: {
+        pure_getters: true,
+        unsafe: true,
+        unsafe_comps: true,
+        warnings: false
+      }
+    })
+  );
+}
+
+export default config;
