@@ -1,8 +1,8 @@
 import sourcemaps from "rollup-plugin-sourcemaps";
-import nodeResolve from "rollup-plugin-node-resolve";
-import nodeGlobals from "rollup-plugin-node-globals";
-import nodeBuiltins from "rollup-plugin-node-builtins";
 import legacy from "rollup-plugin-legacy";
+import resolve from "rollup-plugin-node-resolve";
+import globals from "rollup-plugin-node-globals";
+import builtins from "rollup-plugin-node-builtins";
 import commonjs from "rollup-plugin-commonjs";
 import uglify from "rollup-plugin-uglify";
 import pascalCase from "pascal-case";
@@ -17,7 +17,6 @@ export default {
   exports: "named",
   sourceMap: true,
   plugins: [
-    sourcemaps(),
     legacy({
       "node_modules/socket.io-client/lib/url.js": "url",
       "node_modules/debug/src/index.js": "index",
@@ -27,9 +26,10 @@ export default {
       "node_modules/engine.io-parser/lib/index.js": "index",
       "node_modules/engine.io-client/lib/socket.js": "socket"
     }),
-    nodeResolve(),
-    nodeGlobals(),
-    nodeBuiltins(),
+    sourcemaps(),
+    resolve(),
+    globals(),
+    builtins(),
     commonjs(),
     uglify()
   ]
