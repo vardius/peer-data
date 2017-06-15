@@ -18,9 +18,6 @@ export default {
   sourceMap: true,
   plugins: [
     sourcemaps(),
-    nodeResolve(),
-    nodeGlobals(),
-    nodeBuiltins(),
     legacy({
       "node_modules/socket.io-client/lib/url.js": "url",
       "node_modules/debug/src/index.js": "index",
@@ -30,6 +27,9 @@ export default {
       "node_modules/engine.io-parser/lib/index.js": "index",
       "node_modules/engine.io-client/lib/socket.js": "socket"
     }),
+    nodeResolve(),
+    nodeGlobals(),
+    nodeBuiltins(),
     commonjs(),
     uglify()
   ]
