@@ -1,6 +1,7 @@
 import resolve from "rollup-plugin-node-resolve";
 import globals from "rollup-plugin-node-globals";
 import builtins from "rollup-plugin-node-builtins";
+import commonjs from "rollup-plugin-commonjs";
 import uglify from "rollup-plugin-uglify";
 
 var env = process.env.NODE_ENV;
@@ -9,6 +10,7 @@ var config = {
   moduleName: "peer-data",
   exports: "named",
   plugins: [
+    commonjs(),
     resolve({
       module: true,
       jsnext: true,
