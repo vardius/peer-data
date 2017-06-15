@@ -1,10 +1,17 @@
 {
   "compilerOptions": {
     "target": "es5",
+    "module": "commonjs",
     "rootDir": "src",
     "outDir": ".code",
     "newLine": "LF",
-    "lib": ["es2017", "dom", "scripthost"],
+    "lib": [
+      "es2015",
+      "es2016",
+      "es2017",
+      "dom",
+      "scripthost"
+    ],
     "moduleResolution": "node",
     "importHelpers": true,
     "declaration": true,
