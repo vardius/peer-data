@@ -1,10 +1,10 @@
+import pascalCase from "pascal-case";
 import sourcemaps from "rollup-plugin-sourcemaps";
 import resolve from "rollup-plugin-node-resolve";
 import globals from "rollup-plugin-node-globals";
 import builtins from "rollup-plugin-node-builtins";
 import commonjs from "rollup-plugin-commonjs";
 import uglify from "rollup-plugin-uglify";
-import pascalCase from "pascal-case";
 
 const pkg = require("./package");
 

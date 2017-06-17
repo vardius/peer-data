@@ -10,8 +10,6 @@ import { SignalingEvent } from './app/signaling/event';
 import { SignalingEventType } from './app/signaling/event-type';
 import { SocketChannel } from './app/signaling/socket-channel';
 
-export default PeerData;
-
 export {
     EventDispatcher,
     AppEventType,
@@ -22,3 +20,5 @@ export {
     SignalingEventType,
     SocketChannel,
 };
+
+export default PeerData;
