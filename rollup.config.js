@@ -17,11 +17,11 @@ export default {
   sourceMap: true,
   plugins: [
     sourcemaps(),
+    commonjs(),
     resolve({
       jsnext: true,
       browser: true
     }),
-    commonjs(),
     globals(),
     builtins(),
     uglify()
