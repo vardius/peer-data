@@ -21,10 +21,10 @@ export default {
     resolve(),
     globals(),
     builtins(),
+    commonjs(),
     babel({
       exclude: "node_modules/**"
     }),
-    commonjs(),
     uglify()
   ]
 };
