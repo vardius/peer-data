@@ -4,7 +4,6 @@ import { SignalingEvent } from './signaling/event';
 import { SignalingEventType } from './signaling/event-type';
 import { PeerFactory } from './peer/factory';
 import { DataChannelFactory } from './channel/factory';
-import { AppEvent } from './event';
 import { AppEventType } from './event-type';
 
 export class Bridge {
@@ -38,21 +37,17 @@ export class Bridge {
     this._connection.addChannel(event.caller.id, channel);
     this._connection.addPeer(event.caller.id, peer);
 
-    peer.createOffer(
-      (desc: RTCSessionDescription) => {
-        const message: SignalingEvent = {
-          type: SignalingEventType.OFFER,
-          caller: null,
-          callee: event.caller,
-          room: event.room,
-          data: desc,
-        };
-
-        peer.setLocalDescription(desc, () => this.dispatchEvent(message),
-          (evnt: DOMException) => this.dispatchError(event, evnt));
-      },
-      (evnt: DOMException) => this.dispatchError(event, evnt),
-    );
+    peer
+      .createOffer()
+      .then((desc: RTCSessionDescription) => peer.setLocalDescription(desc))
+      .then(() => this.dispatchEvent({
+        type: SignalingEventType.OFFER,
+        caller: null,
+        callee: event.caller,
+        room: event.room,
+        data: peer.localDescription,
+      }))
+      .catch((evnt: DOMException) => this.dispatchError(event, evnt));
   }
 
   onDisconnect(event: SignalingEvent) {
@@ -71,58 +66,51 @@ export class Bridge {
       this._connection.addChannel(event.caller.id, dataChannelEvent.channel);
     };
 
-    peer.setRemoteDescription(new RTCSessionDescription(event.data), () => { },
-      (evnt: DOMException) => this.dispatchError(event, evnt));
-
-    peer.createAnswer(
-      (desc: RTCSessionDescription) => {
-        const message: SignalingEvent = {
-          type: SignalingEventType.ANSWER,
-          caller: null,
-          callee: event.caller,
-          room: event.room,
-          data: desc,
-        };
-
-        peer.setLocalDescription(desc, () => this.dispatchEvent(message),
-          (evnt: DOMException) => this.dispatchError(event, evnt));
-      },
-      (evnt: DOMException) => this.dispatchError(event, evnt),
-    );
+    peer
+      .setRemoteDescription(new RTCSessionDescription(event.data))
+      .then(() => peer.createAnswer())
+      .then((desc: RTCSessionDescription) => peer.setLocalDescription(desc))
+      .then(() => this.dispatchEvent({
+        type: SignalingEventType.ANSWER,
+        caller: null,
+        callee: event.caller,
+        room: event.room,
+        data: peer.localDescription,
+      }))
+      .catch((evnt: DOMException) => this.dispatchError(event, evnt));
   }
 
   onAnswer(event: SignalingEvent) {
     const peer = this._connection.getPeer(event.caller.id);
-    peer.setRemoteDescription(new RTCSessionDescription(event.data), () => { },
-      (evnt: DOMException) => this.dispatchError(event, evnt));
+
+    peer
+      .setRemoteDescription(new RTCSessionDescription(event.data))
+      .catch((evnt: DOMException) => this.dispatchError(event, evnt));
   }
 
   onCandidate(event: SignalingEvent) {
     const peer = this._connection.getPeer(event.caller.id);
     const candidate = new RTCIceCandidate(event.data);
 
-    peer.addIceCandidate(candidate).then(
-      () => { },
-      (evnt: DOMException) => this.dispatchError(event, evnt),
-    );
+    peer
+      .addIceCandidate(candidate)
+      .catch((evnt: DOMException) => this.dispatchError(event, evnt));
   }
 
   private dispatchPeer(peer: RTCPeerConnection, event: SignalingEvent) {
-    const message: AppEvent = {
+    EventDispatcher.dispatch(AppEventType.PEER, {
       caller: event.caller,
       room: event.room,
       data: peer,
-    };
-    EventDispatcher.dispatch(AppEventType.PEER, message);
+    });
   }
 
   private dispatchChannel(channel: RTCDataChannel, event: SignalingEvent) {
-    const message: AppEvent = {
+    EventDispatcher.dispatch(AppEventType.CHANNEL, {
       caller: event.caller,
       room: event.room,
       data: channel,
-    };
-    EventDispatcher.dispatch(AppEventType.CHANNEL, message);
+    });
   }
 
   private dispatchEvent(event: SignalingEvent) {
@@ -130,11 +118,10 @@ export class Bridge {
   }
 
   private dispatchError(sEvent: SignalingEvent, event: DOMException) {
-    const message: AppEvent = {
+    EventDispatcher.dispatch(AppEventType.ERROR, {
       caller: sEvent.caller,
       room: sEvent.room,
       data: event.message,
-    };
-    EventDispatcher.dispatch(AppEventType.ERROR, message);
+    });
   }
 }

@@ -1,6 +1,6 @@
 # PeerData
 [![Build Status](https://travis-ci.org/vardius/peer-data.svg?branch=master)](https://travis-ci.org/Vardius/peer-data)
-[![codecov](https://codecov.io/gh/vardius/peer-data/branch/master/graph/badge.svg)](https://codecov.io/gh/vardius/peer-data)
+<!--[![codecov](https://codecov.io/gh/vardius/peer-data/branch/master/graph/badge.svg)](https://codecov.io/gh/vardius/peer-data)-->
 [![npm version](https://img.shields.io/npm/v/peer-data.svg)](https://www.npmjs.com/package/peer-data)
 [![npm downloads](https://img.shields.io/npm/dm/peer-data.svg)](https://www.npmjs.com/package/peer-data)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](LICENSE)
