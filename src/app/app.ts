@@ -91,23 +91,18 @@ export class App {
           .catch((evnt: DOMException) => reject(evnt));
       };
 
-      const onDataChannel = (event: RTCDataChannelEvent) => {
-        this.connection.addChannel(mainEvent.caller.id, event.channel);
+      peer.ondatachannel = (event: RTCDataChannelEvent) => {
+        channel = event.channel;
+        this.connection.addChannel(mainEvent.caller.id, channel);
         if (peer.connectionState === 'connected') {
           resolve({ room: mainEvent.room, caller: mainEvent.caller, peer, channel });
-        } else {
-          channel = event.channel;
         }
       };
-
-      const onConnectionStateChange = (event: Event) => {
+      peer.onconnectionstatechange = (event: Event) => {
         if (peer.connectionState === 'connected' && channel) {
           resolve({ room: mainEvent.room, caller: mainEvent.caller, peer, channel });
         }
       };
-
-      peer.ondatachannel = onDataChannel;
-      peer.onconnectionstatechange = onConnectionStateChange;
       peer
         .setRemoteDescription(new RTCSessionDescription(mainEvent.data))
         .then(() => peer.createAnswer())
@@ -151,12 +146,6 @@ export class App {
         this.connection.addChannel(mainEvent.caller.id, channel);
         this.connection.addPeer(mainEvent.caller.id, peer);
 
-        const onConnectionStateChange = (event: Event) => {
-          if (peer.connectionState === 'connected') {
-            resolve({ room: mainEvent.room, caller: mainEvent.caller, peer, channel });
-          }
-        };
-
         const onCandidate = (event: SignalingEvent) => {
           if (mainEvent.caller.id !== event.caller.id) {
             return;
@@ -177,7 +166,11 @@ export class App {
             .catch((evnt: DOMException) => reject(evnt));
         };
 
-        peer.onconnectionstatechange = onConnectionStateChange;
+        peer.onconnectionstatechange = (event: Event) => {
+          if (peer.connectionState === 'connected') {
+            resolve({ room: mainEvent.room, caller: mainEvent.caller, peer, channel });
+          }
+        };
         peer
           .createOffer()
           .then((desc: RTCSessionDescription) => peer.setLocalDescription(desc))
