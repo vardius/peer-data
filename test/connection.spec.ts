@@ -9,7 +9,7 @@ test('Connection initialized', () => {
 
 test('Connection peers', () => {
   const key = 'test';
-  const pc = new RTCPeerConnection({});
+  const pc = { id: '', close: () => { } };
 
   connection.addPeer(key, pc);
   expect(connection.peers[key]).toBeDefined();
@@ -23,20 +23,7 @@ test('Connection peers', () => {
 
 test('Connection channels', () => {
   const key = 'test';
-  const chan = {
-    label: 'test-channel',
-    close: () => { },
-    ordered: true,
-    maxPacketLifeTime: 0,
-    maxRetransmits: 0,
-    protocol: '',
-    negotiated: false,
-    id: 1,
-    readyState: 'connecting',
-    bufferedAmount: 0,
-    bufferedAmountLowThreshold: 0,
-    binaryType: 'arraybuffer',
-  };
+  const chan = { id: '', close: () => { } };
 
   connection.addChannel(key, chan);
   expect(connection.channels[key]).toBeDefined();
