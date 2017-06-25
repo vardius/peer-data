@@ -1,50 +1,49 @@
-import { Connection } from './../src/app/connection/connection';
-// import * from '@types/webrtc';
+import { Connection } from './../src/app/Connection';
 
-const servers = {
-  iceServers: [
-    { url: "stun:stun.1.google.com:19302" }
-  ]
-};
 const constraints = { ordered: true };
-const connection = new Connection(servers, constraints);
+const connection = new Connection();
 
 test('Connection initialized', () => {
   expect(connection).toBeDefined();
-  expect(connection.servers).toEqual(servers);
-  expect(connection.dataConstraints).toEqual(constraints);
-});
-
-test('Connection servers', () => {
-  expect(connection.servers).toEqual(servers);
-});
-
-test('Connection constraints', () => {
-  expect(connection.dataConstraints).toEqual(constraints);
 });
 
 test('Connection peers', () => {
-  const pc = { id: 'test-peer', close: function () { } };
+  const key = 'test';
+  const pc = new RTCPeerConnection({});
 
-  connection.addPeer('test', pc);
-  expect(connection.peers['test']).toBeDefined();
+  connection.addPeer(key, pc);
+  expect(connection.peers[key]).toBeDefined();
 
-  const peer = connection.getPeer('test');
+  const peer = connection.getPeer(key);
   expect(pc).toEqual(peer);
 
-  connection.removePeer('test');
-  expect(connection.peers['test']).toBeUndefined();
+  connection.removePeer(key);
+  expect(connection.peers[key]).toBeUndefined();
 });
 
 test('Connection channels', () => {
-  const chan = { id: 'test-channel', close: function () { } };
+  const key = 'test';
+  const chan = {
+    label: 'test-channel',
+    close: () => { },
+    ordered: true,
+    maxPacketLifeTime: 0,
+    maxRetransmits: 0,
+    protocol: '',
+    negotiated: false,
+    id: 1,
+    readyState: 'connecting',
+    bufferedAmount: 0,
+    bufferedAmountLowThreshold: 0,
+    binaryType: 'arraybuffer',
+  };
 
-  connection.addChannel('test', chan);
-  expect(connection.channels['test']).toBeDefined();
+  connection.addChannel(key, chan);
+  expect(connection.channels[key]).toBeDefined();
 
-  const channel = connection.getChannel('test');
+  const channel = connection.getChannel(key);
   expect(chan).toEqual(channel);
 
-  connection.removeChannel('test');
-  expect(connection.channels['test']).toBeUndefined();
+  connection.removeChannel(key);
+  expect(connection.channels[key]).toBeUndefined();
 });

@@ -1,4 +1,4 @@
-import { EventDispatcher, HANDLERS } from './../src/app/dispatcher/dispatcher';
+import { EventDispatcher, HANDLERS } from './../src/app/EventDispatcher';
 
 let works = 0;
 
@@ -7,9 +7,10 @@ test('EventDispatcher is defined', () => {
 });
 
 test('EventDispatcher register', () => {
-  EventDispatcher.register('TEST', () => works++);
+  const key = 'TEST';
+  EventDispatcher.register(key, () => works++);
 
-  expect(HANDLERS['TEST']).toBeDefined();
+  expect(HANDLERS[key]).toBeDefined();
 });
 
 test('EventDispatcher dispatch', () => {
