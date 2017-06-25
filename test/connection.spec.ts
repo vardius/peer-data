@@ -12,7 +12,7 @@ test('Connection peers', () => {
   const pc = { id: '', close: () => { } };
 
   connection.addPeer(key, pc);
-  expect(connection.peers[key]).toBeDefined();
+  expect(connection.getPeer(key)).toBeDefined();
 
   const peer = connection.getPeer(key);
   expect(pc).toEqual(peer);
@@ -26,7 +26,7 @@ test('Connection channels', () => {
   const chan = { id: '', close: () => { } };
 
   connection.addChannel(key, chan);
-  expect(connection.channels[key]).toBeDefined();
+  expect(connection.getChannel(key)).toBeDefined();
 
   const channel = connection.getChannel(key);
   expect(chan).toEqual(channel);
