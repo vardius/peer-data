@@ -1,5 +1,5 @@
-import { Caller } from './../connection/caller';
-import { Room } from './../connection/room';
+import { Caller } from './Caller';
+import { Room } from './Room';
 
 export interface SignalingEvent {
   type: string;

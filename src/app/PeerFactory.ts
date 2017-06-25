@@ -1,6 +1,6 @@
-import { EventDispatcher } from './../dispatcher/dispatcher';
-import { SignalingEvent } from './../signaling/event';
-import { SignalingEventType } from './../signaling/event-type';
+import { EventDispatcher } from './EventDispatcher';
+import { SignalingEvent } from './SignalingEvent';
+import { SignalingEventType } from './SignalingEventType';
 
 export class PeerFactory {
   static get(servers: RTCConfiguration, event: SignalingEvent): RTCPeerConnection {

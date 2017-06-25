@@ -1,7 +1,7 @@
-import { Signaling } from './signaling';
-import { SignalingEvent } from './event';
-import { EventDispatcher } from './../dispatcher/dispatcher';
-import { AppEventType } from './../event-type';
+import { Signaling } from './Signaling';
+import { SignalingEvent } from './SignalingEvent';
+import { EventDispatcher } from './EventDispatcher';
+import { AppEventType } from './AppEventType';
 import * as io from 'socket.io-client';
 
 export class SocketChannel implements Signaling {

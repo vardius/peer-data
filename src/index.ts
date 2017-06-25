@@ -1,20 +1,16 @@
 import { App as PeerData } from './app/app';
 
-import { EventDispatcher } from './app/dispatcher/dispatcher';
-import { AppEventType } from './app/event-type';
-import { PeerCollection } from './app/peer/collection';
-import { DataChannelCollection } from './app/channel/collection';
+import { EventDispatcher } from './app/EventDispatcher';
+import { AppEventType } from './app/AppEventType';
 
-import { Signaling } from './app/signaling/signaling';
-import { SignalingEvent } from './app/signaling/event';
-import { SignalingEventType } from './app/signaling/event-type';
-import { SocketChannel } from './app/signaling/socket-channel';
+import { Signaling } from './app/Signaling';
+import { SignalingEvent } from './app/SignalingEvent';
+import { SignalingEventType } from './app/SignalingEventType';
+import { SocketChannel } from './app/SocketChannel';
 
 export {
     EventDispatcher,
     AppEventType,
-    PeerCollection,
-    DataChannelCollection,
     Signaling,
     SignalingEvent,
     SignalingEventType,

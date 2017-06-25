@@ -1,5 +1,5 @@
-import { EventHandlerCollection } from './handler.collection';
-import { EventHandler } from './handler';
+import { EventHandlerCollection } from './EventHandlerCollection';
+import { EventHandler } from './EventHandler';
 
 export const HANDLERS: EventHandlerCollection = {};
 
@@ -9,6 +9,13 @@ export class EventDispatcher {
       HANDLERS[type] = [];
     }
     HANDLERS[type].push(callback);
+  }
+
+  static unregister(type: any, callback: EventHandler) {
+    const index = HANDLERS[type].indexOf(callback);
+    if (index !== -1) {
+      delete HANDLERS[type][index];
+    }
   }
 
   static dispatch(type: any, data?: any) {

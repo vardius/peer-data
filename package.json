@@ -58,13 +58,13 @@
   },
   "homepage": "https://github.com/vardius/peer-data#readme",
   "devDependencies": {
-    "@types/jest": "^19.2.4",
-    "@types/node": "^7.0.31",
+    "@types/jest": "^20.0.2",
+    "@types/node": "^8.0.2",
     "@types/socket.io-client": "^1.4.29",
     "@types/webrtc": "^0.0.21",
     "codecov": "^2.2.0",
     "cross-env": "^5.0.1",
-    "dts-bundle": "^0.7.2",
+    "dts-bundle": "^0.7.3",
     "jest": "^20.0.4",
     "jest-cli": "^20.0.4",
     "jest-environment-node-debug": "^2.0.0",
@@ -85,6 +85,6 @@
   },
   "dependencies": {
     "socket.io-client": "^2.0.3",
-    "webrtc-adapter": "^4.0.1"
+    "webrtc-adapter": "^4.0.2"
   }
 }
