@@ -1,6 +1,7 @@
 import { EventDispatcher } from './EventDispatcher';
 import { SignalingEvent } from './SignalingEvent';
 import { SignalingEventType } from './SignalingEventType';
+import { AppEventType } from './AppEventType';
 
 export class PeerFactory {
   static get(servers: RTCConfiguration, event: SignalingEvent): RTCPeerConnection {
@@ -16,7 +17,7 @@ export class PeerFactory {
           data: iceEvent.candidate,
         };
 
-        EventDispatcher.dispatch('send', message);
+        EventDispatcher.dispatch(AppEventType.SEND, message);
       } else {
         // All ICE candidates have been sent
       }

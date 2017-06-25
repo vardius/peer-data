@@ -40,7 +40,7 @@ export class App {
   }
 
   connect(roomId: string) {
-    EventDispatcher.dispatch('send', {
+    EventDispatcher.dispatch(AppEventType.SEND, {
       type: SignalingEventType.CONNECT,
       caller: null,
       callee: null,
@@ -50,7 +50,7 @@ export class App {
   }
 
   disconnect(roomId: string) {
-    EventDispatcher.dispatch('send', {
+    EventDispatcher.dispatch(AppEventType.SEND, {
       type: SignalingEventType.DISCONNECT,
       caller: null,
       callee: null,
@@ -112,7 +112,7 @@ export class App {
         .setRemoteDescription(new RTCSessionDescription(mainEvent.data))
         .then(() => peer.createAnswer())
         .then((desc: RTCSessionDescription) => peer.setLocalDescription(desc))
-        .then(() => EventDispatcher.dispatch('send', {
+        .then(() => EventDispatcher.dispatch(AppEventType.SEND, {
           type: SignalingEventType.ANSWER,
           caller: null,
           callee: mainEvent.caller,
@@ -135,7 +135,7 @@ export class App {
       let peer = this.connection.getPeer(mainEvent.caller.id);
       let channel = this.connection.getChannel(mainEvent.caller.id);
       if (null !== peer && null !== channel) {
-        EventDispatcher.dispatch('send', {
+        EventDispatcher.dispatch(AppEventType.SEND, {
           type: SignalingEventType.ROOM,
           caller: null,
           callee: mainEvent.caller,
@@ -181,7 +181,7 @@ export class App {
         peer
           .createOffer()
           .then((desc: RTCSessionDescription) => peer.setLocalDescription(desc))
-          .then(() => EventDispatcher.dispatch('send', {
+          .then(() => EventDispatcher.dispatch(AppEventType.SEND, {
             type: SignalingEventType.OFFER,
             caller: null,
             callee: mainEvent.caller,

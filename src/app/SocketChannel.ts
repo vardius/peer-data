@@ -10,7 +10,7 @@ export class SocketChannel implements Signaling {
   constructor(opts?: SocketIOClient.ConnectOpts) {
     this.socket = io.connect(opts);
 
-    EventDispatcher.register('send', this.onSend.bind(this));
+    EventDispatcher.register(AppEventType.SEND, this.onSend.bind(this));
 
     this.subscribeEvents();
   }

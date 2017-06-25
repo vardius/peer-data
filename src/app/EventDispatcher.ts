@@ -12,13 +12,17 @@ export class EventDispatcher {
   }
 
   static unregister(type: any, callback: EventHandler) {
-    const index = HANDLERS[type].indexOf(callback);
-    if (index !== -1) {
-      delete HANDLERS[type][index];
+    if (HANDLERS[type]) {
+      const index = HANDLERS[type].indexOf(callback);
+      if (index !== -1) {
+        delete HANDLERS[type][index];
+      }
     }
   }
 
   static dispatch(type: any, data?: any) {
-    HANDLERS[type].forEach(h => h(data));
+    if (HANDLERS[type]) {
+      HANDLERS[type].forEach(h => h(data));
+    }
   }
 }
