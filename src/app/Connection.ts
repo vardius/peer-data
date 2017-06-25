@@ -53,9 +53,11 @@ export class Connection {
 
       // todo: refactor when typescript supports map
       const hMap = this._handlers.get(id);
-      const keys = Array.from(hMap.keys());
-      for (const key of keys) {
-        EventDispatcher.unregister(key, hMap.get(key));
+      if (hMap) {
+        const keys = Array.from(hMap.keys());
+        for (const key of keys) {
+          EventDispatcher.unregister(key, hMap.get(key));
+        }
       }
     }
 
