@@ -64,12 +64,7 @@ export class App {
     const promise = new Promise((resolve, reject) => {
       const peer = this.connection.getPeer(event.caller.id);
       const channel = this.connection.getChannel(event.caller.id);
-
-      if (null !== peer && null !== channel) {
-        resolve({ room: event.room, caller: event.caller, peer, channel });
-      } else {
-        reject('Invalid peer or data channel.');
-      }
+      resolve({ room: event.room, caller: event.caller, peer, channel });
     });
 
     EventDispatcher.dispatch(AppEventType.CONNECTION, promise);
@@ -77,7 +72,6 @@ export class App {
 
   _onOffer(mainEvent: SignalingEvent) {
     const promise = new Promise((resolve, reject) => {
-      let channel;
       const peer = PeerFactory.get(this.servers, mainEvent);
       this.connection.addPeer(mainEvent.caller.id, peer);
 
@@ -92,16 +86,8 @@ export class App {
       };
 
       peer.ondatachannel = (event: RTCDataChannelEvent) => {
-        channel = event.channel;
-        this.connection.addChannel(mainEvent.caller.id, channel);
-        if (peer.connectionState === 'connected') {
-          resolve({ room: mainEvent.room, caller: mainEvent.caller, peer, channel });
-        }
-      };
-      peer.onconnectionstatechange = (event: Event) => {
-        if (peer.connectionState === 'connected' && channel) {
-          resolve({ room: mainEvent.room, caller: mainEvent.caller, peer, channel });
-        }
+        this.connection.addChannel(mainEvent.caller.id, event.channel);
+        resolve({ room: mainEvent.room, caller: mainEvent.caller, peer, channel: event.channel });
       };
       peer
         .setRemoteDescription(new RTCSessionDescription(mainEvent.data))
@@ -166,11 +152,6 @@ export class App {
             .catch((evnt: DOMException) => reject(evnt));
         };
 
-        peer.onconnectionstatechange = (event: Event) => {
-          if (peer.connectionState === 'connected') {
-            resolve({ room: mainEvent.room, caller: mainEvent.caller, peer, channel });
-          }
-        };
         peer
           .createOffer()
           .then((desc: RTCSessionDescription) => peer.setLocalDescription(desc))
@@ -189,6 +170,8 @@ export class App {
         this.connection.handlers.set(mainEvent.caller.id, handlerMap);
         EventDispatcher.register(SignalingEventType.ANSWER, onAnswer);
         EventDispatcher.register(SignalingEventType.CANDIDATE, onCandidate);
+
+        resolve({ room: mainEvent.room, caller: mainEvent.caller, peer, channel });
       }
     });
 
