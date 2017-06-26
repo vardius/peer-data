@@ -132,6 +132,13 @@ export class App {
         this.connection.addChannel(mainEvent.caller.id, channel);
         this.connection.addPeer(mainEvent.caller.id, peer);
 
+        peer.onconnectionstatechange = (event: Event) => {
+          // The connection has become fully connected
+          if (peer.connectionState === 'connected') {
+            resolve({ room: mainEvent.room, caller: mainEvent.caller, peer, channel });
+          }
+        };
+
         const onCandidate = (event: SignalingEvent) => {
           if (mainEvent.caller.id !== event.caller.id) {
             return;
@@ -170,8 +177,6 @@ export class App {
         this.connection.handlers.set(mainEvent.caller.id, handlerMap);
         EventDispatcher.register(SignalingEventType.ANSWER, onAnswer);
         EventDispatcher.register(SignalingEventType.CANDIDATE, onCandidate);
-
-        resolve({ room: mainEvent.room, caller: mainEvent.caller, peer, channel });
       }
     });
 
