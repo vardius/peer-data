@@ -36,17 +36,7 @@ export class Room {
   }
 
   on(event: string, callback: EventHandler) {
-    if (event === 'participant') {
-      this.dispatcher.register(event, (promise: Promise<Participant>) => {
-        callback(promise.then(async (participant: Participant) => {
-          this.participants.set(participant.getId(), participant);
-
-          return participant;
-        }));
-      });
-    } else {
-      this.dispatcher.register(event, callback);
-    }
+    this.dispatcher.register(event, callback);
   }
 
   send(payload: any) {
@@ -101,16 +91,18 @@ export class Room {
   private onOffer(event: SignalingEvent) {
     const desc = new RTCSessionDescription(event.payload);
     const participant = new Participant(event.caller.id, this, desc);
+    this.participants.set(participant.getId(), participant);
     this.dispatcher.dispatch('participant', participant.init());
   }
 
   private onConnect(event: SignalingEvent) {
     const participant = new Participant(event.caller.id, this);
+    this.participants.set(participant.getId(), participant);
     this.dispatcher.dispatch('participant', participant.init());
   }
 
   private onDisconnect(event: SignalingEvent) {
-    if (this.id === event.room.id) {
+    if (this.id === event.room.id && this.participants.has(event.caller.id)) {
       this.participants.get(event.caller.id).close();
       this.participants.delete(event.caller.id);
     }
