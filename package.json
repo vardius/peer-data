@@ -59,7 +59,7 @@
   "homepage": "https://github.com/vardius/peer-data#readme",
   "devDependencies": {
     "@types/jest": "^20.0.2",
-    "@types/node": "^8.0.4",
+    "@types/node": "^8.0.5",
     "@types/socket.io-client": "^1.4.29",
     "@types/webrtc": "^0.0.21",
     "codecov": "^2.2.0",
