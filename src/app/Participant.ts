@@ -26,7 +26,7 @@ export class Participant {
         this.peer.onconnectionstatechange = this.onConnectionStateChange.bind(this);
         this.peer.oniceconnectionstatechange = this.onIceConnectionStateChange.bind(this);
         this.peer.ondatachannel = this.onDataChannel.bind(this);
-        this.peer.ontrack = this.onTrack.bind(this);
+        this.peer.ontrack = this.dispatchRemoteStream.bind(this);
 
         const stream = this.room.getStream();
         if (stream instanceof MediaStream) {
@@ -39,34 +39,39 @@ export class Participant {
     }
 
     async init() {
+        const offerAnswerOptions: RTCOfferOptions = {
+            offerToReceiveAudio: 1,
+            offerToReceiveVideo: 1,
+        };
+
         if (this.remoteDesc) {
             return await this.peer
                 .setRemoteDescription(this.remoteDesc)
-                .then(_ => this.peer.createAnswer())
+                .then(_ => this.peer.createAnswer(offerAnswerOptions))
                 .then((desc: RTCSessionDescription) => this.peer.setLocalDescription(desc))
-                .then(async _ => EventDispatcher.getInstance().dispatch('send', {
+                .then(_ => EventDispatcher.getInstance().dispatch('send', {
                     type: SignalingEventType.ANSWER,
                     caller: null,
                     callee: { id: this.id },
                     room: { id: this.room.getId() },
                     payload: this.peer.localDescription,
                 } as SignalingEvent))
-                .then(async _ => this);
+                .then(_ => this);
         } else {
             this.channel = this.newDataChannel(Configuration.getInstance().getDataConstraints());
             this.channel.onmessage = this.onMessage.bind(this);
 
             return await this.peer
-                .createOffer()
+                .createOffer(offerAnswerOptions)
                 .then((desc: RTCSessionDescription) => this.peer.setLocalDescription(desc))
-                .then(async _ => EventDispatcher.getInstance().dispatch('send', {
+                .then(_ => EventDispatcher.getInstance().dispatch('send', {
                     type: SignalingEventType.OFFER,
                     caller: null,
                     callee: { id: this.id },
                     room: { id: this.room.getId() },
                     payload: this.peer.localDescription,
                 } as SignalingEvent))
-                .then(async _ => this);
+                .then(_ => this);
         }
     }
 
@@ -162,7 +167,7 @@ export class Participant {
         this.dispatcher.dispatch('message', event.data);
     }
 
-    private onTrack(event: RTCTrackEvent) {
+    private dispatchRemoteStream(event: RTCTrackEvent) {
         this.dispatcher.dispatch('track', event);
     }
 }
