@@ -34,14 +34,10 @@ export class Participant {
     }
 
     async init() {
-        const stream = this.room.getStream();
-        if (null !== stream) {
-            this.stream(stream);
-        }
-
         if (this.remoteDesc) {
             return await this.peer
                 .setRemoteDescription(this.remoteDesc)
+                .then(async _ => this.setLocalStream())
                 .then(_ => this.peer.createAnswer())
                 .then((desc: RTCSessionDescription) => this.peer.setLocalDescription(desc))
                 .then(async _ => EventDispatcher.getInstance().dispatch('send', {
@@ -100,13 +96,10 @@ export class Participant {
         }
     }
 
-    private stream(stream: MediaStream) {
-        stream.getTracks().map(track => this.peer.addTrack(track, stream));
-    }
-
     private onAnswer(event: SignalingEvent) {
         this.peer
             .setRemoteDescription(new RTCSessionDescription(event.payload))
+            .then(_ => this.setLocalStream())
             .catch((evnt: DOMException) => this.dispatcher.dispatch('error', evnt));
     }
 
@@ -114,6 +107,13 @@ export class Participant {
         this.peer
             .addIceCandidate(new RTCIceCandidate(event.payload))
             .catch((evnt: DOMException) => this.dispatcher.dispatch('error', evnt));
+    }
+
+    private setLocalStream() {
+        const stream = this.room.getStream();
+        if (stream instanceof MediaStream) {
+            stream.getTracks().map(track => this.peer.addTrack(track, stream));
+        }
     }
 
     private newDataChannel(dataConstraints: RTCDataChannelInit) {
