@@ -27,6 +27,11 @@ export class Participant {
         this.peer.oniceconnectionstatechange = this.onIceConnectionStateChange.bind(this);
         this.peer.ondatachannel = this.onDataChannel.bind(this);
         this.peer.ontrack = this.onTrack.bind(this);
+
+        const stream = this.room.getStream();
+        if (stream instanceof MediaStream) {
+            stream.getTracks().map(track => this.peer.addTrack(track, stream));
+        }
     }
 
     getId(): string {
@@ -37,7 +42,6 @@ export class Participant {
         if (this.remoteDesc) {
             return await this.peer
                 .setRemoteDescription(this.remoteDesc)
-                .then(_ => this.setLocalStream())
                 .then(_ => this.peer.createAnswer())
                 .then((desc: RTCSessionDescription) => this.peer.setLocalDescription(desc))
                 .then(async _ => EventDispatcher.getInstance().dispatch('send', {
@@ -99,7 +103,6 @@ export class Participant {
     private onAnswer(event: SignalingEvent) {
         this.peer
             .setRemoteDescription(new RTCSessionDescription(event.payload))
-            .then(_ => this.setLocalStream())
             .catch((evnt: DOMException) => this.dispatcher.dispatch('error', evnt));
     }
 
@@ -107,13 +110,6 @@ export class Participant {
         this.peer
             .addIceCandidate(new RTCIceCandidate(event.payload))
             .catch((evnt: DOMException) => this.dispatcher.dispatch('error', evnt));
-    }
-
-    private async setLocalStream() {
-        const stream = this.room.getStream();
-        if (stream instanceof MediaStream) {
-            stream.getTracks().map(track => this.peer.addTrack(track, stream));
-        }
     }
 
     private newDataChannel(dataConstraints: RTCDataChannelInit) {
