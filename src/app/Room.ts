@@ -102,7 +102,7 @@ export class Room {
   }
 
   private onDisconnect(event: SignalingEvent) {
-    if (this.id === event.room.id && this.participants.has(event.caller.id)) {
+    if (this.participants.has(event.caller.id)) {
       this.participants.get(event.caller.id).close();
       this.participants.delete(event.caller.id);
     }

@@ -83,6 +83,7 @@ export class Participant {
     close() {
         this.channel.close();
         this.peer.close();
+        this.dispatcher.dispatch('disconnected');
     }
 
     handleEvent(event: SignalingEvent) {
