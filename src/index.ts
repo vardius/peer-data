@@ -1,4 +1,4 @@
-import { App as PeerData } from './app/app';
+import { App as PeerData } from './app/App';
 
 import { Room } from './app/Room';
 import { Participant } from './app/Participant';
