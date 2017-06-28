@@ -21,12 +21,12 @@ export class App {
     EventDispatcher.getInstance().register('send', this.onDisconnected.bind(this));
   }
 
-  connect(id: string): Room {
+  connect(id: string, stream: MediaStream = null): Room {
     if (this.rooms.has(id)) {
       return this.rooms.get(id);
     }
 
-    const room = new Room(id);
+    const room = new Room(id, stream);
     this.rooms.set(id, room);
 
     return room;
