@@ -1,7 +1,6 @@
 import { Signaling } from './Signaling';
 import { SignalingEvent } from './SignalingEvent';
 import { EventDispatcher } from './EventDispatcher';
-import { AppEventType } from './AppEventType';
 import * as io from 'socket.io-client';
 
 export class SocketChannel implements Signaling {
@@ -10,7 +9,7 @@ export class SocketChannel implements Signaling {
   constructor(opts?: SocketIOClient.ConnectOpts) {
     this.socket = io.connect(opts);
 
-    EventDispatcher.register(AppEventType.SEND, this.onSend.bind(this));
+    EventDispatcher.getInstance().register('send', this.onSend.bind(this));
 
     this.subscribeEvents();
   }
@@ -26,14 +25,14 @@ export class SocketChannel implements Signaling {
   }
 
   private onIp(ipaddr: string) {
-    EventDispatcher.dispatch(AppEventType.LOG, 'Server IP address is: ' + ipaddr);
+    EventDispatcher.getInstance().dispatch('log', 'Server IP address is: ' + ipaddr);
   }
 
   private onLog(...args: any[]) {
-    EventDispatcher.dispatch(AppEventType.LOG, args);
+    EventDispatcher.getInstance().dispatch('log', args);
   }
 
   private onMessage(event: SignalingEvent) {
-    EventDispatcher.dispatch(event.type, event);
+    EventDispatcher.getInstance().dispatch(event.type, event);
   }
 }

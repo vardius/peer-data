@@ -5,5 +5,4 @@ export class SignalingEventType {
   public static OFFER = 'OFFER';
   public static ANSWER = 'ANSWER';
   public static ERROR = 'ERROR';
-  public static ROOM = 'ROOM';
 }

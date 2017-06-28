@@ -1,28 +1,37 @@
 import { EventHandlerCollection } from './EventHandlerCollection';
 import { EventHandler } from './EventHandler';
 
-export const HANDLERS: EventHandlerCollection = {};
-
 export class EventDispatcher {
-  static register(type: any, callback: EventHandler) {
-    if (!HANDLERS[type]) {
-      HANDLERS[type] = [];
+  static getInstance(): EventDispatcher {
+    if (!EventDispatcher.globalInstance) {
+      EventDispatcher.globalInstance = new EventDispatcher();
     }
-    HANDLERS[type].push(callback);
+
+    return EventDispatcher.globalInstance;
   }
 
-  static unregister(type: any, callback: EventHandler) {
-    if (HANDLERS[type]) {
-      const index = HANDLERS[type].indexOf(callback);
+  private static globalInstance: EventDispatcher;
+  private handlers: EventHandlerCollection = {};
+
+  register(type: string, callback: EventHandler) {
+    if (!this.handlers[type]) {
+      this.handlers[type] = [];
+    }
+    this.handlers[type].push(callback);
+  }
+
+  unregister(type: string, callback: EventHandler) {
+    if (this.handlers[type]) {
+      const index = this.handlers[type].indexOf(callback);
       if (index !== -1) {
-        delete HANDLERS[type][index];
+        delete this.handlers[type][index];
       }
     }
   }
 
-  static dispatch(type: any, data?: any) {
-    if (HANDLERS[type]) {
-      HANDLERS[type].forEach(h => h(data));
+  dispatch(type: string, ...args) {
+    if (this.handlers[type]) {
+      this.handlers[type].forEach(h => h(...args));
     }
   }
 }
