@@ -1,1 +1,1 @@
-export type EventHandler = (data?: any) => any;
+export type EventHandler = (...args) => any;

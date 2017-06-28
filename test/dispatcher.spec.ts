@@ -1,20 +1,16 @@
-import { EventDispatcher, HANDLERS } from './../src/app/EventDispatcher';
-
-let works = 0;
+import { EventDispatcher } from './../src/app/EventDispatcher';
 
 test('EventDispatcher is defined', () => {
   expect(EventDispatcher).toBeDefined();
-});
-
-test('EventDispatcher register', () => {
-  const key = 'TEST';
-  EventDispatcher.register(key, () => works++);
-
-  expect(HANDLERS[key]).toBeDefined();
+  expect(EventDispatcher.getInstance()).toBeDefined();
+  expect(EventDispatcher.getInstance()).toEqual(EventDispatcher.getInstance());
 });
 
 test('EventDispatcher dispatch', () => {
-  EventDispatcher.dispatch('TEST');
+  let works = 0;
+  const key = 'TEST';
+  EventDispatcher.getInstance().register(key, () => works++);
+  EventDispatcher.getInstance().dispatch(key);
 
   expect(works).toEqual(1);
 });

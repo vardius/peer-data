@@ -59,7 +59,7 @@
   "homepage": "https://github.com/vardius/peer-data#readme",
   "devDependencies": {
     "@types/jest": "^20.0.2",
-    "@types/node": "^8.0.2",
+    "@types/node": "^8.0.4",
     "@types/socket.io-client": "^1.4.29",
     "@types/webrtc": "^0.0.21",
     "codecov": "^2.2.0",
@@ -81,7 +81,7 @@
     "ts-jest": "^20.0.6",
     "tslib": "^1.7.1",
     "tslint": "^5.4.3",
-    "typescript": "^2.3.4"
+    "typescript": "^2.4.1"
   },
   "dependencies": {
     "socket.io-client": "^2.0.3",
