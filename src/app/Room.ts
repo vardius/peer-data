@@ -24,7 +24,7 @@ export class Room {
       callee: null,
       room: { id: this.id },
       payload: null,
-    });
+    } as SignalingEvent);
   }
 
   getId(): string {
@@ -54,7 +54,7 @@ export class Room {
       callee: null,
       room: { id: this.id },
       payload: null,
-    });
+    } as SignalingEvent);
 
     // todo: refactor when typescript supports map
     const keys = Array.from(this.participants.keys());

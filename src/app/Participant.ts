@@ -47,10 +47,10 @@ export class Participant {
                 .then(async _ => EventDispatcher.getInstance().dispatch('send', {
                     type: SignalingEventType.ANSWER,
                     caller: null,
-                    callee: this.id,
-                    room: this.room.getId(),
+                    callee: { id: this.id },
+                    room: { id: this.room.getId() },
                     payload: this.peer.localDescription,
-                }))
+                } as SignalingEvent))
                 .then(async _ => this);
         } else {
             this.channel = this.newDataChannel(Configuration.getInstance().getDataConstraints());
@@ -62,10 +62,10 @@ export class Participant {
                 .then(async _ => EventDispatcher.getInstance().dispatch('send', {
                     type: SignalingEventType.OFFER,
                     caller: null,
-                    callee: this.id,
-                    room: this.room.getId(),
+                    callee: { id: this.id },
+                    room: { id: this.room.getId() },
                     payload: this.peer.localDescription,
-                }))
+                } as SignalingEvent))
                 .then(async _ => this);
         }
     }
@@ -127,10 +127,10 @@ export class Participant {
             EventDispatcher.getInstance().dispatch('send', {
                 type: SignalingEventType.CANDIDATE,
                 caller: null,
-                callee: this.id,
-                room: this.room.getId(),
+                callee: { id: this.id },
+                room: { id: this.room.getId() },
                 payload: iceEvent.candidate,
-            });
+            } as SignalingEvent);
         } else {
             // All ICE candidates have been sent
         }
