@@ -5,13 +5,13 @@ import globals from "rollup-plugin-node-globals";
 import builtins from "rollup-plugin-node-builtins";
 import commonjs from "rollup-plugin-commonjs";
 import uglify from "rollup-plugin-uglify";
+import typescript from "rollup-plugin-typescript2";
 
 const pkg = require("./package");
-
-export default {
+const env = process.env.NODE_ENV;
+const config = {
   moduleName: pascalCase(pkg.name),
-  entry: "es/index.js",
-  dest: "dist/bundle.js",
+  entry: "src/index.ts",
   format: "umd",
   exports: "named",
   sourceMap: true,
@@ -21,9 +21,15 @@ export default {
       jsnext: true,
       browser: true
     }),
+    typescript(),
     commonjs(),
     globals(),
-    builtins(),
-    uglify()
+    builtins()
   ]
 };
+
+if (env === "production") {
+  config.plugins.push(uglify());
+}
+
+export default config;
