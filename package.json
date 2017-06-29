@@ -22,7 +22,8 @@
     "preversion": "yarn test",
     "postversion": "git push && git push --tags"
   },
-  "main": "dist/peer-data.min.js",
+  "main": "dist/peer-data.js",
+  "browser": "dist/peer-data.min.js",
   "types": "dist/peer-data.d.ts",
   "repository": {
     "type": "git",
