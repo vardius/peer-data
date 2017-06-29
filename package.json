@@ -6,7 +6,7 @@
     "build": "yarn build:lib & yarn build:umd & yarn build:umd:min & yarn build:dts ",
     "build:lib": "tsc --outDir lib --module commonjs",
     "build:es": "tsc --outDir es --module es2015",
-    "build:umd": "cross-env NODE_ENV=production rollup -c -o dist/peer-data.js",
+    "build:umd": "cross-env NODE_ENV=development rollup -c -o dist/peer-data.js",
     "build:umd:min": "cross-env NODE_ENV=production rollup -c -o dist/peer-data.min.js",
     "build:dts": "yarn build:es && dts-bundle --name dist/peer-data --main es --outputAsModuleFolder",
     "clean": "rimraf dist es lib coverage",
