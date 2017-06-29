@@ -3,6 +3,8 @@ __tests__
 # test
 tests
 powered-test
+.code
+.rpt2_cache
 
 # asset directories
 docs

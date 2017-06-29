@@ -3,11 +3,9 @@
   "version": "3.0.10",
   "description": "PeerData - library for files, media streaming/sharing using WebRTC",
   "scripts": {
-    "build": "yarn build:lib & yarn build:umd & yarn build:umd:min & yarn build:dts",
-    "build:lib": "tsc --outDir lib --module commonjs",
+    "build": "yarn build:lib & yarn build:dts",
+    "build:lib": "rollup -c",
     "build:es": "tsc --outDir es --module es2015",
-    "build:umd": "cross-env NODE_ENV=development rollup -c -o dist/peer-data.js",
-    "build:umd:min": "cross-env NODE_ENV=production rollup -c -o dist/peer-data.min.js",
     "build:dts": "yarn build:es && dts-bundle --name dist/peer-data --main es --outputAsModuleFolder",
     "clean": "rimraf dist es lib coverage",
     "typecheck": "tsc --noEmit",
@@ -23,7 +21,7 @@
     "postversion": "git push && git push --tags"
   },
   "main": "dist/peer-data.js",
-  "browser": "dist/peer-data.min.js",
+  "module": "lib/peer-data.js",
   "types": "dist/peer-data.d.ts",
   "repository": {
     "type": "git",
@@ -69,7 +67,6 @@
     "jest": "^20.0.4",
     "jest-cli": "^20.0.4",
     "jest-environment-node-debug": "^2.0.0",
-    "pascal-case": "^2.0.1",
     "rimraf": "^2.6.1",
     "rollup": "^0.43.0",
     "rollup-plugin-commonjs": "^8.0.2",
@@ -83,10 +80,10 @@
     "ts-jest": "^20.0.6",
     "tslib": "^1.7.1",
     "tslint": "^5.4.3",
-    "typescript": "^2.4.1"
+    "typescript": "^2.4.1",
+    "socket.io-client": "^2.0.3"
   },
   "dependencies": {
-    "socket.io-client": "^2.0.3",
     "webrtc-adapter": "^4.0.2"
   }
 }
