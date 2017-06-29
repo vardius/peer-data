@@ -3,7 +3,7 @@
   "version": "3.0.10",
   "description": "PeerData - library for files, media streaming/sharing using WebRTC",
   "scripts": {
-    "build": "yarn build:lib & yarn build:umd & yarn build:umd:min & yarn build:dts ",
+    "build": "yarn build:lib & yarn build:umd & yarn build:umd:min & yarn build:dts",
     "build:lib": "tsc --outDir lib --module commonjs",
     "build:es": "tsc --outDir es --module es2015",
     "build:umd": "cross-env NODE_ENV=development rollup -c -o dist/peer-data.js",
