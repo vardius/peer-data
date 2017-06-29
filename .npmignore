@@ -1,4 +1,6 @@
 .idea
+.code
+.rpt2_cache
 .DS_Store
 *.log
 node_modules
