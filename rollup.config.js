@@ -18,12 +18,9 @@ const plugins = [
   typescript(),
   commonjs(),
   globals(),
-  builtins()
+  builtins(),
+  uglify()
 ];
-
-if (env === "production") {
-  plugins.push(uglify());
-}
 
 const config = {
   moduleName: pkg.name,
