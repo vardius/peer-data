@@ -90,15 +90,23 @@ export class Room {
 
   private onOffer(event: SignalingEvent) {
     const desc = new RTCSessionDescription(event.payload);
-    const participant = new Participant(event.caller.id, this, desc);
-    this.participants.set(participant.getId(), participant);
-    this.dispatcher.dispatch('participant', participant.init());
+    if (this.participants.has(event.caller.id)) {
+      this.participants.get(event.caller.id).renegotiate(desc);
+    } else {
+      const participant = new Participant(event.caller.id, this);
+      this.participants.set(participant.getId(), participant);
+      this.dispatcher.dispatch('participant', participant.init(desc));
+    }
   }
 
   private onConnect(event: SignalingEvent) {
-    const participant = new Participant(event.caller.id, this);
-    this.participants.set(participant.getId(), participant);
-    this.dispatcher.dispatch('participant', participant.init());
+    if (this.participants.has(event.caller.id)) {
+      this.participants.get(event.caller.id).renegotiate();
+    } else {
+      const participant = new Participant(event.caller.id, this);
+      this.participants.set(participant.getId(), participant);
+      this.dispatcher.dispatch('participant', participant.init());
+    }
   }
 
   private onDisconnect(event: SignalingEvent) {
