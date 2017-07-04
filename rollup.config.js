@@ -28,6 +28,7 @@ const config = {
   plugins: plugins,
   targets: [
     {
+      dest: pkg.module,
       format: "es",
       sourceMap: true
     },
