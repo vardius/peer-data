@@ -3,7 +3,6 @@ import resolve from "rollup-plugin-node-resolve";
 import globals from "rollup-plugin-node-globals";
 import builtins from "rollup-plugin-node-builtins";
 import commonjs from "rollup-plugin-commonjs";
-import uglify from "rollup-plugin-uglify";
 import typescript from "rollup-plugin-typescript2";
 
 const pkg = require("./package");
@@ -19,7 +18,6 @@ const plugins = [
   commonjs(),
   globals(),
   builtins(),
-  uglify()
 ];
 
 const config = {
@@ -30,15 +28,14 @@ const config = {
   plugins: plugins,
   targets: [
     {
+      format: "es",
+      sourceMap: true
+    },
+    {
       dest: pkg.main,
       format: "umd",
       sourceMap: true
     },
-    {
-      dest: pkg.module,
-      format: "es",
-      sourceMap: true
-    }
   ]
 };
 
