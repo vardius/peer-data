@@ -14,10 +14,6 @@ export class Room {
     this.id = id;
     this.stream = stream;
 
-    this.onConnect = this.onConnect.bind(this);
-    this.onOffer = this.onOffer.bind(this);
-    this.onDisconnect = this.onDisconnect.bind(this);
-
     EventDispatcher.getInstance().dispatch('send', {
       type: SignalingEventType.CONNECT,
       caller: null,
@@ -27,19 +23,19 @@ export class Room {
     } as SignalingEvent);
   }
 
-  getId(): string {
+  getId = (): string => {
     return this.id;
   }
 
-  getStream(): MediaStream {
+  getStream = (): MediaStream => {
     return this.stream;
   }
 
-  on(event: string, callback: EventHandler) {
+  on = (event: string, callback: EventHandler) => {
     this.dispatcher.register(event, callback);
   }
 
-  send(payload: any) {
+  send = (payload: any) => {
     // todo: refactor when typescript supports map
     const keys = Array.from(this.participants.keys());
     for (const key of keys) {
@@ -47,7 +43,7 @@ export class Room {
     }
   }
 
-  disconnect() {
+  disconnect = () => {
     EventDispatcher.getInstance().dispatch('send', {
       type: SignalingEventType.DISCONNECT,
       caller: null,
@@ -64,7 +60,7 @@ export class Room {
     }
   }
 
-  handleEvent(event: SignalingEvent) {
+  handleEvent = (event: SignalingEvent) => {
     if (this.id !== event.room.id) {
       return;
     }
@@ -88,7 +84,7 @@ export class Room {
     }
   }
 
-  private onOffer(event: SignalingEvent) {
+  private onOffer = (event: SignalingEvent) => {
     const desc = new RTCSessionDescription(event.payload);
     if (this.participants.has(event.caller.id)) {
       this.participants.get(event.caller.id).renegotiate(desc);
@@ -99,7 +95,7 @@ export class Room {
     }
   }
 
-  private onConnect(event: SignalingEvent) {
+  private onConnect = (event: SignalingEvent) => {
     if (this.participants.has(event.caller.id)) {
       this.participants.get(event.caller.id).renegotiate();
     } else {
@@ -109,7 +105,7 @@ export class Room {
     }
   }
 
-  private onDisconnect(event: SignalingEvent) {
+  private onDisconnect = (event: SignalingEvent) => {
     if (this.participants.has(event.caller.id)) {
       this.participants.get(event.caller.id).close();
       this.participants.delete(event.caller.id);

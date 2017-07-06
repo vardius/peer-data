@@ -13,19 +13,19 @@ export class Configuration {
 
     private constructor() { }
 
-    setServers(servers: RTCConfiguration) {
+    setServers = (servers: RTCConfiguration) => {
         this.servers = servers;
     }
 
-    getServers(): RTCConfiguration {
+    getServers = (): RTCConfiguration => {
         return this.servers;
     }
 
-    setDataConstraints(dataConstraints: RTCDataChannelInit) {
+    setDataConstraints = (dataConstraints: RTCDataChannelInit) => {
         this.dataConstraints = dataConstraints;
     }
 
-    getDataConstraints(): RTCDataChannelInit {
+    getDataConstraints = (): RTCDataChannelInit => {
         return this.dataConstraints;
     }
 }

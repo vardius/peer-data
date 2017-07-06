@@ -2,7 +2,7 @@ import { EventHandlerCollection } from './EventHandlerCollection';
 import { EventHandler } from './EventHandler';
 
 export class EventDispatcher {
-  static getInstance(): EventDispatcher {
+  static getInstance = (): EventDispatcher => {
     if (!EventDispatcher.globalInstance) {
       EventDispatcher.globalInstance = new EventDispatcher();
     }
@@ -13,14 +13,14 @@ export class EventDispatcher {
   private static globalInstance: EventDispatcher;
   private handlers: EventHandlerCollection = {};
 
-  register(type: string, callback: EventHandler) {
+  register = (type: string, callback: EventHandler) => {
     if (!this.handlers[type]) {
       this.handlers[type] = [];
     }
     this.handlers[type].push(callback);
   }
 
-  unregister(type: string, callback: EventHandler) {
+  unregister = (type: string, callback: EventHandler) => {
     if (this.handlers[type]) {
       const index = this.handlers[type].indexOf(callback);
       if (index !== -1) {
@@ -29,7 +29,7 @@ export class EventDispatcher {
     }
   }
 
-  dispatch(type: string, ...args) {
+  dispatch = (type: string, ...args) => {
     if (this.handlers[type]) {
       this.handlers[type].forEach(h => h(...args));
     }
