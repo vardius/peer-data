@@ -58,7 +58,7 @@
   "homepage": "https://github.com/vardius/peer-data#readme",
   "devDependencies": {
     "@types/jest": "^20.0.2",
-    "@types/node": "^8.0.7",
+    "@types/node": "^8.0.8",
     "@types/socket.io-client": "^1.4.29",
     "@types/webrtc": "^0.0.21",
     "codecov": "^2.2.0",
@@ -83,6 +83,6 @@
     "typescript": "^2.4.1"
   },
   "dependencies": {
-    "webrtc-adapter": "^4.1.0"
+    "webrtc-adapter": "^4.1.1"
   }
 }
