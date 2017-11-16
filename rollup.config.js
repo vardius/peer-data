@@ -23,7 +23,7 @@ const plugins = [
 const config = {
   name: pkg.name,
   input: "src/index.ts",
-  exports: "named",
+  exports: 'named',
   external: external,
   plugins: plugins,
   output: [
