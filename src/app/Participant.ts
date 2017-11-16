@@ -166,13 +166,16 @@ export class Participant {
     }
 
     private onConnectionStateChange = () => {
-        switch (this.peer.connectionState) {
-            case 'disconnected':
-            case 'failed':
-            case 'closed':
-                this.dispatcher.dispatch('disconnected');
-                break;
-        }
+        // todo: fix this
+        // semantic error TS2339 Property 'connectionState' does not exist on type 'RTCPeerConnection'.
+
+        // switch (this.peer.connectionState) {
+        //     case 'disconnected':
+        //     case 'failed':
+        //     case 'closed':
+        //         this.dispatcher.dispatch('disconnected');
+        //         break;
+        // }
     }
 
     private onIceConnectionStateChange = () => {

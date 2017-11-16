@@ -21,21 +21,21 @@ const plugins = [
 ];
 
 const config = {
-  moduleName: pkg.name,
-  entry: "src/index.ts",
+  name: pkg.name,
+  input: "src/index.ts",
   exports: "named",
   external: external,
   plugins: plugins,
-  targets: [
+  output: [
     {
-      dest: pkg.module,
+      file: pkg.module,
       format: "es",
-      sourceMap: true
+      sourcemap: true
     },
     {
-      dest: pkg.main,
+      file: pkg.main,
       format: "umd",
-      sourceMap: true
+      sourcemap: true
     },
   ]
 };
