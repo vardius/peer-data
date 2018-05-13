@@ -9,7 +9,7 @@
     "build:dts": "yarn build:es && dts-bundle --name dist/peer-data --main es --outputAsModuleFolder",
     "clean": "rimraf dist es lib coverage",
     "typecheck": "tsc --noEmit",
-    "lint": "tslint --project tsconfig.json --type-check --format stylish",
+    "lint": "tslint --project tsconfig.json --project --format stylish",
     "test": "jest --no-cache --config $(node jest.config.js)",
     "test:cov": "jest --coverage --no-cache --config $(node jest.config.js)",
     "test:watch": "jest --watch --updateSnapshot --config $(node jest.config.js)",
