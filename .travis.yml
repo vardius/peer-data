@@ -1,14 +1,12 @@
 language: node_js
 node_js:
   - "node"
-cache:
-  yarn: true
-  directories:
-    - node_modules
+  - 8
+  - 9
 script:
-  - yarn run test:cov
-  - yarn run posttest
+  - yarn test:cov && codecov
 before_install:
+  - npm install -g yarn
   - npm i -g codecov
 after_success:
   - bash <(curl -s https://codecov.io/bash) -e TRAVIS_NODE_VERSION
