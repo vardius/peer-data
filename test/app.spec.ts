@@ -2,7 +2,7 @@ import { App } from './../src/app/App';
 
 const servers = {
   iceServers: [
-    { url: 'stun:stun.1.google.com:19302' },
+    { urls: ['stun:stun.1.google.com:19302'] },
   ],
 };
 const constraints = { ordered: true };

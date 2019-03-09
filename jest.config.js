@@ -2,7 +2,7 @@
 
 var jestConfig = {
   transform: {
-    '.(ts?)': '<rootDir>/node_modules/ts-jest/preprocessor.js'
+    '.(ts?)': 'ts-jest'
   },
   testMatch: ['**/?(*.)(spec|test).{t,j}s'],
   testPathIgnorePatterns: [
