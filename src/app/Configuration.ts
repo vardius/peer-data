@@ -15,17 +15,17 @@ export class Configuration {
 
   setServers = (servers: RTCConfiguration) => {
     this.servers = servers;
-  };
+  }
 
   getServers = (): RTCConfiguration => {
     return this.servers;
-  };
+  }
 
   setDataConstraints = (dataConstraints: RTCDataChannelInit) => {
     this.dataConstraints = dataConstraints;
-  };
+  }
 
   getDataConstraints = (): RTCDataChannelInit => {
     return this.dataConstraints;
-  };
+  }
 }

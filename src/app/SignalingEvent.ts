@@ -1,4 +1,4 @@
-import { Identifiable } from "./Identifiable";
+import { Identifiable } from './Identifiable';
 
 export interface SignalingEvent {
   type: string;
