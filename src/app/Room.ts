@@ -1,8 +1,8 @@
-import { EventDispatcher } from './EventDispatcher';
-import { SignalingEventType } from './SignalingEventType';
-import { EventHandler } from './EventHandler';
-import { Participant } from './Participant';
-import { SignalingEvent } from './SignalingEvent';
+import { EventDispatcher } from "./EventDispatcher";
+import { SignalingEventType } from "./SignalingEventType";
+import { EventHandler } from "./EventHandler";
+import { Participant } from "./Participant";
+import { SignalingEvent } from "./SignalingEvent";
 
 export class Room {
   private id: string;
@@ -14,26 +14,26 @@ export class Room {
     this.id = id;
     this.stream = stream;
 
-    EventDispatcher.getInstance().dispatch('send', {
+    EventDispatcher.getInstance().dispatch("send", {
       type: SignalingEventType.CONNECT,
       caller: null,
       callee: null,
       room: { id: this.id },
-      payload: null,
+      payload: null
     } as SignalingEvent);
   }
 
   getId = (): string => {
     return this.id;
-  }
+  };
 
   getStream = (): MediaStream => {
     return this.stream;
-  }
+  };
 
   on = (event: string, callback: EventHandler) => {
     this.dispatcher.register(event, callback);
-  }
+  };
 
   send = (payload: any) => {
     // todo: refactor when typescript supports map
@@ -41,15 +41,15 @@ export class Room {
     for (const key of keys) {
       this.participants.get(key).send(payload);
     }
-  }
+  };
 
   disconnect = () => {
-    EventDispatcher.getInstance().dispatch('send', {
+    EventDispatcher.getInstance().dispatch("send", {
       type: SignalingEventType.DISCONNECT,
       caller: null,
       callee: null,
       room: { id: this.id },
-      payload: null,
+      payload: null
     } as SignalingEvent);
 
     // todo: refactor when typescript supports map
@@ -58,7 +58,7 @@ export class Room {
       this.participants.get(key).close();
       this.participants.delete(key);
     }
-  }
+  };
 
   handleEvent = (event: SignalingEvent) => {
     if (this.id !== event.room.id) {
@@ -82,7 +82,7 @@ export class Room {
         }
         break;
     }
-  }
+  };
 
   private onOffer = (event: SignalingEvent) => {
     const desc = new RTCSessionDescription(event.payload);
@@ -91,9 +91,9 @@ export class Room {
     } else {
       const participant = new Participant(event.caller.id, this);
       this.participants.set(participant.getId(), participant);
-      this.dispatcher.dispatch('participant', participant.init(desc));
+      this.dispatcher.dispatch("participant", participant.init(desc));
     }
-  }
+  };
 
   private onConnect = (event: SignalingEvent) => {
     if (this.participants.has(event.caller.id)) {
@@ -101,14 +101,14 @@ export class Room {
     } else {
       const participant = new Participant(event.caller.id, this);
       this.participants.set(participant.getId(), participant);
-      this.dispatcher.dispatch('participant', participant.init());
+      this.dispatcher.dispatch("participant", participant.init());
     }
-  }
+  };
 
   private onDisconnect = (event: SignalingEvent) => {
     if (this.participants.has(event.caller.id)) {
       this.participants.get(event.caller.id).close();
       this.participants.delete(event.caller.id);
     }
-  }
+  };
 }

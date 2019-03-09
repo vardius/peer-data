@@ -1,5 +1,5 @@
-import { EventHandlerCollection } from './EventHandlerCollection';
-import { EventHandler } from './EventHandler';
+import { EventHandlerCollection } from "./EventHandlerCollection";
+import { EventHandler } from "./EventHandler";
 
 export class EventDispatcher {
   static getInstance = (): EventDispatcher => {
@@ -8,7 +8,7 @@ export class EventDispatcher {
     }
 
     return EventDispatcher.globalInstance;
-  }
+  };
 
   private static globalInstance: EventDispatcher;
   private handlers: EventHandlerCollection = {};
@@ -18,7 +18,7 @@ export class EventDispatcher {
       this.handlers[type] = [];
     }
     this.handlers[type].push(callback);
-  }
+  };
 
   unregister = (type: string, callback: EventHandler) => {
     if (this.handlers[type]) {
@@ -27,11 +27,11 @@ export class EventDispatcher {
         delete this.handlers[type][index];
       }
     }
-  }
+  };
 
   dispatch = (type: string, ...args) => {
     if (this.handlers[type]) {
       this.handlers[type].forEach(h => h(...args));
     }
-  }
+  };
 }

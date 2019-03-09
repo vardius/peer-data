@@ -1,31 +1,31 @@
 export class Configuration {
-    static getInstance(): Configuration {
-        if (!Configuration.instance) {
-            Configuration.instance = new Configuration();
-        }
-
-        return Configuration.instance;
+  static getInstance(): Configuration {
+    if (!Configuration.instance) {
+      Configuration.instance = new Configuration();
     }
 
-    private static instance: Configuration;
-    private servers: RTCConfiguration = {};
-    private dataConstraints: RTCDataChannelInit = null;
+    return Configuration.instance;
+  }
 
-    private constructor() { }
+  private static instance: Configuration;
+  private servers: RTCConfiguration = {};
+  private dataConstraints: RTCDataChannelInit = null;
 
-    setServers = (servers: RTCConfiguration) => {
-        this.servers = servers;
-    }
+  private constructor() {}
 
-    getServers = (): RTCConfiguration => {
-        return this.servers;
-    }
+  setServers = (servers: RTCConfiguration) => {
+    this.servers = servers;
+  };
 
-    setDataConstraints = (dataConstraints: RTCDataChannelInit) => {
-        this.dataConstraints = dataConstraints;
-    }
+  getServers = (): RTCConfiguration => {
+    return this.servers;
+  };
 
-    getDataConstraints = (): RTCDataChannelInit => {
-        return this.dataConstraints;
-    }
+  setDataConstraints = (dataConstraints: RTCDataChannelInit) => {
+    this.dataConstraints = dataConstraints;
+  };
+
+  getDataConstraints = (): RTCDataChannelInit => {
+    return this.dataConstraints;
+  };
 }
