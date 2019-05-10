@@ -15,15 +15,6 @@ For this, we use a signaling server: a server that can pass messages between *We
 
 [PeerDataServer](https://github.com/Vardius/peer-data-server) - An **ready to use** example of signaling server on *Node* using [socket.io](http://socket.io/).
 
-## Installation
-```bash
-$ npm install peer-data
-```
-
-## [Documentation](https://github.com/vardius/peer-data/wiki)
-
-- [Chat Example](https://github.com/vardius/webrtc-chat)
-
 ABOUT
 ==================================================
 Contributors:
@@ -35,6 +26,54 @@ Want to contribute ? Feel free to send pull requests!
 Have problems, bugs, feature ideas?
 We are using the github [issue tracker](https://github.com/vardius/peer-data/issues) to manage them.
 
-## License
+HOW TO USE
+==================================================
 
-The code is available under the [MIT license](LICENSE).
+1. [Documentation](https://github.com/vardius/peer-data/wiki)
+2. [Chat Example](https://github.com/vardius/webrtc-chat)
+
+## Installation
+```bash
+$ npm install peer-data
+```
+
+## Basic example
+```typescript
+import PeerData from 'peer-data';
+
+const servers = {
+  iceServers: [
+    {url: "stun:stun.1.google.com:19302"}
+  ]
+};
+
+const constraints = {ordered: true};
+const peerData = new PeerData(servers, constraints);
+const room = peerData.connect('test-room');
+
+room.on("participant", promise => {
+    promise.then(participant => {
+
+      participant.on("message", payload => {
+        console.log("message", payload);
+      });
+
+      participant.send('Hi mate! this is private message.');
+   });
+});
+```
+
+For how to **disconnect**, **close connection** and handle errors please check [Client documentation](https://github.com/vardius/peer-data/wiki/Client).
+
+## Advanced examples
+- [Client](https://github.com/vardius/peer-data/wiki/Client)
+- [Signaling](https://github.com/vardius/peer-data/wiki/Signaling)
+- [Data Channel](https://github.com/vardius/peer-data/wiki/Data-Channel)
+- [Media Stream](https://github.com/vardius/peer-data/wiki/Media-Stream)
+
+License
+-------
+
+This package is released under the MIT license. See the complete license in the package:
+
+[LICENSE](LICENSE.md)
