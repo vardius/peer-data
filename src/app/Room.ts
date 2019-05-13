@@ -38,11 +38,7 @@ export class Room {
   }
 
   send = (payload: any): Room => {
-    // todo: refactor when typescript supports map
-    const keys = Array.from(this.participants.keys());
-    for (const key of keys) {
-      this.participants.get(key).send(payload);
-    }
+    this.participants.forEach((participant: Participant) => participant.send(payload));
 
     return this;
   }
@@ -55,9 +51,8 @@ export class Room {
       room: { id: this.id },
       payload: null,
     } as SignalingEvent);
-
-    // todo: refactor when typescript supports map
     const keys = Array.from(this.participants.keys());
+
     for (const key of keys) {
       this.participants.get(key).close();
       this.participants.delete(key);
