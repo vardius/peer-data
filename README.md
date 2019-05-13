@@ -51,16 +51,13 @@ const constraints = {ordered: true};
 const peerData = new PeerData(servers, constraints);
 const room = peerData.connect('test-room');
 
-room.on("participant", promise => {
-    promise.then(participant => {
+room
+  .on("participant", participant => {
+    participant.on("message", payload => console.log("message", payload));
 
-      participant.on("message", payload => {
-        console.log("message", payload);
-      });
-
-      participant.send('Hi mate! this is private message.');
-   });
-});
+    participant.send('Hi mate! this is private message.');
+  })
+  .on("error", event => console.log("error", event));
 ```
 
 For how to **disconnect**, **close connection** and handle errors please check [Client documentation](https://github.com/vardius/peer-data/wiki/Client).
@@ -70,6 +67,7 @@ For how to **disconnect**, **close connection** and handle errors please check [
 - [Signaling](https://github.com/vardius/peer-data/wiki/Signaling)
 - [Data Channel](https://github.com/vardius/peer-data/wiki/Data-Channel)
 - [Media Stream](https://github.com/vardius/peer-data/wiki/Media-Stream)
+- [Error Handling](https://github.com/vardius/peer-data/wiki/Error-Handling)
 
 License
 -------
