@@ -31,19 +31,23 @@ export class Room {
     return this.stream;
   }
 
-  on = (event: string, callback: EventHandler) => {
+  on = (event: string, callback: EventHandler): Room => {
     this.dispatcher.register(event, callback);
+
+    return this;
   }
 
-  send = (payload: any) => {
+  send = (payload: any): Room => {
     // todo: refactor when typescript supports map
     const keys = Array.from(this.participants.keys());
     for (const key of keys) {
       this.participants.get(key).send(payload);
     }
+
+    return this;
   }
 
-  disconnect = () => {
+  disconnect = (): Room => {
     EventDispatcher.getInstance().dispatch('send', {
       type: SignalingEventType.DISCONNECT,
       caller: null,
@@ -58,9 +62,11 @@ export class Room {
       this.participants.get(key).close();
       this.participants.delete(key);
     }
+
+    return this;
   }
 
-  handleEvent = (event: SignalingEvent) => {
+  onSignalingEvent = (event: SignalingEvent): Room => {
     if (this.id !== event.room.id) {
       return;
     }
@@ -78,10 +84,12 @@ export class Room {
       case SignalingEventType.ANSWER:
       case SignalingEventType.CANDIDATE:
         if (this.participants.has(event.caller.id)) {
-          this.participants.get(event.caller.id).handleEvent(event);
+          this.participants.get(event.caller.id).onSignalingEvent(event);
         }
         break;
     }
+
+    return this;
   }
 
   private onOffer = (event: SignalingEvent) => {
@@ -91,7 +99,9 @@ export class Room {
     } else {
       const participant = new Participant(event.caller.id, this);
       this.participants.set(participant.getId(), participant);
-      this.dispatcher.dispatch('participant', participant.init(desc));
+      participant.init(desc)
+        .then(p => this.dispatcher.dispatch('participant', p))
+        .catch((evnt: DOMException) => this.dispatcher.dispatch('error', evnt));
     }
   }
 
@@ -101,7 +111,9 @@ export class Room {
     } else {
       const participant = new Participant(event.caller.id, this);
       this.participants.set(participant.getId(), participant);
-      this.dispatcher.dispatch('participant', participant.init());
+      participant.init()
+        .then(p => this.dispatcher.dispatch('participant', p))
+        .catch((evnt: DOMException) => this.dispatcher.dispatch('error', evnt));
     }
   }
 

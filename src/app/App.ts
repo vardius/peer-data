@@ -30,10 +30,12 @@ export class App {
     return room;
   }
 
-  private onEvent = (event: SignalingEvent) => {
+  private onEvent = (event: SignalingEvent): App => {
     if (this.rooms.has(event.room.id)) {
-      this.rooms.get(event.room.id).handleEvent(event);
+      this.rooms.get(event.room.id).onSignalingEvent(event);
     }
+
+    return this;
   }
 
   private onDisconnected = (event: SignalingEvent) => {

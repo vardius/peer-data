@@ -26,23 +26,29 @@ export class Participant {
     return this.id;
   }
 
-  on = (event: string, callback: EventHandler) => {
+  on = (event: string, callback: EventHandler): Participant => {
     this.dispatcher.register(event, callback);
+
+    return this;
   }
 
-  send = (payload: any) => {
+  send = (payload: any): Participant => {
     if (this.channel.readyState === 'open') {
       this.channel.send(payload);
     }
+
+    return this;
   }
 
-  close = () => {
+  close = (): Participant => {
     this.channel.close();
     this.peer.close();
     this.dispatcher.dispatch('disconnected');
+
+    return this;
   }
 
-  handleEvent = (event: SignalingEvent) => {
+  onSignalingEvent = (event: SignalingEvent): Participant => {
     if (this.id !== event.caller.id) {
       return;
     }
@@ -55,9 +61,11 @@ export class Participant {
         this.onCandidate(event);
         break;
     }
+
+    return this;
   }
 
-  init = async (remoteDesc: RTCSessionDescription = null) => {
+  init = async (remoteDesc: RTCSessionDescription = null): Promise<Participant> => {
     this.peer = new RTCPeerConnection(Configuration.getInstance().getServers());
     this.peer.onicecandidate = this.onIceCandidate;
     this.peer.onconnectionstatechange = this.onConnectionStateChange;
@@ -153,7 +161,7 @@ export class Participant {
     }
   }
 
-  private newDataChannel = (dataConstraints: RTCDataChannelInit) => {
+  private newDataChannel = (dataConstraints: RTCDataChannelInit): RTCDataChannel => {
     const label = Math.floor((1 + Math.random()) * 1e16)
       .toString(16)
       .substring(1);
