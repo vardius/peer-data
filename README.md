@@ -51,13 +51,11 @@ const constraints = {ordered: true};
 const peerData = new PeerData(servers, constraints);
 const room = peerData.connect('test-room');
 
-room
-  .on("participant", participant => {
-    participant.on("message", payload => console.log("message", payload));
+room.on("participant", participant => {
+  participant.on("message", payload => console.log("message", payload));
 
-    participant.send('Hi mate! this is private message.');
-  })
-  .on("error", event => console.log("error", event));
+  participant.send('Hi mate! this is private message.');
+})
 ```
 
 For how to **disconnect**, **close connection** and handle errors please check [Client documentation](https://github.com/vardius/peer-data/wiki/Client).
