@@ -11,8 +11,7 @@ const env = process.env.NODE_ENV;
 const plugins = [
   sourcemaps(),
   resolve({
-    jsnext: true,
-    browser: true
+    mainFields: ['module', 'main', 'browser', 'jsnext']
   }),
   typescript({
     clean: true,
