@@ -14,7 +14,11 @@ const plugins = [
     jsnext: true,
     browser: true
   }),
-  typescript(),
+  typescript({
+    clean: true,
+    rollupCommonJSResolveHack: true,
+    exclude: ['*.d.ts', '**/*.d.ts'],
+  }),
   commonjs(),
   globals(),
   builtins(),
