@@ -23,13 +23,9 @@ export class Room {
     } as SignalingEvent);
   }
 
-  getId = (): string => {
-    return this.id;
-  }
+  getId = (): string => this.id;
 
-  getStream = (): MediaStream => {
-    return this.stream;
-  }
+  getStream = (): MediaStream => this.stream;
 
   on = (event: string, callback: EventHandler): Room => {
     this.dispatcher.register(event, callback);

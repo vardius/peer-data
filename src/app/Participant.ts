@@ -22,9 +22,7 @@ export class Participant {
     };
   }
 
-  getId = (): string => {
-    return this.id;
-  }
+  getId = (): string => this.id;
 
   on = (event: string, callback: EventHandler): Participant => {
     this.dispatcher.register(event, callback);
@@ -82,39 +80,29 @@ export class Participant {
       return await this.peer
         .setRemoteDescription(remoteDesc)
         .then(_ => this.peer.createAnswer(this.offerAnswerOptions))
-        .then((desc: RTCSessionDescription) =>
-          this.peer.setLocalDescription(desc),
-        )
-        .then(_ =>
-          EventDispatcher.getInstance().dispatch('send', {
-            type: SignalingEventType.ANSWER,
-            caller: null,
-            callee: { id: this.id },
-            room: { id: this.room.getId() },
-            payload: this.peer.localDescription,
-          } as SignalingEvent),
-        )
+        .then((desc: RTCSessionDescription) => this.peer.setLocalDescription(desc))
+        .then(_ => EventDispatcher.getInstance().dispatch('send', {
+          type: SignalingEventType.ANSWER,
+          caller: null,
+          callee: { id: this.id },
+          room: { id: this.room.getId() },
+          payload: this.peer.localDescription,
+        } as SignalingEvent))
         .then(_ => this);
     } else {
-      this.channel = this.newDataChannel(
-        Configuration.getInstance().getDataConstraints(),
-      );
+      this.channel = this.newDataChannel(Configuration.getInstance().getDataConstraints());
       this.channel.onmessage = this.onMessage;
 
       return await this.peer
         .createOffer(this.offerAnswerOptions)
-        .then((desc: RTCSessionDescription) =>
-          this.peer.setLocalDescription(desc),
-        )
-        .then(_ =>
-          EventDispatcher.getInstance().dispatch('send', {
-            type: SignalingEventType.OFFER,
-            caller: null,
-            callee: { id: this.id },
-            room: { id: this.room.getId() },
-            payload: this.peer.localDescription,
-          } as SignalingEvent),
-        )
+        .then((desc: RTCSessionDescription) => this.peer.setLocalDescription(desc))
+        .then(_ => EventDispatcher.getInstance().dispatch('send', {
+          type: SignalingEventType.OFFER,
+          caller: null,
+          callee: { id: this.id },
+          room: { id: this.room.getId() },
+          payload: this.peer.localDescription,
+        } as SignalingEvent))
         .then(_ => this);
     }
   }
@@ -124,39 +112,29 @@ export class Participant {
       this.peer
         .setRemoteDescription(remoteDesc)
         .then(_ => this.peer.createAnswer(this.offerAnswerOptions))
-        .then((desc: RTCSessionDescription) =>
-          this.peer.setLocalDescription(desc),
-        )
-        .then(_ =>
-          EventDispatcher.getInstance().dispatch('send', {
-            type: SignalingEventType.ANSWER,
-            caller: null,
-            callee: { id: this.id },
-            room: { id: this.room.getId() },
-            payload: this.peer.localDescription,
-          } as SignalingEvent),
-        )
+        .then((desc: RTCSessionDescription) => this.peer.setLocalDescription(desc))
+        .then(_ => EventDispatcher.getInstance().dispatch('send', {
+          type: SignalingEventType.ANSWER,
+          caller: null,
+          callee: { id: this.id },
+          room: { id: this.room.getId() },
+          payload: this.peer.localDescription,
+        } as SignalingEvent))
         .catch((evnt: DOMException) => this.dispatcher.dispatch('error', evnt));
     } else {
-      this.channel = this.newDataChannel(
-        Configuration.getInstance().getDataConstraints(),
-      );
+      this.channel = this.newDataChannel(Configuration.getInstance().getDataConstraints());
       this.channel.onmessage = this.onMessage;
 
       this.peer
         .createOffer(this.offerAnswerOptions)
-        .then((desc: RTCSessionDescription) =>
-          this.peer.setLocalDescription(desc),
-        )
-        .then(_ =>
-          EventDispatcher.getInstance().dispatch('send', {
-            type: SignalingEventType.OFFER,
-            caller: null,
-            callee: { id: this.id },
-            room: { id: this.room.getId() },
-            payload: this.peer.localDescription,
-          } as SignalingEvent),
-        )
+        .then((desc: RTCSessionDescription) => this.peer.setLocalDescription(desc))
+        .then(_ => EventDispatcher.getInstance().dispatch('send', {
+          type: SignalingEventType.OFFER,
+          caller: null,
+          callee: { id: this.id },
+          room: { id: this.room.getId() },
+          payload: this.peer.localDescription,
+        } as SignalingEvent))
         .catch((evnt: DOMException) => this.dispatcher.dispatch('error', evnt));
     }
   }
@@ -225,7 +203,7 @@ export class Participant {
     this.channel.onmessage = this.onMessage;
   }
 
-  private onMessage = event => {
+  private onMessage = (event: MessageEvent) => {
     this.dispatcher.dispatch('message', event.data);
   }
 
