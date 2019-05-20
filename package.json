@@ -1,6 +1,6 @@
 {
   "name": "peer-data",
-  "version": "3.0.31",
+  "version": "3.0.32",
   "description": "PeerData - library for files, media streaming/sharing using WebRTC",
   "scripts": {
     "build": "rollup -c",
@@ -59,7 +59,9 @@
     "transform": {
       ".(ts?)": "ts-jest"
     },
-    "testMatch": ["**/?(*.)(spec|test).{t,j}s"],
+    "testMatch": [
+      "**/?(*.)(spec|test).{t,j}s"
+    ],
     "testPathIgnorePatterns": [
       "<rootDir>/(node_modules|lib|es|dist)"
     ],
@@ -67,7 +69,11 @@
       "src/**/*.{t,j}s",
       "!src/**/*.d.ts"
     ],
-    "moduleFileExtensions": ["js", "json", "ts"]
+    "moduleFileExtensions": [
+      "js",
+      "json",
+      "ts"
+    ]
   },
   "peerDependencies": {
     "socket.io-client": "^2.0.3",
