@@ -1,13 +1,15 @@
 import { Signaling } from './Signaling';
 import { SignalingEvent } from './SignalingEvent';
 import { EventDispatcher } from './EventDispatcher';
-import { connect } from 'socket.io-client';
+
+// tslint:disable-next-line: no-var-requires no-require-imports
+const io = require('socket.io-client');
 
 export class SocketChannel implements Signaling {
   private socket: SocketIOClient.Socket;
 
   constructor(opts?: SocketIOClient.ConnectOpts) {
-    this.socket = connect(opts);
+    this.socket = io(opts);
 
     EventDispatcher.getInstance().register('send', this.onSend);
 

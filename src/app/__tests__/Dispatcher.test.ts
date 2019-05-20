@@ -1,4 +1,4 @@
-import { EventDispatcher } from './../src/app/EventDispatcher';
+import { EventDispatcher } from '../EventDispatcher';
 
 test('EventDispatcher is defined', () => {
   expect(EventDispatcher).toBeDefined();

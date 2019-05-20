@@ -1,7 +1,5 @@
 import sourcemaps from "rollup-plugin-sourcemaps";
 import resolve from "rollup-plugin-node-resolve";
-import globals from "rollup-plugin-node-globals";
-import builtins from "rollup-plugin-node-builtins";
 import commonjs from "rollup-plugin-commonjs";
 import typescript from "rollup-plugin-typescript2";
 
@@ -10,18 +8,9 @@ const external = Object.keys(pkg.peerDependencies);
 const env = process.env.NODE_ENV;
 const plugins = [
   sourcemaps(),
-  resolve({
-    preferBuiltins: true,
-    mainFields: ['module', 'main', 'browser', 'jsnext']
-  }),
-  typescript({
-    clean: true,
-    rollupCommonJSResolveHack: true,
-    exclude: ['*.d.ts', '**/*.d.ts'],
-  }),
+  resolve(),
+  typescript(),
   commonjs(),
-  globals(),
-  builtins(),
 ];
 
 const config = {
