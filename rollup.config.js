@@ -39,7 +39,7 @@ const config = {
       name: pkg.name,
       exports: 'named',
       file: pkg.main,
-      format: "umd",
+      format: "cjs",
       sourcemap: true
     },
   ]
