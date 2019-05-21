@@ -29,7 +29,7 @@ export class EventDispatcher {
     }
   }
 
-  dispatch = (type: string, ...args) => {
+  dispatch = (type: string, ...args: any[]) => {
     if (this.handlers[type]) {
       this.handlers[type].forEach(h => h(...args));
     }

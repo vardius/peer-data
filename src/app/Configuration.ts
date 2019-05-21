@@ -9,9 +9,9 @@ export class Configuration {
 
   private static instance: Configuration;
   private servers: RTCConfiguration = {};
-  private dataConstraints: RTCDataChannelInit = null;
+  private dataConstraints?: RTCDataChannelInit;
 
-  private constructor() {}
+  private constructor() { }
 
   setServers = (servers: RTCConfiguration) => {
     this.servers = servers;
@@ -25,7 +25,7 @@ export class Configuration {
     this.dataConstraints = dataConstraints;
   }
 
-  getDataConstraints = (): RTCDataChannelInit => {
+  getDataConstraints = (): RTCDataChannelInit | undefined => {
     return this.dataConstraints;
   }
 }

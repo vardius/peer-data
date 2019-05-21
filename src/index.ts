@@ -4,9 +4,7 @@ import { Room } from './app/Room';
 import { Participant } from './app/Participant';
 import { EventDispatcher } from './app/EventDispatcher';
 
-import { Signaling } from './app/Signaling';
-import { SignalingEvent } from './app/SignalingEvent';
-import { SignalingEventType } from './app/SignalingEventType';
+import { Signaling, SignalingEvent, SignalingEventType } from './app/Signaling';
 import { SocketChannel } from './app/SocketChannel';
 
 export {

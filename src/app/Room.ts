@@ -1,16 +1,15 @@
 import { EventDispatcher } from './EventDispatcher';
-import { SignalingEventType } from './SignalingEventType';
+import { Identifiable, SignalingEvent, SignalingEventType } from './Signaling';
 import { EventHandler } from './EventHandler';
 import { Participant } from './Participant';
-import { SignalingEvent } from './SignalingEvent';
 
 export class Room {
   private id: string;
   private participants: Map<string, Participant> = new Map();
   private dispatcher: EventDispatcher = new EventDispatcher();
-  private stream: MediaStream = null;
+  private stream?: MediaStream;
 
-  constructor(id: string, stream: MediaStream = null) {
+  constructor(id: string, stream?: MediaStream) {
     this.id = id;
     this.stream = stream;
 
@@ -25,7 +24,7 @@ export class Room {
 
   getId = (): string => this.id;
 
-  getStream = (): MediaStream => this.stream;
+  getStream = (): MediaStream | undefined => this.stream;
 
   on = (event: string, callback: EventHandler): Room => {
     this.dispatcher.register(event, callback);
@@ -47,10 +46,10 @@ export class Room {
       room: { id: this.id },
       payload: null,
     } as SignalingEvent);
-    const keys = Array.from(this.participants.keys());
 
+    const keys = Array.from(this.participants.keys());
     for (const key of keys) {
-      this.participants.get(key).close();
+      (this.participants.get(key) as Participant).close();
       this.participants.delete(key);
     }
 
@@ -59,7 +58,7 @@ export class Room {
 
   onSignalingEvent = (event: SignalingEvent): Room => {
     if (this.id !== event.room.id) {
-      return;
+      return this;
     }
 
     switch (event.type) {
@@ -74,8 +73,8 @@ export class Room {
         break;
       case SignalingEventType.ANSWER:
       case SignalingEventType.CANDIDATE:
-        if (this.participants.has(event.caller.id)) {
-          this.participants.get(event.caller.id).onSignalingEvent(event);
+        if (this.participants.has((event.caller as Identifiable).id)) {
+          (this.participants.get((event.caller as Identifiable).id) as Participant).onSignalingEvent(event);
         }
         break;
     }
@@ -85,10 +84,10 @@ export class Room {
 
   private onOffer = (event: SignalingEvent) => {
     const desc = new RTCSessionDescription(event.payload);
-    if (this.participants.has(event.caller.id)) {
-      this.participants.get(event.caller.id).renegotiate(desc);
+    if (this.participants.has((event.caller as Identifiable).id)) {
+      (this.participants.get((event.caller as Identifiable).id) as Participant).renegotiate(desc);
     } else {
-      const participant = new Participant(event.caller.id, this);
+      const participant = new Participant((event.caller as Identifiable).id, this);
       this.participants.set(participant.getId(), participant);
       participant.init(desc)
         .then(p => this.dispatcher.dispatch('participant', p))
@@ -97,10 +96,10 @@ export class Room {
   }
 
   private onConnect = (event: SignalingEvent) => {
-    if (this.participants.has(event.caller.id)) {
-      this.participants.get(event.caller.id).renegotiate();
+    if (this.participants.has((event.caller as Identifiable).id)) {
+      (this.participants.get((event.caller as Identifiable).id) as Participant).renegotiate();
     } else {
-      const participant = new Participant(event.caller.id, this);
+      const participant = new Participant((event.caller as Identifiable).id, this);
       this.participants.set(participant.getId(), participant);
       participant.init()
         .then(p => this.dispatcher.dispatch('participant', p))
@@ -109,9 +108,9 @@ export class Room {
   }
 
   private onDisconnect = (event: SignalingEvent) => {
-    if (this.participants.has(event.caller.id)) {
-      this.participants.get(event.caller.id).close();
-      this.participants.delete(event.caller.id);
+    if (this.participants.has((event.caller as Identifiable).id)) {
+      (this.participants.get((event.caller as Identifiable).id) as Participant).close();
+      this.participants.delete((event.caller as Identifiable).id);
     }
   }
 }

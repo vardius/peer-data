@@ -1,5 +1,4 @@
-import { Signaling } from './Signaling';
-import { SignalingEvent } from './SignalingEvent';
+import { Signaling, SignalingEvent } from './Signaling';
 import { EventDispatcher } from './EventDispatcher';
 
 // tslint:disable-next-line: no-var-requires no-require-imports
