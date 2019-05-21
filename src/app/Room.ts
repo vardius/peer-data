@@ -88,9 +88,12 @@ export class Room {
       (this.participants.get((event.caller as Identifiable).id) as Participant).renegotiate(desc);
     } else {
       const participant = new Participant((event.caller as Identifiable).id, this);
+
       this.participants.set(participant.getId(), participant);
-      participant.init(desc)
-        .then(p => this.dispatcher.dispatch('participant', p))
+      this.dispatcher.dispatch('participant', participant);
+
+      participant
+        .init(desc)
         .catch((evnt: DOMException) => this.dispatcher.dispatch('error', evnt));
     }
   }
@@ -100,9 +103,12 @@ export class Room {
       (this.participants.get((event.caller as Identifiable).id) as Participant).renegotiate();
     } else {
       const participant = new Participant((event.caller as Identifiable).id, this);
+
       this.participants.set(participant.getId(), participant);
-      participant.init()
-        .then(p => this.dispatcher.dispatch('participant', p))
+      this.dispatcher.dispatch('participant', participant);
+
+      participant
+        .init()
         .catch((evnt: DOMException) => this.dispatcher.dispatch('error', evnt));
     }
   }
