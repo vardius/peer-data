@@ -26,7 +26,8 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedParameters": true
+    "noUnusedParameters": true,	
+    "declaration": true,	
   },
   "include": [
     "src/**/*"
