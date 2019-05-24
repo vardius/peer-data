@@ -27,8 +27,6 @@
     "url": "git+https://github.com/vardius/peer-data.git"
   },
   "files": [
-    "lib",
-    "es",
     "dist"
   ],
   "keywords": [
