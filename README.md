@@ -30,6 +30,7 @@ HOW TO USE
 
 1. [Documentation](https://github.com/vardius/peer-data/wiki)
 2. [Chat Example](https://github.com/vardius/webrtc-chat)
+3. [React Chat Example](https://github.com/vardius/react-webrtc-chat)
 
 ## Installation
 ```bash
