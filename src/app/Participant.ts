@@ -29,7 +29,7 @@ export class Participant {
 
     const stream = this.room.getStream();
     if (stream instanceof MediaStream) {
-      stream.getTracks().map(track => this.peer.addTrack(track, stream));
+      this.addStream(stream);
     }
   }
 
@@ -58,6 +58,12 @@ export class Participant {
 
     this.peer.close();
     this.dispatcher.dispatch('disconnected');
+
+    return this;
+  }
+
+  addStream = (stream: MediaStream): Participant => {
+    stream.getTracks().map(track => this.peer.addTrack(track, stream));
 
     return this;
   }
@@ -152,8 +158,9 @@ export class Participant {
   }
 
   private onAnswer = (event: SignalingEvent) => {
+    const remoteDesc = new RTCSessionDescription(event.payload);
     this.peer
-      .setRemoteDescription(new RTCSessionDescription(event.payload))
+      .setRemoteDescription(remoteDesc)
       .catch((evnt: DOMException) => this.dispatcher.dispatch('error', evnt));
   }
 
