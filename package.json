@@ -1,6 +1,6 @@
 {
   "name": "peer-data",
-  "version": "3.1.2",
+  "version": "3.1.3",
   "description": "PeerData - library for files, media streaming/sharing using WebRTC",
   "scripts": {
     "build": "rollup -c",
