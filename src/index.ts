@@ -1,3 +1,4 @@
+/// <reference types="webrtc" />
 import 'webrtc-adapter';
 
 import { App as PeerData } from './app/App';
