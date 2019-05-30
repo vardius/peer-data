@@ -15,7 +15,7 @@ const plugins = [
 
 const config = {
   input: "src/index.ts",
-  // external: external,
+  external: external,
   plugins: plugins,
   output: [
     {

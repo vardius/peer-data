@@ -73,9 +73,11 @@
       "ts"
     ]
   },
-  "dependencies": {
-    "socket.io-client": "^2.0.3",
+  "peerDependencies": {
     "webrtc-adapter": "^7.2.3"
+  },
+  "dependencies": {
+    "socket.io-client": "^2.0.3"
   },
   "devDependencies": {
     "@types/jest": "^24.0.13",
