@@ -1,4 +1,5 @@
-import 'webrtc-adapter';
+// tslint:disable-next-line: no-require-imports no-var-requires
+require('webrtc-adapter');
 
 import { App as PeerData } from './app/App';
 
