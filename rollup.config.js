@@ -1,6 +1,6 @@
+import resolve from "@rollup/plugin-node-resolve";
+import commonjs from "@rollup/plugin-commonjs";
 import sourcemaps from "rollup-plugin-sourcemaps";
-import resolve from "rollup-plugin-node-resolve";
-import commonjs from "rollup-plugin-commonjs";
 import typescript from "rollup-plugin-typescript2";
 
 const pkg = require("./package");
@@ -9,7 +9,10 @@ const env = process.env.NODE_ENV;
 const plugins = [
   sourcemaps(),
   resolve(),
-  typescript(),
+  typescript({
+    objectHashIgnoreUnknownHack: true,
+    clean: true,
+  }),
   commonjs(),
 ];
 

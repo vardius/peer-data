@@ -4,43 +4,43 @@ import { Configuration } from './Configuration';
 import { Room } from './Room';
 
 export class App {
-  private rooms: Map<string, Room> = new Map();
+    private rooms: Map<string, Room> = new Map();
 
-  constructor(servers: RTCConfiguration = {}, dataConstraints?: RTCDataChannelInit) {
-    Configuration.getInstance().setServers(servers);
+    constructor(servers: RTCConfiguration = {}, dataConstraints?: RTCDataChannelInit) {
+        Configuration.getInstance().setServers(servers);
 
-    if (dataConstraints) { Configuration.getInstance().setDataConstraints(dataConstraints); }
+        if (dataConstraints) { Configuration.getInstance().setDataConstraints(dataConstraints); }
 
-    EventDispatcher.getInstance().register(SignalingEventType.CONNECT, this.onEvent);
-    EventDispatcher.getInstance().register(SignalingEventType.OFFER, this.onEvent);
-    EventDispatcher.getInstance().register(SignalingEventType.DISCONNECT, this.onEvent);
-    EventDispatcher.getInstance().register(SignalingEventType.ANSWER, this.onEvent);
-    EventDispatcher.getInstance().register(SignalingEventType.CANDIDATE, this.onEvent);
-    EventDispatcher.getInstance().register('send', this.onDisconnected);
-  }
-
-  connect = (id: string, stream?: MediaStream): Room => {
-    if (this.rooms.has(id)) {
-      return this.rooms.get(id) as Room;
+        EventDispatcher.getInstance().register(SignalingEventType.CONNECT, this.onEvent);
+        EventDispatcher.getInstance().register(SignalingEventType.OFFER, this.onEvent);
+        EventDispatcher.getInstance().register(SignalingEventType.DISCONNECT, this.onEvent);
+        EventDispatcher.getInstance().register(SignalingEventType.ANSWER, this.onEvent);
+        EventDispatcher.getInstance().register(SignalingEventType.CANDIDATE, this.onEvent);
+        EventDispatcher.getInstance().register('send', this.onDisconnected);
     }
 
-    const room = new Room(id, stream);
-    this.rooms.set(id, room);
+    connect = (id: string, stream?: MediaStream): Room => {
+        if (this.rooms.has(id)) {
+            return this.rooms.get(id) as Room;
+        }
 
-    return room;
-  }
+        const room = new Room(id, stream);
+        this.rooms.set(id, room);
 
-  private onEvent = (event: SignalingEvent): App => {
-    if (this.rooms.has(event.room.id)) {
-      (this.rooms.get(event.room.id) as Room).onSignalingEvent(event);
-    }
+        return room;
+    };
 
-    return this;
-  }
+    private onEvent = (event: SignalingEvent): App => {
+        if (this.rooms.has(event.room.id)) {
+            (this.rooms.get(event.room.id) as Room).onSignalingEvent(event);
+        }
 
-  private onDisconnected = (event: SignalingEvent) => {
-    if (event.type === SignalingEventType.DISCONNECT) {
-      this.rooms.delete(event.room.id);
-    }
-  }
+        return this;
+    };
+
+    private onDisconnected = (event: SignalingEvent): void => {
+        if (event.type === SignalingEventType.DISCONNECT) {
+            this.rooms.delete(event.room.id);
+        }
+    };
 }

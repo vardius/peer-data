@@ -6,7 +6,7 @@
     "build": "rollup -c",
     "clean": "rimraf dist coverage",
     "typecheck": "tsc --noEmit",
-    "lint": "tslint --project tsconfig.json --project --format stylish",
+    "lint": "eslint -c .eslintrc.js --ext .ts src",
     "test": "jest --no-cache",
     "test:cov": "yarn test -- --coverage",
     "test:watch": "yarn test -- --watchAll",
@@ -77,29 +77,31 @@
     "webrtc-adapter": "^7.2.3"
   },
   "dependencies": {
-    "socket.io-client": "^2.0.3"
+    "socket.io-client": "^2.3.0"
   },
   "devDependencies": {
-    "@types/jest": "^24.0.13",
-    "@types/node": "^12.0.2",
+    "@rollup/plugin-commonjs": "^11.0.2",
+    "@rollup/plugin-node-resolve": "^7.1.1",
+    "@types/jest": "^25.1.2",
+    "@types/node": "^13.7.0",
     "@types/socket.io-client": "^1.4.29",
     "@types/webrtc": "0.0.25",
-    "codecov": "^3.5.0",
-    "cross-env": "^5.0.1",
+    "@typescript-eslint/eslint-plugin": "^2.19.0",
+    "@typescript-eslint/parser": "^2.19.0",
+    "codecov": "^3.6.5",
+    "cross-env": "^7.0.0",
     "dts-bundle": "^0.7.3",
-    "jest": "^24.8.0",
-    "jest-cli": "^24.8.0",
+    "eslint": "^6.8.0",
+    "jest": "^25.1.0",
+    "jest-cli": "^25.1.0",
     "jest-environment-node-debug": "^2.0.0",
     "npm-check": "^5.7.1",
-    "rimraf": "^2.6.1",
-    "rollup": "^1.12.3",
-    "rollup-plugin-commonjs": "^10.0.0",
-    "rollup-plugin-node-resolve": "^5.0.0",
-    "rollup-plugin-sourcemaps": "^0.4.2",
-    "rollup-plugin-typescript2": "^0.21.1",
-    "ts-jest": "^24.0.2",
-    "tslib": "^1.7.1",
-    "tslint": "^5.16.0",
-    "typescript": "^3.4.5"
+    "rimraf": "^3.0.1",
+    "rollup": "^1.31.0",
+    "rollup-plugin-sourcemaps": "^0.5.0",
+    "rollup-plugin-typescript2": "^0.25.3",
+    "ts-jest": "^25.2.0",
+    "tslib": "^1.10.0",
+    "typescript": "^3.7.5"
   }
 }

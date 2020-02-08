@@ -2,36 +2,36 @@ import { EventHandlerCollection } from './EventHandlerCollection';
 import { EventHandler } from './EventHandler';
 
 export class EventDispatcher {
-  static getInstance = (): EventDispatcher => {
-    if (!EventDispatcher.globalInstance) {
-      EventDispatcher.globalInstance = new EventDispatcher();
-    }
+    private static globalInstance: EventDispatcher;
+    private handlers: EventHandlerCollection = {};
 
-    return EventDispatcher.globalInstance;
-  }
+    static getInstance = (): EventDispatcher => {
+        if (!EventDispatcher.globalInstance) {
+            EventDispatcher.globalInstance = new EventDispatcher();
+        }
 
-  private static globalInstance: EventDispatcher;
-  private handlers: EventHandlerCollection = {};
+        return EventDispatcher.globalInstance;
+    };
 
-  register = (type: string, callback: EventHandler) => {
-    if (!this.handlers[type]) {
-      this.handlers[type] = [];
-    }
-    this.handlers[type].push(callback);
-  }
+    register = (type: string, callback: EventHandler): void => {
+        if (!this.handlers[type]) {
+            this.handlers[type] = [];
+        }
+        this.handlers[type].push(callback);
+    };
 
-  unregister = (type: string, callback: EventHandler) => {
-    if (this.handlers[type]) {
-      const index = this.handlers[type].indexOf(callback);
-      if (index !== -1) {
-        delete this.handlers[type][index];
-      }
-    }
-  }
+    unregister = (type: string, callback: EventHandler): void => {
+        if (this.handlers[type]) {
+            const index = this.handlers[type].indexOf(callback);
+            if (index !== -1) {
+                delete this.handlers[type][index];
+            }
+        }
+    };
 
-  dispatch = (type: string, ...args: any[]) => {
-    if (this.handlers[type]) {
-      this.handlers[type].forEach(h => h(...args));
-    }
-  }
+    dispatch = (type: string, ...args: any[]): void => {
+        if (this.handlers[type]) {
+            this.handlers[type].forEach(h => h(...args));
+        }
+    };
 }
