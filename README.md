@@ -20,7 +20,7 @@ For this, we use a signaling server: a server that can pass messages between *We
 ==================================================
 Contributors:
 
-* [Rafał Lorenz](http://rafallorenz.com)
+* [Rafał Lorenz](https://rafallorenz.com)
 
 Want to contribute ? Feel free to send pull requests!
 
@@ -29,7 +29,7 @@ We are using the github [issue tracker](https://github.com/vardius/peer-data/iss
 
 ## 📚 Documentation
 
-For **documentation** (_including examples_), **visit [rafallorenz.com/peer-data](http://rafallorenz.com/peer-data)**
+For **documentation** (_including examples_), **visit [rafallorenz.com/peer-data](https://rafallorenz.com/peer-data)**
 
 🚏 HOW TO USE
 ==================================================
