@@ -64,7 +64,7 @@ room.on("participant", participant => {
 })
 ```
 
-For how to **disconnect**, **close connection** and handle errors please check [Client documentation](https://github.com/vardius/peer-data/docs/client).
+For how to **disconnect**, **close connection** and handle errors please check [documentation](https://github.com/vardius/peer-data/docs/client).
 
 📜 [License](LICENSE.md)
 -------
