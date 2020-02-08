@@ -1,0 +1,106 @@
+<!DOCTYPE html><html lang="en"><head><meta charSet="utf-8"/><meta http-equiv="X-UA-Compatible" content="IE=edge"/><title>Signaling Server · peer-data</title><meta name="viewport" content="width=device-width"/><meta name="generator" content="Docusaurus"/><meta name="description" content="## [The signaling server](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Signaling_and_video_calling#The_signaling_server)"/><meta name="docsearch:language" content="en"/><meta property="og:title" content="Signaling Server · peer-data"/><meta property="og:type" content="website"/><meta property="og:url" content="http://rafallorenz.com//peer-data/"/><meta property="og:description" content="## [The signaling server](https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Signaling_and_video_calling#The_signaling_server)"/><meta property="og:image" content="http://rafallorenz.com//peer-data/img/undraw_online.svg"/><meta name="twitter:card" content="summary"/><meta name="twitter:image" content="http://rafallorenz.com//peer-data/img/undraw_tweetstorm.svg"/><link rel="shortcut icon" href="/peer-data/favicon/favicon.ico"/><link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/9.12.0/styles/solarized-dark.min.css"/><script>
+              (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+              (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+              m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+              })(window,document,'script','https://www.google-analytics.com/analytics.js','ga');
+
+              ga('create', 'UA-42622274-2', 'auto');
+              ga('send', 'pageview');
+            </script><script type="text/javascript" src="https://buttons.github.io/buttons.js"></script><script src="/peer-data/js/scrollSpy.js"></script><link rel="stylesheet" href="/peer-data/css/main.css"/><script src="/peer-data/js/codetabs.js"></script></head><body class="sideNavVisible separateOnPageNav"><div class="fixedHeaderContainer"><div class="headerWrapper wrapper"><header><a href="/peer-data/"><img class="logo" src="/peer-data/favicon/ms-icon-310x310.png" alt="peer-data"/><h2 class="headerTitleWithLogo">peer-data</h2></a><div class="navigationWrapper navigationSlider"><nav class="slidingNav"><ul class="nav-site nav-site-internal"><li class="siteNavGroupActive"><a href="/peer-data/docs/installation" target="_self">Docs</a></li><li class=""><a href="/peer-data/help" target="_self">Help</a></li><li class=""><a href="https://github.com/vardius/peer-data" target="_self">GitHub</a></li></ul></nav></div></header></div></div><div class="navPusher"><div class="docMainWrapper wrapper"><div class="docsNavContainer" id="docsNav"><nav class="toc"><div class="toggleNav"><section class="navWrapper wrapper"><div class="navBreadcrumb wrapper"><div class="navToggle" id="navToggler"><div class="hamburger-menu"><div class="line1"></div><div class="line2"></div><div class="line3"></div></div></div><h2><i>›</i><span>Quick Start</span></h2><div class="tocToggler" id="tocToggler"><i class="icon-toc"></i></div></div><div class="navGroups"><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Quick Start<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/peer-data/docs/installation">Installation</a></li><li class="navListItem"><a class="navItem" href="/peer-data/docs/client">Basic Example</a></li><li class="navListItem navListItemActive"><a class="navItem" href="/peer-data/docs/signaling">Signaling Server</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Connection<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/peer-data/docs/data-channel">Data Channel</a></li><li class="navListItem"><a class="navItem" href="/peer-data/docs/media-stream">Media Stream</a></li></ul></div><div class="navGroup"><h3 class="navGroupCategoryTitle collapsible">Examples<span class="arrow"><svg width="24" height="24" viewBox="0 0 24 24"><path fill="#565656" d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path><path d="M0 0h24v24H0z" fill="none"></path></svg></span></h3><ul class="hide"><li class="navListItem"><a class="navItem" href="/peer-data/docs/error">Error Handling</a></li></ul></div></div></section></div><script>
+            var coll = document.getElementsByClassName('collapsible');
+            var checkActiveCategory = true;
+            for (var i = 0; i < coll.length; i++) {
+              var links = coll[i].nextElementSibling.getElementsByTagName('*');
+              if (checkActiveCategory){
+                for (var j = 0; j < links.length; j++) {
+                  if (links[j].classList.contains('navListItemActive')){
+                    coll[i].nextElementSibling.classList.toggle('hide');
+                    coll[i].childNodes[1].classList.toggle('rotate');
+                    checkActiveCategory = false;
+                    break;
+                  }
+                }
+              }
+
+              coll[i].addEventListener('click', function() {
+                var arrow = this.childNodes[1];
+                arrow.classList.toggle('rotate');
+                var content = this.nextElementSibling;
+                content.classList.toggle('hide');
+              });
+            }
+
+            document.addEventListener('DOMContentLoaded', function() {
+              createToggler('#navToggler', '#docsNav', 'docsSliderActive');
+              createToggler('#tocToggler', 'body', 'tocActive');
+
+              var headings = document.querySelector('.toc-headings');
+              headings && headings.addEventListener('click', function(event) {
+                var el = event.target;
+                while(el !== headings){
+                  if (el.tagName === 'A') {
+                    document.body.classList.remove('tocActive');
+                    break;
+                  } else{
+                    el = el.parentNode;
+                  }
+                }
+              }, false);
+
+              function createToggler(togglerSelector, targetSelector, className) {
+                var toggler = document.querySelector(togglerSelector);
+                var target = document.querySelector(targetSelector);
+
+                if (!toggler) {
+                  return;
+                }
+
+                toggler.onclick = function(event) {
+                  event.preventDefault();
+
+                  target.classList.toggle(className);
+                };
+              }
+            });
+        </script></nav></div><div class="container mainContainer docsContainer"><div class="wrapper"><div class="post"><header class="postHeader"><h1 id="__docusaurus" class="postHeaderTitle">Signaling Server</h1></header><article><div><span><h2><a class="anchor" aria-hidden="true" id="the-signaling-serverhttpsdevelopermozillaorgen-usdocswebapiwebrtc_apisignaling_and_video_callingthe_signaling_server"></a><a href="#the-signaling-serverhttpsdevelopermozillaorgen-usdocswebapiwebrtc_apisignaling_and_video_callingthe_signaling_server" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a><a href="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Signaling_and_video_calling#The_signaling_server">The signaling server</a></h2>
+<p>Signaling is the process of coordinating communication. In order for a WebRTC application to set up a 'call', its clients need to exchange information:</p>
+<ul>
+<li>Session control messages used to open or close communication.</li>
+<li>Error messages.</li>
+<li>Key data, used to establish secure connections.</li>
+<li>Network data, such as a host's IP address and port as seen by the outside world.</li>
+</ul>
+<p><code>PeerData</code> needs signaling server to work. Before <code>connect</code> you need to set signaling server. You can use ready to go Socket Channel included in <code>peer-data</code> package.</p>
+<pre><code class="hljs css language-javascript"><span class="hljs-keyword">import</span> PeerData, {SocketChannel} <span class="hljs-keyword">from</span> <span class="hljs-string">'peer-data'</span>;
+
+<span class="hljs-keyword">let</span> peerData = <span class="hljs-keyword">new</span> PeerData();
+<span class="hljs-keyword">let</span> signaling = <span class="hljs-keyword">new</span> SocketChannel(<span class="hljs-string">'http://localhost:8080'</span>);
+
+peerData.connect();
+</code></pre>
+<p><a href="https://github.com/Vardius/peer-data-server">PeerDataServer</a> example of socket.io signaling server implementation for <code>SocketChannel</code>.</p>
+<p>If you want to create custom signaling channel, take a look what events does dispatch and subscribe to <a href="https://github.com/vardius/peer-data/blob/master/src/app/SocketChannel.ts">SocketChannel.ts</a> and remember to do the same.</p>
+<h2><a class="anchor" aria-hidden="true" id="custom-signaling-channel"></a><a href="#custom-signaling-channel" aria-hidden="true" class="hash-link"><svg class="hash-link-icon" aria-hidden="true" height="16" version="1.1" viewBox="0 0 16 16" width="16"><path fill-rule="evenodd" d="M4 9h1v1H4c-1.5 0-3-1.69-3-3.5S2.55 3 4 3h4c1.45 0 3 1.69 3 3.5 0 1.41-.91 2.72-2 3.25V8.59c.58-.45 1-1.27 1-2.09C10 5.22 8.98 4 8 4H4c-.98 0-2 1.22-2 2.5S3 9 4 9zm9-3h-1v1h1c1 0 2 1.22 2 2.5S13.98 12 13 12H9c-.98 0-2-1.22-2-2.5 0-.83.42-1.64 1-2.09V6.25c-1.09.53-2 1.84-2 3.25C6 11.31 7.55 13 9 13h4c1.45 0 3-1.69 3-3.5S14.5 6 13 6z"></path></svg></a>Custom signaling channel</h2>
+<p>It's important to note that the server doesn't need to understand or interpret the signaling data content. Although it's SDP, even this doesn't matter so much: the content of the message going through the signaling server is, in effect, a black box. What does matter is when the ICE subsystem instructs you to send signaling data to the other peer, you do so, and the other peer knows how to receive this information and deliver it to its own ICE subsystem. All you have to do is channel the information back and forth. The contents don't matter at all to the signaling server.</p>
+<p>When writing custom signaling channel you have to listen to all <code>send</code> events on <code>EventDispatcher</code>. And pass them on to the other clients in a room.</p>
+<p>Check how is it done in the <a href="https://github.com/vardius/peer-data/blob/356008b0116a25ddac34a823ffac8ee1b07c72ec/src/app/SocketChannel.ts#L13">SocketChannel</a> which passes all events to socket server.</p>
+<pre><code class="hljs css language-typescript"><span class="hljs-keyword">import</span> { EventDispatcher } <span class="hljs-keyword">from</span> <span class="hljs-string">'peer-data'</span>;
+
+EventDispatcher.getInstance().register(<span class="hljs-string">'send'</span>,onSend);
+
+onSend = <span class="hljs-function">(<span class="hljs-params">event: SignalingEvent</span>) =&gt;</span> {
+ socket.emit(<span class="hljs-string">'message'</span>, event); <span class="hljs-comment">// @<span class="hljs-doctag">TODO:</span> implement your own logic</span>
+}
+</code></pre>
+<p>Also channel has to listen to events passed from server and dispatch them to user's peer. This is done by <a href="https://github.com/vardius/peer-data/blob/356008b0116a25ddac34a823ffac8ee1b07c72ec/src/app/SocketChannel.ts#L23">listening socket events</a> and passing them to the event dispatcher.</p>
+<pre><code class="hljs css language-typescript"><span class="hljs-keyword">import</span> { EventDispatcher } <span class="hljs-keyword">from</span> <span class="hljs-string">'peer-data'</span>;
+
+socket.on(<span class="hljs-string">'message'</span>,onMessage); <span class="hljs-comment">// @<span class="hljs-doctag">TODO:</span> implement your own logic</span>
+
+onMessage = <span class="hljs-function">(<span class="hljs-params">event: SignalingEvent</span>) =&gt;</span> {
+  EventDispatcher.getInstance().dispatch(event.type, event);
+}
+</code></pre>
+<p>This way we simply send the candidates and descriptions, back and forth, through the signaling server.</p>
+<p><a href="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Signaling_and_video_calling#Exchanging_ICE_candidates">https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Signaling_and_video_calling#Exchanging_ICE_candidates</a></p>
+</span></div></article></div><div class="docs-prevnext"><a class="docs-prev button" href="/peer-data/docs/client"><span class="arrow-prev">← </span><span>Basic Example</span></a><a class="docs-next button" href="/peer-data/docs/data-channel"><span>Data Channel</span><span class="arrow-next"> →</span></a></div></div></div><nav class="onPageNav"><ul class="toc-headings"><li><a href="#the-signaling-serverhttpsdevelopermozillaorgen-usdocswebapiwebrtc_apisignaling_and_video_callingthe_signaling_server"><a href="https://developer.mozilla.org/en-US/docs/Web/API/WebRTC_API/Signaling_and_video_calling#The_signaling_server">The signaling server</a></a></li><li><a href="#custom-signaling-channel">Custom signaling channel</a></li></ul></nav></div><footer class="nav-footer" id="footer"><section class="sitemap"><a href="/peer-data/" class="nav-home"><img src="/peer-data/favicon/ms-icon-310x310.png" alt="peer-data" width="66" height="58"/></a><div><h5>Docs</h5><a href="/peer-data/docs/en/installation.html">Documentation</a></div><div><h5>Community</h5><a href="https://github.com/sponsors/vardius">Support</a></div><div><h5>More</h5><a href="http://rafallorenz.com">rafallorenz.com</a><a href="https://github.com/vardius/peer-data">GitHub</a><a class="github-button" href="https://github.com/vardius/peer-data" data-icon="octicon-star" data-count-href="/vardius/peer-data/stargazers" data-show-count="true" data-count-aria-label="# stargazers on GitHub" aria-label="Star this project on GitHub">Star</a></div></section><section class="copyright">Copyright © 2020 Rafał Lorenz</section></footer></div></body></html>
