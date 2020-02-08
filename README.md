@@ -5,6 +5,8 @@
 [![license](https://img.shields.io/github/license/vardius/peer-data.svg)](LICENSE)
 <!--[![codecov](https://codecov.io/gh/vardius/peer-data/branch/master/graph/badge.svg)](https://codecov.io/gh/vardius/peer-data)-->
 
+<img align="right" height="180px" src="website/src/static/img/logo.png" alt="logo" />
+
 PeerData is a library for bidirectional peer-to-peer transfers of arbitrary data using [RTCDataChannel](https://developer.mozilla.org/pl/docs/Web/API/RTCDataChannel). Simple *WebRTC* wrapper providing data channel abstraction.
 
 [WebRTC](https://webrtc.org/) needs a messaging service to set up and maintain a *WebRTC* call.
@@ -14,7 +16,7 @@ For this, we use a signaling server: a server that can pass messages between *We
 
 [PeerDataServer](https://github.com/Vardius/peer-data-server) - An **ready to use** example of signaling server on *Node* using [socket.io](http://socket.io/).
 
-ABOUT
+📖 ABOUT
 ==================================================
 Contributors:
 
@@ -25,10 +27,13 @@ Want to contribute ? Feel free to send pull requests!
 Have problems, bugs, feature ideas?
 We are using the github [issue tracker](https://github.com/vardius/peer-data/issues) to manage them.
 
-HOW TO USE
+## 📚 Documentation
+
+For **documentation** (_including examples_), **visit [rafallorenz.com/peer-data](http://rafallorenz.com/peer-data)**
+
+🚏 HOW TO USE
 ==================================================
 
-1. [Documentation](https://github.com/vardius/peer-data/wiki)
 2. [Chat Example](https://github.com/vardius/webrtc-chat)
 3. [React Chat Example](https://github.com/vardius/react-webrtc-chat)
 4. [React Hook](https://github.com/vardius/react-peer-data)
@@ -59,18 +64,9 @@ room.on("participant", participant => {
 })
 ```
 
-For how to **disconnect**, **close connection** and handle errors please check [Client documentation](https://github.com/vardius/peer-data/wiki/Client).
+For how to **disconnect**, **close connection** and handle errors please check [Client documentation](https://github.com/vardius/peer-data/docs/client).
 
-## Advanced examples
-- [Client](https://github.com/vardius/peer-data/wiki/Client)
-- [Signaling](https://github.com/vardius/peer-data/wiki/Signaling)
-- [Data Channel](https://github.com/vardius/peer-data/wiki/Data-Channel)
-- [Media Stream](https://github.com/vardius/peer-data/wiki/Media-Stream)
-- [Error Handling](https://github.com/vardius/peer-data/wiki/Error-Handling)
-
-License
+📜 [License](LICENSE.md)
 -------
 
 This package is released under the MIT license. See the complete license in the package:
-
-[LICENSE](LICENSE.md)
