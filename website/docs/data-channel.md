@@ -8,7 +8,8 @@ sidebar_label: Data Channel
 
 A WebRTC data channel lets you send text or binary data over an active connection to a peer. In the context of a game, this lets players send data to each other, whether text chat or game status information. Data channels come in two flavors.
 
-## Example:
+## Example
+
 ```typescript
 import PeerData from 'peer-data';
 

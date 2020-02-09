@@ -14,7 +14,7 @@ PeerData is a library for bidirectional peer-to-peer transfers of arbitrary data
 The sender and receiver *RTCPeerConnections* run in web pages on different devices, and we need a way for them to communicate metadata.
 For this, we use a signaling server: a server that can pass messages between *WebRTC* clients (peers).
 
-[PeerDataServer](https://github.com/Vardius/peer-data-server) - An **ready to use** example of signaling server on *Node* using [socket.io](http://socket.io/).
+[PeerDataServer](https://github.com/vardius/peer-data-server) - An **ready to use** example of signaling server on *Node* using [socket.io](http://socket.io/).
 
 📖 ABOUT
 ==================================================

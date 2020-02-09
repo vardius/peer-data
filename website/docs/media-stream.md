@@ -9,7 +9,8 @@ sidebar_label: Media Stream
 The Media Capture and Streams API, often called the Media Streams API or simply MediaStream API, is an API related to WebRTC which provides support for streaming audio and video data.
 It provides the interfaces and methods for working with the streams and their constituent tracks, the constraints associated with data formats, the success and error callbacks when using the data asynchronously, and the events that are fired during the process.
 
-## Example:
+## Example
+
 ```javascript
 import PeerData from 'peer-data';
 

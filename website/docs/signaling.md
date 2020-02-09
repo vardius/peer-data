@@ -23,7 +23,7 @@ let signaling = new SocketChannel('http://localhost:8080');
 peerData.connect();
 ```
 
-[PeerDataServer](https://github.com/Vardius/peer-data-server) example of socket.io signaling server implementation for `SocketChannel`. 
+[PeerDataServer](https://github.com/vardius/peer-data-server) example of socket.io signaling server implementation for `SocketChannel`. 
 
 If you want to create custom signaling channel, take a look what events does dispatch and subscribe to [SocketChannel.ts](https://github.com/vardius/peer-data/blob/master/src/app/SocketChannel.ts) and remember to do the same.
 
