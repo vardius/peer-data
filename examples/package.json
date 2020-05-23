@@ -24,6 +24,6 @@
   },
   "homepage": "https://github.com/vardius/peer-data#readme",
   "dependencies": {
-    "peer-data": "^3.1.8"
+    "peer-data": "^3.1.9"
   }
 }
