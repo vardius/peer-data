@@ -16,7 +16,7 @@ const GridBlock = CompLibrary.GridBlock;
 const pre = "```";
 
 const baseCodeExample = `${pre}ts
-import PeerData from 'peer-data';
+import PeerData, { EventDispatcher, SocketChannel } from 'peer-data';
 
 const servers = {
   iceServers: [
@@ -24,9 +24,9 @@ const servers = {
   ]
 };
 
-const constraints = {ordered: true};
-const peerData = new PeerData(servers, constraints);
-const room = peerData.connect('test-room');
+const dispatcher = new EventDispatcher();
+const peerData = new PeerData(dispatcher, servers);
+const signaling = new SocketChannel(dispatcher, 'http://localhost:8080');
 
 room.on("participant", participant => {
   participant.on("message", payload => console.log("message", payload));
