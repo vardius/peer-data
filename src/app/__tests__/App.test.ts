@@ -1,4 +1,5 @@
 import { App } from '../App';
+import { EventDispatcher } from '../EventDispatcher';
 
 const servers = {
     iceServers: [
@@ -6,7 +7,9 @@ const servers = {
     ],
 };
 const constraints = { ordered: true };
-const app = new App(servers, constraints);
+const dispatcher =new EventDispatcher();
+
+const app = new App(dispatcher, servers, constraints);
 
 test('App init', (): void => {
     expect(app).toBeDefined();
