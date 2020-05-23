@@ -1,3 +1,4 @@
+import { v4 as uuidv4 } from 'uuid';
 import { EventDispatcher } from './EventDispatcher';
 import { Identifiable, SignalingEvent, SignalingEventType } from './Signaling';
 import { EventHandler } from './EventHandler';
@@ -5,6 +6,7 @@ import { Participant } from './Participant';
 
 export class Room {
     private id: string;
+    private participantId: string;
     private participants: Map<string, Participant> = new Map();
     private dispatcher: EventDispatcher = new EventDispatcher();
     private stream?: MediaStream;
@@ -12,10 +14,11 @@ export class Room {
     constructor(id: string, stream?: MediaStream) {
         this.id = id;
         this.stream = stream;
+        this.participantId = uuidv4();
 
         EventDispatcher.getInstance().dispatch('send', {
             type: SignalingEventType.CONNECT,
-            caller: null,
+            caller: { id: this.participantId },
             callee: null,
             room: { id: this.id },
             payload: null,
@@ -23,6 +26,8 @@ export class Room {
     }
 
     getId = (): string => this.id;
+
+    getParticipantId = (): string => this.participantId;
 
     getStream = (): MediaStream | undefined => this.stream;
 
@@ -41,7 +46,7 @@ export class Room {
     disconnect = (): Room => {
         EventDispatcher.getInstance().dispatch('send', {
             type: SignalingEventType.DISCONNECT,
-            caller: null,
+            caller: { id: this.participantId },
             callee: null,
             room: { id: this.id },
             payload: null,

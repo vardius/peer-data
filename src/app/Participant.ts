@@ -93,7 +93,7 @@ export class Participant {
                 .then((desc: RTCSessionDescriptionInit): Promise<void> => this.peer.setLocalDescription(desc))
                 .then((): void => EventDispatcher.getInstance().dispatch('send', {
                     type: SignalingEventType.ANSWER,
-                    caller: null,
+                    caller: { id: this.room.getParticipantId() },
                     callee: { id: this.id },
                     room: { id: this.room.getId() },
                     payload: this.peer.localDescription,
@@ -108,7 +108,7 @@ export class Participant {
                 .then((desc: RTCSessionDescriptionInit): Promise<void> => this.peer.setLocalDescription(desc))
                 .then((): void => EventDispatcher.getInstance().dispatch('send', {
                     type: SignalingEventType.OFFER,
-                    caller: null,
+                    caller: { id: this.room.getParticipantId() },
                     callee: { id: this.id },
                     room: { id: this.room.getId() },
                     payload: this.peer.localDescription,
@@ -125,7 +125,7 @@ export class Participant {
                 .then((desc: RTCSessionDescriptionInit): Promise<void> => this.peer.setLocalDescription(desc))
                 .then((): void => EventDispatcher.getInstance().dispatch('send', {
                     type: SignalingEventType.ANSWER,
-                    caller: null,
+                    caller: { id: this.room.getParticipantId() },
                     callee: { id: this.id },
                     room: { id: this.room.getId() },
                     payload: this.peer.localDescription,
@@ -140,7 +140,7 @@ export class Participant {
                 .then((desc: RTCSessionDescriptionInit): Promise<void> => this.peer.setLocalDescription(desc))
                 .then((): void => EventDispatcher.getInstance().dispatch('send', {
                     type: SignalingEventType.OFFER,
-                    caller: null,
+                    caller: { id: this.room.getParticipantId() },
                     callee: { id: this.id },
                     room: { id: this.room.getId() },
                     payload: this.peer.localDescription,
@@ -174,7 +174,7 @@ export class Participant {
         if (iceEvent.candidate) {
             EventDispatcher.getInstance().dispatch('send', {
                 type: SignalingEventType.CANDIDATE,
-                caller: null,
+                caller: { id: this.room.getParticipantId() },
                 callee: { id: this.id },
                 room: { id: this.room.getId() },
                 payload: iceEvent.candidate,
