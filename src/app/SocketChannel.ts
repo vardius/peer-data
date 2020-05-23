@@ -4,7 +4,7 @@ import { EventDispatcher } from './EventDispatcher';
 
 export class SocketChannel implements Signaling {
     private socket: SocketIOClient.Socket;
-    private dispatcher: EventDispatcher = new EventDispatcher();
+    private dispatcher: EventDispatcher;
 
     constructor(dispatcher: EventDispatcher , opts?: SocketIOClient.ConnectOpts) {
         this.dispatcher = dispatcher;

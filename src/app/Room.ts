@@ -34,7 +34,7 @@ export class Room {
 
     getParticipantId = (): string => this.participantId;
 
-    getEventDispatcher = (): EventDispatcher => this.dispatcher;
+    getEventDispatcher = (): EventDispatcher => this.appDispatcher;
 
     getConfiguration = (): Configuration => this.configuration;
 
