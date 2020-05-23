@@ -11,7 +11,7 @@ WebRTC is designed to work peer-to-peer, so users can connect by the most direct
 ## Example
 
 ```typescript
-import PeerData from 'peer-data';
+import PeerData, { EventDispatcher, SocketChannel } from 'peer-data';
 
 const servers = {
   iceServers: [
@@ -19,7 +19,10 @@ const servers = {
   ]
 };
 
-const peerData = new PeerData(servers);
+const dispatcher = new EventDispatcher();
+const peerData = new PeerData(dispatcher, servers);
+const signaling = new SocketChannel(dispatcher, 'http://localhost:8080');
+
 const room = peerData.connect('test-room');
 
 // returns participant object

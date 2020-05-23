@@ -2,16 +2,7 @@ import { EventHandlerCollection } from './EventHandlerCollection';
 import { EventHandler } from './EventHandler';
 
 export class EventDispatcher {
-    private static globalInstance: EventDispatcher;
     private handlers: EventHandlerCollection = {};
-
-    static getInstance = (): EventDispatcher => {
-        if (!EventDispatcher.globalInstance) {
-            EventDispatcher.globalInstance = new EventDispatcher();
-        }
-
-        return EventDispatcher.globalInstance;
-    };
 
     register = (type: string, callback: EventHandler): void => {
         if (!this.handlers[type]) {

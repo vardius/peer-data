@@ -1,10 +1,16 @@
 import PeerData, { EventDispatcher } from "peer-data";
 
+const localDispatcher = new EventDispatcher();
+const remoteDispatcher = new EventDispatcher();
+
 // Custom signaling system (we do not built in socket.io for local example)
-const localSignalingChannel = EventDispatcher.getInstance();
-localSignalingChannel.register("send", (event) => {
+localDispatcher.register("send", (event) => {
   console.log("EventDispatcher:send", event);
-  localSignalingChannel.dispatch(event.type, event);
+  remoteDispatcher.dispatch(event.type, event);
+});
+remoteDispatcher.register("send", (event) => {
+  console.log("EventDispatcher:send", event);
+  localDispatcher.dispatch(event.type, event);
 });
 
 // Set up servers
@@ -12,8 +18,8 @@ const servers = {
   iceServers: [{ url: "stun:stun.1.google.com:19302" }],
 };
 
-const localPeerData = new PeerData(servers);
-const remotePeerData = new PeerData(servers);
+const localPeerData = new PeerData(localDispatcher, servers);
+const remotePeerData = new PeerData(remoteDispatcher, servers);
 
 // get video/voice stream
 navigator.getUserMedia({ video: true, audio: true }, gotMedia, () => {});
@@ -47,7 +53,7 @@ async function connect(e) {
     .on("participant", (participant) => {
       //this peer disconnected from room
       participant.on("disconnected", () => remoteRoom.disconnect());
-      
+
       //this peer shared a stream
       participant.on("track", (event) => {
         participant.addStream(event.streams[0]);

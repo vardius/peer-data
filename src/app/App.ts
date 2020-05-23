@@ -4,27 +4,35 @@ import { Configuration } from './Configuration';
 import { Room } from './Room';
 
 export class App {
+    private dispatcher: EventDispatcher;
+    private configuration: Configuration = new Configuration();
     private rooms: Map<string, Room> = new Map();
 
-    constructor(servers: RTCConfiguration = {}, dataConstraints?: RTCDataChannelInit) {
-        Configuration.getInstance().setServers(servers);
+    constructor(dispatcher: EventDispatcher, servers: RTCConfiguration = {}, dataConstraints?: RTCDataChannelInit) {
+        this.dispatcher = dispatcher;
 
-        if (dataConstraints) { Configuration.getInstance().setDataConstraints(dataConstraints); }
+        this.configuration.setServers(servers);
 
-        EventDispatcher.getInstance().register(SignalingEventType.CONNECT, this.onEvent);
-        EventDispatcher.getInstance().register(SignalingEventType.OFFER, this.onEvent);
-        EventDispatcher.getInstance().register(SignalingEventType.DISCONNECT, this.onEvent);
-        EventDispatcher.getInstance().register(SignalingEventType.ANSWER, this.onEvent);
-        EventDispatcher.getInstance().register(SignalingEventType.CANDIDATE, this.onEvent);
-        EventDispatcher.getInstance().register('send', this.onDisconnected);
+        if (dataConstraints) { this.configuration.setDataConstraints(dataConstraints); }
+
+        this.dispatcher.register(SignalingEventType.CONNECT, this.onEvent);
+        this.dispatcher.register(SignalingEventType.OFFER, this.onEvent);
+        this.dispatcher.register(SignalingEventType.DISCONNECT, this.onEvent);
+        this.dispatcher.register(SignalingEventType.ANSWER, this.onEvent);
+        this.dispatcher.register(SignalingEventType.CANDIDATE, this.onEvent);
+        this.dispatcher.register('send', this.onDisconnected);
     }
+
+    getEventDispatcher = (): EventDispatcher => this.dispatcher;
+
+    getConfiguration = (): Configuration => this.configuration;
 
     connect = (id: string, stream?: MediaStream): Room => {
         if (this.rooms.has(id)) {
             return this.rooms.get(id) as Room;
         }
 
-        const room = new Room(id, stream);
+        const room = new Room(id, this.configuration, this.dispatcher, stream);
         this.rooms.set(id, room);
 
         return room;

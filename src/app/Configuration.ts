@@ -1,16 +1,6 @@
 export class Configuration {
-    private static instance: Configuration;
     private servers: RTCConfiguration = {};
     private dataConstraints?: RTCDataChannelInit;
-
-    private constructor() { }
-    static getInstance(): Configuration {
-        if (!Configuration.instance) {
-            Configuration.instance = new Configuration();
-        }
-
-        return Configuration.instance;
-    }
 
     setServers = (servers: RTCConfiguration): void => {
         this.servers = servers;

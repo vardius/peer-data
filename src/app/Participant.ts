@@ -1,7 +1,6 @@
 import { EventDispatcher } from './EventDispatcher';
 import { SignalingEvent, SignalingEventType } from './Signaling';
 import { EventHandler } from './EventHandler';
-import { Configuration } from './Configuration';
 import { Room } from './Room';
 
 export class Participant {
@@ -20,7 +19,7 @@ export class Participant {
             offerToReceiveVideo: true,
         };
 
-        this.peer = new RTCPeerConnection(Configuration.getInstance().getServers());
+        this.peer = new RTCPeerConnection(this.room.getConfiguration().getServers());
         this.peer.onicecandidate = this.onIceCandidate;
         this.peer.onconnectionstatechange = this.onConnectionStateChange;
         this.peer.oniceconnectionstatechange = this.onIceConnectionStateChange;
@@ -91,7 +90,7 @@ export class Participant {
                 .setRemoteDescription(remoteDesc)
                 .then((): Promise<RTCSessionDescriptionInit> => this.peer.createAnswer(this.offerAnswerOptions))
                 .then((desc: RTCSessionDescriptionInit): Promise<void> => this.peer.setLocalDescription(desc))
-                .then((): void => EventDispatcher.getInstance().dispatch('send', {
+                .then((): void => this.room.getEventDispatcher().dispatch('send', {
                     type: SignalingEventType.ANSWER,
                     caller: { id: this.room.getParticipantId() },
                     callee: { id: this.id },
@@ -100,13 +99,13 @@ export class Participant {
                 } as SignalingEvent))
                 .then((): Participant => this);
         } else {
-            this.channel = this.newDataChannel(Configuration.getInstance().getDataConstraints());
+            this.channel = this.newDataChannel(this.room.getConfiguration().getDataConstraints());
             this.channel.onmessage = this.onMessage;
 
             return await this.peer
                 .createOffer(this.offerAnswerOptions)
                 .then((desc: RTCSessionDescriptionInit): Promise<void> => this.peer.setLocalDescription(desc))
-                .then((): void => EventDispatcher.getInstance().dispatch('send', {
+                .then((): void => this.room.getEventDispatcher().dispatch('send', {
                     type: SignalingEventType.OFFER,
                     caller: { id: this.room.getParticipantId() },
                     callee: { id: this.id },
@@ -123,7 +122,7 @@ export class Participant {
                 .setRemoteDescription(remoteDesc)
                 .then((): Promise<RTCSessionDescriptionInit> => this.peer.createAnswer(this.offerAnswerOptions))
                 .then((desc: RTCSessionDescriptionInit): Promise<void> => this.peer.setLocalDescription(desc))
-                .then((): void => EventDispatcher.getInstance().dispatch('send', {
+                .then((): void => this.room.getEventDispatcher().dispatch('send', {
                     type: SignalingEventType.ANSWER,
                     caller: { id: this.room.getParticipantId() },
                     callee: { id: this.id },
@@ -132,13 +131,13 @@ export class Participant {
                 } as SignalingEvent))
                 .catch((evnt: DOMException): void => this.dispatcher.dispatch('error', evnt));
         } else {
-            this.channel = this.newDataChannel(Configuration.getInstance().getDataConstraints());
+            this.channel = this.newDataChannel(this.room.getConfiguration().getDataConstraints());
             this.channel.onmessage = this.onMessage;
 
             this.peer
                 .createOffer(this.offerAnswerOptions)
                 .then((desc: RTCSessionDescriptionInit): Promise<void> => this.peer.setLocalDescription(desc))
-                .then((): void => EventDispatcher.getInstance().dispatch('send', {
+                .then((): void => this.room.getEventDispatcher().dispatch('send', {
                     type: SignalingEventType.OFFER,
                     caller: { id: this.room.getParticipantId() },
                     callee: { id: this.id },
@@ -172,7 +171,7 @@ export class Participant {
 
     private onIceCandidate = (iceEvent: RTCPeerConnectionIceEvent): void => {
         if (iceEvent.candidate) {
-            EventDispatcher.getInstance().dispatch('send', {
+            this.room.getEventDispatcher().dispatch('send', {
                 type: SignalingEventType.CANDIDATE,
                 caller: { id: this.room.getParticipantId() },
                 callee: { id: this.id },

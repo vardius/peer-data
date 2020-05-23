@@ -12,16 +12,6 @@ It provides the interfaces and methods for working with the streams and their co
 ## Example
 
 ```javascript
-import PeerData from 'peer-data';
-
-const servers = {
-  iceServers: [
-    {url: "stun:stun.1.google.com:19302"}
-  ]
-};
-
-const peerData = new PeerData(servers);
-
 // get video/voice stream
 navigator.getUserMedia({ video: true, audio: true }, gotMedia, () => {})
 

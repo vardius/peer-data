@@ -11,16 +11,19 @@ A WebRTC data channel lets you send text or binary data over an active connectio
 ## Example
 
 ```typescript
-import PeerData from 'peer-data';
+import PeerData, { EventDispatcher, SocketChannel } from 'peer-data';
 
+const constraints = {ordered: true};
 const servers = {
   iceServers: [
     {url: "stun:stun.1.google.com:19302"}
   ]
 };
 
-const constraints = {ordered: true};
-const peerData = new PeerData(servers, constraints);
+const dispatcher = new EventDispatcher();
+const peerData = new PeerData(dispatcher, servers, constraints);
+const signaling = new SocketChannel(dispatcher, 'http://localhost:8080');
+
 const room = peerData.connect('test-room');
 
 //payload object can be everything

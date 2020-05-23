@@ -7,15 +7,6 @@ sidebar_label: Error Handling
 ## Example
 
 ```javascript
-import PeerData from 'peer-data';
-
-const servers = {
-  iceServers: [
-    {url: "stun:stun.1.google.com:19302"}
-  ]
-};
-
-const peerData = new PeerData(servers);
 const room = peerData.connect('test-room');
 
 room

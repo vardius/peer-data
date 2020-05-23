@@ -4,11 +4,13 @@ import { EventDispatcher } from './EventDispatcher';
 
 export class SocketChannel implements Signaling {
     private socket: SocketIOClient.Socket;
+    private dispatcher: EventDispatcher = new EventDispatcher();
 
-    constructor(opts?: SocketIOClient.ConnectOpts) {
+    constructor(dispatcher: EventDispatcher , opts?: SocketIOClient.ConnectOpts) {
+        this.dispatcher = dispatcher;
         this.socket = io(opts);
 
-        EventDispatcher.getInstance().register('send', this.onSend);
+        this.dispatcher.register('send', this.onSend);
 
         this.subscribeEvents();
     }
@@ -24,14 +26,14 @@ export class SocketChannel implements Signaling {
     };
 
     private onIp = (ipaddr: string): void => {
-        EventDispatcher.getInstance().dispatch('log', 'Server IP address is: ' + ipaddr);
+        this.dispatcher.dispatch('log', 'Server IP address is: ' + ipaddr);
     };
 
     private onLog = (...args: any[]): void => {
-        EventDispatcher.getInstance().dispatch('log', args);
+        this.dispatcher.dispatch('log', args);
     };
 
     private onMessage = (event: SignalingEvent): void => {
-        EventDispatcher.getInstance().dispatch(event.type, event);
+        this.dispatcher.dispatch(event.type, event);
     };
 }

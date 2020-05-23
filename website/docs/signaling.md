@@ -15,12 +15,20 @@ Signaling is the process of coordinating communication. In order for a WebRTC ap
 `PeerData` needs signaling server to work. Before `connect` you need to set signaling server. You can use ready to go Socket Channel included in `peer-data` package.
 
 ```javascript
-import PeerData, {SocketChannel} from 'peer-data';
+import PeerData, { EventDispatcher, SocketChannel } from 'peer-data';
 
-let peerData = new PeerData();
-let signaling = new SocketChannel('http://localhost:8080');
+const constraints = {ordered: true};
+const servers = {
+  iceServers: [
+    {url: "stun:stun.1.google.com:19302"}
+  ]
+};
 
-peerData.connect();
+const dispatcher = new EventDispatcher();
+const peerData = new PeerData(dispatcher, servers, constraints);
+const signaling = new SocketChannel(dispatcher, 'http://localhost:8080');
+
+const room = peerData.connect('test-room');
 ```
 
 [PeerDataServer](https://github.com/vardius/peer-data-server) example of socket.io signaling server implementation for `SocketChannel`. 
@@ -38,7 +46,9 @@ Check how is it done in the [SocketChannel](https://github.com/vardius/peer-data
 ```typescript
 import { EventDispatcher } from 'peer-data';
 
-EventDispatcher.getInstance().register('send',onSend);
+const dispatcher = new EventDispatcher();
+
+dispatcher.register('send',onSend);
 
 onSend = (event: SignalingEvent) => {
  socket.emit('message', event); // @TODO: implement your own logic
@@ -53,7 +63,7 @@ import { EventDispatcher } from 'peer-data';
 socket.on('message',onMessage); // @TODO: implement your own logic
 
 onMessage = (event: SignalingEvent) => {
-  EventDispatcher.getInstance().dispatch(event.type, event);
+  dispatcher.dispatch(event.type, event);
 }
 ```
 
