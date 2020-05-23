@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="PeerData - example">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+    <meta itemprop="description" content="PeerData - example">
+    <meta itemprop="image" content="../website/src/static/img/logo.png">
+    <meta itemprop="name" content="WebRTC code samples">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta id="theme-color" name="theme-color" content="#ffffff">
+
+    <base target="_blank">
+
+    <title>PeerData - example</title>
+
+    <link rel="icon" sizes="192x192" href="../website/src/static/favicon/android-icon-192x192.png">
+</head>
+
+<body>
+
+<div id="container">
+    <h1>
+        <a href="https://rafallorenz.com/peer-data/" title="PeerData example">PeerData</a>
+        <span>example</span>
+    </h1>
+
+    <video id="localVideo" playsinline autoplay muted></video>
+    <video id="remoteVideo" playsinline autoplay></video>
+
+    <div class="box">
+        <button id="connect">Connect</button>
+        <button id="disconnect">Disconnect</button>
+    </div>
+</div>
+
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script src="index.js" async></script>
+</body>
+</html>

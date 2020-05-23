@@ -1,0 +1,29 @@
+{
+  "name": "peer-data-example",
+  "version": "1.0.0",
+  "description": "Peer-Data example",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vardius/peer-data.git"
+  },
+  "keywords": [
+    "peer-data",
+    "webrtc"
+  ],
+  "author": {
+    "name": "Rafał Lorenz",
+    "email": "vardius@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vardius/peer-data/issues"
+  },
+  "homepage": "https://github.com/vardius/peer-data#readme",
+  "dependencies": {
+    "peer-data": "^3.1.8"
+  }
+}
