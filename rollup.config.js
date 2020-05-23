@@ -8,12 +8,15 @@ const external = Object.keys(pkg.peerDependencies);
 const env = process.env.NODE_ENV;
 const plugins = [
   sourcemaps(),
-  resolve(),
+  resolve({
+    browser: true,
+    preferBuiltins: true,
+  }),
+  commonjs(),
   typescript({
     objectHashIgnoreUnknownHack: true,
     clean: true,
   }),
-  commonjs(),
 ];
 
 const config = {
@@ -23,19 +26,19 @@ const config = {
   output: [
     {
       name: pkg.name,
-      exports: 'named',
+      exports: "named",
       file: pkg.module,
       format: "es",
-      sourcemap: true
+      sourcemap: true,
     },
     {
       name: pkg.name,
-      exports: 'named',
+      exports: "named",
       file: pkg.main,
       format: "cjs",
-      sourcemap: true
+      sourcemap: true,
     },
-  ]
+  ],
 };
 
 export default config;

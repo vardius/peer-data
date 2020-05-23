@@ -1,8 +1,6 @@
+import io from 'socket.io-client';
 import { Signaling, SignalingEvent } from './Signaling';
 import { EventDispatcher } from './EventDispatcher';
-
-// eslint-disable-next-line @typescript-eslint/no-var-requires, @typescript-eslint/no-require-imports
-const io = require('socket.io-client');
 
 export class SocketChannel implements Signaling {
     private socket: SocketIOClient.Socket;
