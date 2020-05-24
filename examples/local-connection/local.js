@@ -33,9 +33,13 @@ async function connect(e) {
     // you can catch errors here to know if the peer connection init failed
     .on("error", (event) => console.error("local:error", event))
     .on("participant", (participant) => {
+      // handle this participant error
+      participant.on("error", (event) => console.error("participant:error", event));
+
       //this peer shared a stream
       participant.on("track", (event) => {
         console.log("local:track", event);
+
         const video = document.querySelector("#remoteVideo");
         video.srcObject = event.streams[0];
       });
@@ -45,6 +49,7 @@ async function connect(e) {
 async function disconnect(e) {
   if (room) {
     room.disconnect();
+    console.log('btn:disconnect');
     room = null;
   }
 }

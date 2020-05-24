@@ -7,19 +7,38 @@ const servers = {
 };
 
 const peerData = new window.PeerData(dispatcher, servers);
+let room = null;
 
-// remote stream will receive our local stream and share it back for purpose of this example
-const room = peerData.connect("test-room");
-room
-  // you can catch errors here to know if the peer connection init failed
-  .on("error", (event) => console.log(event))
-  .on("participant", (participant) => {
-    //this peer disconnected from room
-    participant.on("disconnected", () => room.disconnect());
+async function connect(e) {
+  if (room) {
+    return;
+  }
 
-    //this peer shared a stream
-    participant.on("track", (event) => {
-      participant.addStream(event.streams[0]);
-      participant.renegotiate();
+  // remote stream will receive our local stream and share it back for purpose of this example
+  room = peerData.connect("test-room");
+  room
+    // you can catch errors here to know if the peer connection init failed
+    .on("error", (event) => console.error("remote:error", event))
+    .on("participant", (participant) => {
+      // handle this participant error
+      participant.on("error", (event) => console.error("participant:error", event));
+
+      // this peer disconnected from room
+      participant.on("disconnected", () => {
+        console.log("remote:disconnected", event);
+
+        // local peer has disconnected so we do the same, leave the room
+        room.disconnect();
+        room = null;
+      });
+
+      // this peer shared a stream
+      participant.on("track", (event) => {
+        console.log("remote:track", event);
+        participant.addStream(event.streams[0]);
+        participant.renegotiate();
+      });
     });
-  });
+}
+
+  document.querySelector("#connect").addEventListener("click", (e) => connect(e));
