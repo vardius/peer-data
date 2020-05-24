@@ -115,6 +115,8 @@ export class Participant {
             promises.push(this.peer
                 .createOffer(this.offerAnswerOptions)
                 .then((desc: RTCSessionDescriptionInit): Promise<void> => {
+                    // prevent race condition if another side send us offer at the time
+                    // when we were in process of createOffer
                     if (this.peer.signalingState === 'stable') {
                         return this.peer
                             .setLocalDescription(desc)
