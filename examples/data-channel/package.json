@@ -1,0 +1,30 @@
+{
+  "name": "peer-data-example",
+  "version": "1.0.0",
+  "description": "Peer-Data socket data channel example",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vardius/peer-data.git"
+  },
+  "keywords": [
+    "peer-data",
+    "webrtc"
+  ],
+  "author": {
+    "name": "Rafał Lorenz",
+    "email": "vardius@gmail.com"
+  },
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/vardius/peer-data/issues"
+  },
+  "homepage": "https://github.com/vardius/peer-data#readme",
+  "dependencies": {
+    "express": "^4.15.3"
+  }
+}

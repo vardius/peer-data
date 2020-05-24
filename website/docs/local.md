@@ -15,12 +15,10 @@ To run this example simple clone the repository and perform the following from t
 ```sh
 ➜  examples git:(master) ✗ cd local-connection
 ➜  local-connection git:(master) ✗ yarn
-yarn install v1.22.1
 [1/4] 🔍  Resolving packages...
 success Already up-to-date.
 ✨  Done in 0.13s.
 ➜  local-connection git:(master) ✗ yarn start
-yarn run v1.22.1
 $ node server.js
 Server started at port 3000
 ```

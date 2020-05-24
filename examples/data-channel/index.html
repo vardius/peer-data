@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="description" content="PeerData - example">
+    <meta name="viewport" content="width=device-width, user-scalable=yes, initial-scale=1, maximum-scale=1">
+    <meta itemprop="description" content="PeerData - example">
+    <meta itemprop="image" content="../website/src/static/img/logo.png">
+    <meta itemprop="name" content="WebRTC code samples">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta id="theme-color" name="theme-color" content="#ffffff">
+
+    <base target="_blank">
+
+    <title>PeerData - data channel example</title>
+
+    <link rel="icon" sizes="192x192" href="../website/src/static/favicon/android-icon-192x192.png">
+
+    <!-- Bootstrap not needed for PeerData-->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/css/bootstrap.min.css" integrity="sha384-9aIt2nRpC12Uk9gS9baDl411NQApFmC26EwAOH8WgZl5MYYxFfc+NcPb1dKGj7Sk" crossorigin="anonymous">
+</head>
+
+<body>
+<main role="main">
+    <section class="jumbotron text-center">
+        <div class="container">
+        <h1>Example</h1>
+        <p class="lead text-muted">local connection with data channel</p>
+        <p>
+            <button id="connect" type="button" class="btn btn-success my-2">Connect</button>
+            <button id="disconnect" type="button" class="btn btn-danger my-2">Disconnect</button>
+        </p>
+        </div>
+    </section>
+    
+    <div class="py-5 bg-light">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6">
+                    <div class="card mb-6 shadow-sm">
+                        <textarea id="localMessage"width="100%" rows="10"></textarea>
+                        <div class="card-body">
+                            <button id="send" type="button" class="btn btn-primary my-2">Send</button>
+                            <p class="card-text">local connection</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-6">
+                    <div class="card mb-6 shadow-sm">
+                        <textarea id="remoteMessage"width="100%" rows="10" readonly></textarea>
+                        <div class="card-body">
+                            <p class="card-text">remote connection</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- Bootstrap not needed for PeerData-->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.0/js/bootstrap.min.js" integrity="sha384-OgVRvuATP1z7JjHLkuOU7Xw704+h835Lr+6QL9UvYjZE3Ipu6Tp75j7Bh/kR0JKI" crossorigin="anonymous"></script>
+
+<!-- WebRTC -->
+<script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
+<script type="module">
+    import PeerData, { EventDispatcher } from 'https://unpkg.com/peer-data@3.2.3/dist/index.es.js';
+
+    window.PeerData = PeerData;
+    window.localDispatcher = new EventDispatcher();
+    window.remoteDispatcher = new EventDispatcher();
+</script>
+<script type="module" src="local.js"></script>
+<script type="module" src="remote.js"></script>
+</body>
+</html>
