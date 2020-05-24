@@ -101,7 +101,9 @@ export class Room {
     private onOffer = (event: SignalingEvent): void => {
         const desc = new RTCSessionDescription(event.payload);
         if (this.participants.has((event.caller as Identifiable).id)) {
-            (this.participants.get((event.caller as Identifiable).id) as Participant).renegotiate(desc);
+            (this.participants.get((event.caller as Identifiable).id) as Participant)
+                .renegotiate(desc)
+                .catch((evnt: DOMException): void => this.dispatcher.dispatch('error', evnt));
         } else {
             const participant = new Participant((event.caller as Identifiable).id, this);
 
@@ -116,7 +118,9 @@ export class Room {
 
     private onConnect = (event: SignalingEvent): void => {
         if (this.participants.has((event.caller as Identifiable).id)) {
-            (this.participants.get((event.caller as Identifiable).id) as Participant).renegotiate();
+            (this.participants.get((event.caller as Identifiable).id) as Participant)
+                .renegotiate()
+                .catch((evnt: DOMException): void => this.dispatcher.dispatch('error', evnt));
         } else {
             const participant = new Participant((event.caller as Identifiable).id, this);
 
