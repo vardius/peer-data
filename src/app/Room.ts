@@ -129,8 +129,10 @@ export class Room {
 
     private onDisconnect = (event: SignalingEvent): void => {
         if (this.participants.has((event.caller as Identifiable).id)) {
-            (this.participants.get((event.caller as Identifiable).id) as Participant).close();
+            const participant = (this.participants.get((event.caller as Identifiable).id) as Participant);
             this.participants.delete((event.caller as Identifiable).id);
+
+            participant.close();
         }
     };
 }
