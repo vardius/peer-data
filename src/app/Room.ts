@@ -63,8 +63,10 @@ export class Room {
 
         const keys = Array.from(this.participants.keys());
         for (const key of keys) {
-            (this.participants.get(key) as Participant).close();
+            const participant = (this.participants.get(key) as Participant);
             this.participants.delete(key);
+
+            participant.close();
         }
 
         return this;
