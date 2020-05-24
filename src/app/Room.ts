@@ -109,7 +109,7 @@ export class Room {
             this.dispatcher.dispatch('participant', participant);
 
             participant
-                .init(desc)
+                .renegotiate(desc)
                 .catch((evnt: DOMException): void => this.dispatcher.dispatch('error', evnt));
         }
     };
@@ -124,7 +124,7 @@ export class Room {
             this.dispatcher.dispatch('participant', participant);
 
             participant
-                .init()
+                .renegotiate()
                 .catch((evnt: DOMException): void => this.dispatcher.dispatch('error', evnt));
         }
     };

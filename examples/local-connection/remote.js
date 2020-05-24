@@ -38,7 +38,6 @@ async function connect(e) {
       participant.on("track", (event) => {
         console.log("remote:track", event);
         participant.addStream(event.streams[0]);
-        participant.renegotiate();
       });
     });
 }
