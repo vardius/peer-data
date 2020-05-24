@@ -28,6 +28,8 @@ const dispatcher = new EventDispatcher();
 const peerData = new PeerData(dispatcher, servers);
 const signaling = new SocketChannel(dispatcher, 'http://localhost:8080');
 
+const room = peerData.connect('test-room');
+
 room.on("participant", participant => {
   participant.on("message", payload => console.log("message", payload));
 
