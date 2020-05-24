@@ -18,6 +18,8 @@
 <span class="hljs-keyword">const</span> peerData = <span class="hljs-keyword">new</span> PeerData(dispatcher, servers);
 <span class="hljs-keyword">const</span> signaling = <span class="hljs-keyword">new</span> SocketChannel(dispatcher, <span class="hljs-string">'http://localhost:8080'</span>);
 
+<span class="hljs-keyword">const</span> room = peerData.connect(<span class="hljs-string">'test-room'</span>);
+
 room.on(<span class="hljs-string">"participant"</span>, <span class="hljs-function"><span class="hljs-params">participant</span> =&gt;</span> {
   participant.on(<span class="hljs-string">"message"</span>, <span class="hljs-function"><span class="hljs-params">payload</span> =&gt;</span> <span class="hljs-built_in">console</span>.log(<span class="hljs-string">"message"</span>, payload));
 
