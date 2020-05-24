@@ -20,17 +20,18 @@ export class Participant {
         };
 
         this.peer = new RTCPeerConnection(this.room.getConfiguration().getServers());
+
+        const stream = this.room.getStream();
+        if (stream instanceof MediaStream) {
+            this.addStream(stream);
+        }
+
         this.peer.onicecandidate = this.onIceCandidate;
         this.peer.onconnectionstatechange = this.onConnectionStateChange;
         this.peer.oniceconnectionstatechange = this.onIceConnectionStateChange;
         this.peer.onnegotiationneeded = this.onNegotiationNeeded;
         this.peer.ondatachannel = this.onDataChannel;
         this.peer.ontrack = this.dispatchRemoteStream;
-
-        const stream = this.room.getStream();
-        if (stream instanceof MediaStream) {
-            this.addStream(stream);
-        }
     }
 
     getId = (): string => this.id;

@@ -89,8 +89,9 @@ export class Room {
             break;
         case SignalingEventType.ANSWER:
         case SignalingEventType.CANDIDATE:
-            if (this.participants.has((event.caller as Identifiable).id)) {
-                (this.participants.get((event.caller as Identifiable).id) as Participant).onSignalingEvent(event);
+            const caller = (event.caller as Identifiable);
+            if (this.participants.has(caller.id)) {
+                (this.participants.get(caller.id) as Participant).onSignalingEvent(event);
             }
             break;
         }
@@ -100,12 +101,13 @@ export class Room {
 
     private onOffer = (event: SignalingEvent): void => {
         const desc = new RTCSessionDescription(event.payload);
-        if (this.participants.has((event.caller as Identifiable).id)) {
-            (this.participants.get((event.caller as Identifiable).id) as Participant)
+        const caller = (event.caller as Identifiable);
+        if (this.participants.has(caller.id)) {
+            (this.participants.get(caller.id) as Participant)
                 .renegotiate(desc)
                 .catch((evnt: DOMException): void => this.dispatcher.dispatch('error', evnt));
         } else {
-            const participant = new Participant((event.caller as Identifiable).id, this);
+            const participant = new Participant(caller.id, this);
 
             this.participants.set(participant.getId(), participant);
             this.dispatcher.dispatch('participant', participant);
@@ -117,26 +119,20 @@ export class Room {
     };
 
     private onConnect = (event: SignalingEvent): void => {
-        if (this.participants.has((event.caller as Identifiable).id)) {
-            (this.participants.get((event.caller as Identifiable).id) as Participant)
-                .renegotiate()
-                .catch((evnt: DOMException): void => this.dispatcher.dispatch('error', evnt));
-        } else {
-            const participant = new Participant((event.caller as Identifiable).id, this);
+        const caller = (event.caller as Identifiable);
+        if (!this.participants.has(caller.id)) {
+            const participant = new Participant(caller.id, this);
 
             this.participants.set(participant.getId(), participant);
             this.dispatcher.dispatch('participant', participant);
-
-            participant
-                .renegotiate()
-                .catch((evnt: DOMException): void => this.dispatcher.dispatch('error', evnt));
         }
     };
 
     private onDisconnect = (event: SignalingEvent): void => {
-        if (this.participants.has((event.caller as Identifiable).id)) {
-            const participant = (this.participants.get((event.caller as Identifiable).id) as Participant);
-            this.participants.delete((event.caller as Identifiable).id);
+        const caller = (event.caller as Identifiable);
+        if (this.participants.has(caller.id)) {
+            const participant = (this.participants.get(caller.id) as Participant);
+            this.participants.delete(caller.id);
 
             participant.close();
         }
