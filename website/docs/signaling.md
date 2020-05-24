@@ -15,6 +15,7 @@ Signaling is the process of coordinating communication. In order for a WebRTC ap
 `PeerData` needs signaling server to work. Before `connect` you need to set signaling server. You can use ready to go Socket Channel included in `peer-data` package.
 
 ```javascript
+// main.js
 import PeerData, { EventDispatcher, SocketChannel } from 'peer-data';
 
 const constraints = {ordered: true};
@@ -32,6 +33,32 @@ const room = peerData.connect('test-room');
 ```
 
 [PeerDataServer](https://github.com/vardius/peer-data-server) example of socket.io signaling server implementation for `SocketChannel`. 
+
+```javascript
+// server.js
+const express = require("express");
+const path = require("path");
+const http = require("http");
+const PeerDataServer = require("peer-data-server");
+
+const PORT = process.env.PORT || 3000;
+
+const app = express();
+
+if (process.env.NODE_ENV === "production") {
+  app.use(express.static(path.join(__dirname, "build")));
+  app.get("*", (req, res) =>
+    res.sendFile(path.join(__dirname, "build", "index.html"))
+  );
+}
+
+const appendPeerDataServer = PeerDataServer.default || PeerDataServer;
+const server = http.createServer(app);
+
+appendPeerDataServer(server);
+
+server.listen(PORT, () => console.log(`Server started at port ${PORT}`));
+```
 
 If you want to create custom signaling channel, take a look what events does dispatch and subscribe to [SocketChannel.ts](https://github.com/vardius/peer-data/blob/master/src/app/SocketChannel.ts) and remember to do the same.
 

@@ -1,4 +1,4 @@
-import PeerData, { EventDispatcher } from "peer-data";
+import PeerData, { EventDispatcher, SocketChannel } from 'https://unpkg.com/peer-data@3.2.1/dist/index.es.js';
 
 const localDispatcher = new EventDispatcher();
 const remoteDispatcher = new EventDispatcher();
@@ -46,7 +46,7 @@ async function connect(e) {
     });
 
   // remote stream will receive our local stream and share it back for purpose of this example
-  remoteRoom = remotePeerData.connect("test-room");
+  const remoteRoom = remotePeerData.connect("test-room");
   remoteRoom
     // you can catch errors here to know if the peer connection init failed
     .on("error", (event) => console.log(event))

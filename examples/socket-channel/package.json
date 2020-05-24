@@ -1,10 +1,11 @@
 {
   "name": "peer-data-example",
   "version": "1.0.0",
-  "description": "Peer-Data example",
+  "description": "Peer-Data socket signalling example",
   "main": "index.html",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
   },
   "repository": {
     "type": "git",
@@ -24,6 +25,9 @@
   },
   "homepage": "https://github.com/vardius/peer-data#readme",
   "dependencies": {
-    "peer-data": "^3.1.9"
+    "express": "^4.15.3",
+    "peer-data": "^3.2.1",
+    "peer-data-server": "^1.0.10",
+    "socket.io": "^2.3.0"
   }
 }
