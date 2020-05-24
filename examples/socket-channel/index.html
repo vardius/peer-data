@@ -25,16 +25,24 @@
         <span>example</span>
     </h1>
 
-    <video id="localVideo" playsinline autoplay muted></video>
-    <video id="remoteVideo" playsinline autoplay></video>
-
     <div class="box">
         <button id="connect">Connect</button>
         <button id="disconnect">Disconnect</button>
     </div>
+
+    <video id="localVideo" playsinline autoplay muted></video>
+    <video id="remoteVideo" playsinline autoplay></video>
 </div>
 
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
-<script type="module" src="main.js" async></script>
+<script type="module">
+    import PeerData, { EventDispatcher, SocketChannel } from 'https://unpkg.com/peer-data@3.2.1/dist/index.es.js';
+
+    window.PeerData = PeerData;
+    window.EventDispatcher = EventDispatcher;
+    window.SocketChannel = SocketChannel;
+</script>
+<script type="module" src="local.js"></script>
+<script type="module" src="remote.js"></script>
 </body>
 </html>
