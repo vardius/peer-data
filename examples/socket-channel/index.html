@@ -65,11 +65,11 @@
 <!-- WebRTC -->
 <script src="https://webrtc.github.io/adapter/adapter-latest.js"></script>
 <script type="module">
-    import PeerData, { EventDispatcher } from 'https://unpkg.com/peer-data@3.2.2/dist/index.es.js';
+    import PeerData, { EventDispatcher, SocketChannel } from 'https://unpkg.com/peer-data@3.2.2/dist/index.es.js';
 
     window.PeerData = PeerData;
-    window.localDispatcher = new EventDispatcher();
-    window.remoteDispatcher = new EventDispatcher();
+    window.EventDispatcher = EventDispatcher;
+    window.SocketChannel = SocketChannel;
 </script>
 <script type="module" src="local.js"></script>
 <script type="module" src="remote.js"></script>
