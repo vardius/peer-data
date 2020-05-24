@@ -5,7 +5,7 @@ window.remoteDispatcher.register("send", (event) => {
 
 // Set up servers
 const servers = {
-  iceServers: [{ url: "stun:stun.1.google.com:19302" }],
+  iceServers: [{ urls: "stun:stun.1.google.com:19302" }],
 };
 
 const peerData = new window.PeerData(window.remoteDispatcher, servers);

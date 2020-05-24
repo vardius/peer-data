@@ -35,7 +35,7 @@ import PeerData from 'peer-data';
 
 const servers = {
   iceServers: [
-    {url: "stun:stun.1.google.com:19302"}
+    {urls: "stun:stun.1.google.com:19302"}
   ]
 };
 

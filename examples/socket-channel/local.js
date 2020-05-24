@@ -3,7 +3,7 @@ const signalling = new window.SocketChannel(dispatcher, 'http://localhost:3000')
 
 // Set up servers
 const servers = {
-  iceServers: [{ url: "stun:stun.1.google.com:19302" }],
+  iceServers: [{ urls: "stun:stun.1.google.com:19302" }],
 };
 
 const peerData = new window.PeerData(dispatcher, servers);
