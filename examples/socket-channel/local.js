@@ -38,7 +38,9 @@ async function connect(e) {
         console.log("local:track", event);
 
         const video = document.querySelector("#remoteVideo");
-        video.srcObject = event.streams[0];
+        if (video.srcObject !== event.streams[0]) {
+          video.srcObject = event.streams[0];
+        }
       });
     });
 }

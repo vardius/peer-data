@@ -40,4 +40,4 @@ async function connect(e) {
     });
 }
 
-  document.querySelector("#connect").addEventListener("click", (e) => connect(e));
+document.querySelector("#connect").addEventListener("click", (e) => connect(e));
