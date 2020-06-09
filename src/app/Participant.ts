@@ -87,57 +87,47 @@ export class Participant {
     };
 
     renegotiate = async (remoteDesc?: RTCSessionDescription): Promise<Participant> => {
-        const promises: Promise<any>[] = [];
-
         if (remoteDesc) {
             if (remoteDesc.type === 'offer' && this.peer.signalingState !== 'stable') {
-                promises.push(this.peer.setLocalDescription({type: 'rollback'}));
+                await this.peer.setLocalDescription({type: 'rollback'});
             }
 
-            promises.push(this.peer.setRemoteDescription(remoteDesc));
+            await this.peer.setRemoteDescription(remoteDesc);
 
             if (remoteDesc.type === 'offer') {
-                promises.push(this.peer
-                    .createAnswer(this.offerAnswerOptions)
-                    .then((desc: RTCSessionDescriptionInit): Promise<void> => this.peer.setLocalDescription(desc))
-                    .then((): void => this.room.getEventDispatcher().dispatch('send', {
-                        type: SignalingEventType.ANSWER,
-                        caller: { id: this.room.getParticipantId() },
-                        callee: { id: this.id },
-                        room: { id: this.room.getId() },
-                        payload: this.peer.localDescription,
-                    } as SignalingEvent))
-                );
+                const desc = await this.peer.createAnswer(this.offerAnswerOptions);
+                await this.peer.setLocalDescription(desc);
+
+                this.room.getEventDispatcher().dispatch('send', {
+                    type: SignalingEventType.ANSWER,
+                    caller: { id: this.room.getParticipantId() },
+                    callee: { id: this.id },
+                    room: { id: this.room.getId() },
+                    payload: this.peer.localDescription,
+                } as SignalingEvent);
             }
         } else {
             this.channel = this.newDataChannel(this.room.getConfiguration().getDataConstraints());
             this.channel.onmessage = this.onMessage;
 
-            promises.push(this.peer
-                .createOffer(this.offerAnswerOptions)
-                .then((desc: RTCSessionDescriptionInit): Promise<void> => {
-                    // prevent race condition if another side send us offer at the time
-                    // when we were in process of createOffer
-                    if (this.peer.signalingState === 'stable') {
-                        return this.peer
-                            .setLocalDescription(desc)
-                            .then((): void => this.room.getEventDispatcher().dispatch('send', {
-                                type: SignalingEventType.OFFER,
-                                caller: { id: this.room.getParticipantId() },
-                                callee: { id: this.id },
-                                room: { id: this.room.getId() },
-                                payload: this.peer.localDescription,
-                            } as SignalingEvent));
-                    }
+            const desc = await this.peer.createOffer(this.offerAnswerOptions);
 
-                    return Promise.resolve();
-                })
-            );
+            // prevent race condition if another side send us offer at the time
+            // when we were in process of createOffer
+            if (this.peer.signalingState === 'stable') {
+                await this.peer.setLocalDescription(desc);
+
+                this.room.getEventDispatcher().dispatch('send', {
+                    type: SignalingEventType.OFFER,
+                    caller: { id: this.room.getParticipantId() },
+                    callee: { id: this.id },
+                    room: { id: this.room.getId() },
+                    payload: this.peer.localDescription,
+                } as SignalingEvent);
+            }
         }
 
-        return Promise
-            .all(promises)
-            .then((): Participant => this);
+        return this;
     };
 
     private newDataChannel = (dataConstraints?: RTCDataChannelInit): RTCDataChannel => {
@@ -148,16 +138,20 @@ export class Participant {
         return this.peer.createDataChannel(label, dataConstraints);
     };
 
-    private onAnswer = (event: SignalingEvent): void => {
-        this
-            .renegotiate(new RTCSessionDescription(event.payload))
-            .catch((evnt: DOMException): void => this.dispatcher.dispatch('error', evnt));
+    private onAnswer = async (event: SignalingEvent): Promise<void> => {
+        try {
+            await this.renegotiate(new RTCSessionDescription(event.payload));
+        } catch (err) {
+            this.dispatcher.dispatch('error', err);
+        }
     };
 
-    private onCandidate = (event: SignalingEvent): void => {
-        this.peer
-            .addIceCandidate(new RTCIceCandidate(event.payload))
-            .catch((evnt: DOMException): void => this.dispatcher.dispatch('error', evnt));
+    private onCandidate = async (event: SignalingEvent):  Promise<void> => {
+        try {
+            await this.peer.addIceCandidate(new RTCIceCandidate(event.payload));
+        } catch (err) {
+            this.dispatcher.dispatch('error', err);
+        }
     };
 
     private onIceCandidate = (iceEvent: RTCPeerConnectionIceEvent): void => {
@@ -199,10 +193,12 @@ export class Participant {
         }
     };
 
-    private onNegotiationNeeded = (): void => {
-        this
-            .renegotiate()
-            .catch((evnt: DOMException): void => this.dispatcher.dispatch('error', evnt));
+    private onNegotiationNeeded = async (): Promise<void> => {
+        try {
+            await this.renegotiate();
+        } catch (err) {
+            this.dispatcher.dispatch('error', err);
+        }
     };
 
     private onDataChannel = (event: RTCDataChannelEvent): void => {

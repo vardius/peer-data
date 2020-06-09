@@ -40,7 +40,9 @@ export class App {
 
     private onEvent = (event: SignalingEvent): App => {
         if (this.rooms.has(event.room.id)) {
-            (this.rooms.get(event.room.id) as Room).onSignalingEvent(event);
+            const room =  (this.rooms.get(event.room.id) as Room);
+
+            room.onSignalingEvent(event);
         }
 
         return this;
