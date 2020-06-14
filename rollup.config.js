@@ -23,6 +23,7 @@ const config = {
   input: "src/index.ts",
   external: external,
   plugins: plugins,
+  treeshake: true,
   output: [
     {
       name: pkg.name,
