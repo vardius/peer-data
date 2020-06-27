@@ -34,9 +34,9 @@ For **documentation** (_including examples_), **visit [rafallorenz.com/peer-data
 🚏 HOW TO USE
 ==================================================
 
-2. [Chat Example](https://github.com/vardius/webrtc-chat)
-3. [React Chat Example](https://github.com/vardius/react-webrtc-chat)
-4. [React Hook](https://github.com/vardius/react-peer-data)
+1. [Chat Example](https://github.com/vardius/webrtc-chat)
+2. [React Chat Example](https://github.com/vardius/react-webrtc-chat)
+3. [React Hook](https://github.com/vardius/react-peer-data)
 
 ## Installation
 ```bash
@@ -72,4 +72,4 @@ For how to **disconnect**, **close connection** and handle errors please check [
 📜 [License](LICENSE.md)
 -------
 
-This package is released under the MIT license. See the complete license in the package:
+This package is released under the MIT license. See the complete license in the package
