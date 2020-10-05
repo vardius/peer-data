@@ -11,6 +11,8 @@ export class Participant {
     private dispatcher: EventDispatcher = new EventDispatcher();
     private offerAnswerOptions: RTCOfferOptions;
 
+    private isNegotiating: boolean; // Workaround for Chrome: skip nested negotiations
+
     constructor(id: string, room: Room) {
         this.id = id;
         this.room = room;
@@ -18,6 +20,7 @@ export class Participant {
             offerToReceiveAudio: true,
             offerToReceiveVideo: true,
         };
+        this.isNegotiating = false;
 
         this.peer = new RTCPeerConnection(this.room.getConfiguration().getServers());
 
@@ -29,6 +32,7 @@ export class Participant {
         this.peer.onicecandidate = this.onIceCandidate;
         this.peer.onconnectionstatechange = this.onConnectionStateChange;
         this.peer.oniceconnectionstatechange = this.onIceConnectionStateChange;
+        this.peer.onsignalingstatechange = this.onSignalingStateChange;
         this.peer.onnegotiationneeded = this.onNegotiationNeeded;
         this.peer.ondatachannel = this.onDataChannel;
         this.peer.ontrack = this.dispatchRemoteStream;
@@ -194,11 +198,18 @@ export class Participant {
     };
 
     private onNegotiationNeeded = async (): Promise<void> => {
-        try {
-            await this.renegotiate();
-        } catch (err) {
-            this.dispatcher.dispatch('error', err);
+        if (!this.isNegotiating) {
+            try {
+                await this.renegotiate();
+            } catch (err) {
+                this.dispatcher.dispatch('error', err);
+            }
+            this.isNegotiating = true;
         }
+    };
+
+    private onSignalingStateChange = (): void => {
+        this.isNegotiating = (this.peer.signalingState !== 'stable');
     };
 
     private onDataChannel = (event: RTCDataChannelEvent): void => {
