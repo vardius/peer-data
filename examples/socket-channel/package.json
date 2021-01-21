@@ -28,6 +28,6 @@
     "express": "^4.15.3",
     "peer-data": "^3.2.2",
     "peer-data-server": "^1.0.10",
-    "socket.io": "^2.3.0"
+    "socket.io": "^2.4.0"
   }
 }
