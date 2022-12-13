@@ -25,6 +25,6 @@
   },
   "homepage": "https://github.com/vardius/peer-data#readme",
   "dependencies": {
-    "express": "^4.15.3"
+    "express": "^4.17.3"
   }
 }
