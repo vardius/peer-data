@@ -40,6 +40,10 @@ export default defineConfig({
 });
 ```
 
+The signaling server answers every request below `/socket.io/`, so leave the plugin out when your dev server
+proxies a socket.io server of your own there. Other WebSockets on Vite's server, such as its own and those
+`server.proxy` opens, are left alone.
+
 Pages signal through `io()`, which connects to the origin of the page:
 
 ```ts

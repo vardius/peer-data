@@ -61,8 +61,10 @@ attachSignaling(httpServer, { cors: { origin: 'https://your.site' } });
 httpServer.listen(8080);
 ```
 
-Beyond routing, it checks that each socket only speaks for the peer ids it joined with, and tells a room when
-a socket drops. Add whatever your app needs on top, such as authentication before a socket may join a room.
+Beyond routing, it checks that each socket only speaks for the peer ids it joined with, 16 at most, and tells a
+room when a socket drops. A peer whose socket reconnects before the server notices the old one is gone gets its
+id back once the server does, within socket.io's ping interval and timeout: 45 seconds by default. Add whatever
+your app needs on top, such as authentication before a socket may join a room, or rate limits.
 
 ## The messages
 

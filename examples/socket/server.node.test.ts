@@ -142,6 +142,84 @@ test('an id another socket joined with cannot be claimed', async () => {
   expect(b.inbox).toEqual([]);
 });
 
+test('a page that reconnects before its old socket is noticed gone gets its id once that socket goes', async () => {
+  const old = await join('r9', 'a9');
+  const b = await join('r9', 'b9');
+  await flush(b);
+  b.inbox.length = 0;
+
+  // The new socket asks for the id while the server still holds the old one, which may be a thief's too.
+  const renewed = await join('r9', 'a9');
+  await flush(b);
+  expect(b.inbox).toEqual([]);
+
+  const back = b.next((event) => event.type === 'CONNECT');
+  old.socket.close();
+  await back;
+  expect(b.inbox).toEqual([{ ...connectEvent('r9', 'a9'), type: 'DISCONNECT' }, connectEvent('r9', 'a9')]);
+
+  await b.send(offer('r9', 'b9', 'a9'));
+  await flush(renewed);
+  expect(renewed.inbox).toEqual([offer('r9', 'b9', 'a9')]);
+});
+
+test('an id left with DISCONNECT goes to the socket waiting for it, after the DISCONNECT', async () => {
+  const a = await join('r10', 'a10');
+  const b = await join('r10', 'b10');
+  await join('r10', 'a10');
+  await flush(b);
+  b.inbox.length = 0;
+
+  const back = b.next((event) => event.type === 'CONNECT');
+  await a.send({ ...connectEvent('r10', 'a10'), type: 'DISCONNECT' });
+  await back;
+
+  expect(b.inbox).toEqual([{ ...connectEvent('r10', 'a10'), type: 'DISCONNECT' }, connectEvent('r10', 'a10')]);
+});
+
+test('a socket that leaves an id it waits for does not get it', async () => {
+  const old = await join('r12', 'a12');
+  const b = await join('r12', 'b12');
+  const renewed = await join('r12', 'a12');
+  await renewed.send({ ...connectEvent('r12', 'a12'), type: 'DISCONNECT' });
+  await flush(b);
+  b.inbox.length = 0;
+
+  old.socket.close();
+  await b.next((event) => event.type === 'DISCONNECT');
+  await flush(b);
+
+  expect(b.inbox).toEqual([{ ...connectEvent('r12', 'a12'), type: 'DISCONNECT' }]);
+});
+
+test('the ids a socket waits for count toward its 16, until another socket asks for them', async () => {
+  const holder = await join('r13', 'a13');
+  const waiter = await join('r13', 'a13');
+  await flush(holder);
+  holder.inbox.length = 0;
+
+  for (let i = 1; i <= 16; i++) await waiter.send(connectEvent('r13', `w${String(i)}`));
+  await join('r13', 'a13');
+  await waiter.send(connectEvent('r13', 'w16'));
+  await flush(holder);
+
+  expect(holder.inbox.map((event) => event.caller.id)).toEqual(
+    Array.from({ length: 16 }, (_, i) => `w${String(i + 1)}`),
+  );
+});
+
+test('a socket joins with 16 ids at most', async () => {
+  const a = await join('r11', 'a11');
+  const flood = await join('r11', 'f0');
+  await flush(a);
+  a.inbox.length = 0;
+
+  for (let i = 1; i <= 16; i++) await flood.send(connectEvent('r11', `f${String(i)}`));
+  await flush(a);
+
+  expect(a.inbox.map((event) => event.caller.id)).toEqual(Array.from({ length: 15 }, (_, i) => `f${String(i + 1)}`));
+});
+
 test('an offer only goes into the room its id joined', async () => {
   const victim = await join('lobby', 'v1');
   await victim.send(connectEvent('secret', 'v2'));

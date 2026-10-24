@@ -7,14 +7,17 @@ import { attachSignaling } from './server.js';
  * attachSignaling on a server of your own.
  */
 export function signaling(): Plugin {
+  // socket.io would close any other WebSocket it doesn't handle, such as a proxy's, that isn't answered within a
+  // second: those are left to their own handlers.
+  const options = { destroyUpgrade: false };
   return {
     name: 'peer-data-signaling',
     configureServer(server) {
       // Middleware mode has no server of its own.
-      if (server.httpServer) attachSignaling(server.httpServer);
+      if (server.httpServer) attachSignaling(server.httpServer, options);
     },
     configurePreviewServer(server) {
-      attachSignaling(server.httpServer);
+      attachSignaling(server.httpServer, options);
     },
   };
 }
