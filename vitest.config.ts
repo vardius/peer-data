@@ -28,7 +28,23 @@ export default defineConfig({
             enabled: true,
             headless: true,
             provider: playwright(),
-            instances: [{ browser: 'chromium' }, { browser: 'firefox' }, { browser: 'webkit' }],
+            instances: [
+              { browser: 'chromium' },
+              {
+                browser: 'firefox',
+                // Firefox hides host addresses behind mDNS names, which CI machines may not resolve, and skips
+                // loopback: let the peers in one browser connect over plain addresses, loopback included.
+                provider: playwright({
+                  launchOptions: {
+                    firefoxUserPrefs: {
+                      'media.peerconnection.ice.obfuscate_host_addresses': false,
+                      'media.peerconnection.ice.loopback': true,
+                    },
+                  },
+                }),
+              },
+              { browser: 'webkit' },
+            ],
           },
         },
       },
