@@ -16,6 +16,11 @@
 	min-width: 0;
 }
 
+/* A long call in a table cell may break anywhere, so it doesn't widen the table past the page with large text. */
+.sl-markdown-content td code {
+	overflow-wrap: anywhere;
+}
+
 /* Landing page: a soft accent glow at the top, behind the hero. */
 .main-frame:has(.hero) {
 	background:
