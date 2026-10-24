@@ -1,0 +1,287 @@
+---
+// A live chat between two peers in this page, signaling over BroadcastChannel: no server. Other tabs showing
+// a chat demo join the same room. The chat itself is examples/chat/chat.ts, which has its own tests.
+---
+
+<div class="chat-demo not-content" data-chat-demo>
+	<div class="peers">
+		{
+			[0, 1].map((i) => (
+				<section class="peer" aria-labelledby={`chat-name-${i}`}>
+					<header>
+						<h3 class="name" id={`chat-name-${i}`}>Peer {i + 1}</h3>
+						<p class="status" role="status">
+							Connecting…
+						</p>
+					</header>
+					<ul class="log" aria-live="polite" />
+					<form>
+						<label class="sr-only" for={`chat-text-${i}`}>
+							Message
+						</label>
+						<input id={`chat-text-${i}`} autocomplete="off" placeholder="Say something" required />
+						<button type="submit">Send</button>
+					</form>
+				</section>
+			))
+		}
+	</div>
+	<details class="signals">
+		<summary>What went through signaling</summary>
+		<p>
+			Everything this page's peers sent each other to connect. After that, chat messages go straight from one
+			peer to the other.
+		</p>
+		<ol />
+	</details>
+</div>
+
+<script>
+	import { BroadcastChannelSignaling, type SignalingEvent } from 'peer-data';
+	import { joinChat } from '../../../examples/chat/chat';
+	import { Names, peerNames } from '../scripts/demo';
+
+	/** Signaling log entries kept on screen. */
+	const MAX_SIGNALS = 50;
+
+	for (const demo of document.querySelectorAll<HTMLElement>('[data-chat-demo]')) runChatDemo(demo);
+	// A page restored from the back-forward cache has left the chat: join afresh.
+	window.addEventListener('pageshow', (event) => {
+		if (event.persisted) location.reload();
+	});
+
+	function runChatDemo(demo: HTMLElement): void {
+		const signals = demo.querySelector('.signals ol');
+		const names = new Names();
+		let last: { key: string; count: number; item: HTMLLIElement } | undefined;
+
+		const record = (from: string, event: SignalingEvent): void => {
+			if (!signals) return;
+			const to = event.callee ? (names.of(event.callee.id) ?? 'a peer in another tab') : 'the room';
+			const key = `${event.type} ${from} ${to}`;
+			// ICE candidates come in runs: one line per run, with a count.
+			if (last?.key === key) {
+				last.count++;
+				last.item.dataset.count = `×${String(last.count)}`;
+				return;
+			}
+			const item = document.createElement('li');
+			const type = document.createElement('code');
+			type.textContent = event.type;
+			item.append(type, ` ${from} → ${to}`);
+			signals.append(item);
+			if (signals.children.length > MAX_SIGNALS) signals.firstElementChild?.remove();
+			last = { key, count: 1, item };
+		};
+
+		for (const [i, panel] of demo.querySelectorAll<HTMLElement>('.peer').entries()) {
+			const name = peerNames[i % 2] ?? 'Peer';
+			const heading = panel.querySelector('.name');
+			const status = panel.querySelector('.status');
+			const log = panel.querySelector('.log');
+			const form = panel.querySelector('form');
+			const label = panel.querySelector('label');
+			const input = panel.querySelector('input');
+			if (!heading || !status || !log || !form || !label || !input) continue;
+			heading.textContent = name;
+			label.textContent = `Message from ${name}`;
+			input.placeholder = `Say something as ${name}`;
+
+			const show = (from: string, text: string, own: boolean): void => {
+				const item = document.createElement('li');
+				item.classList.toggle('own', own);
+				const who = document.createElement('b');
+				who.textContent = from;
+				item.append(who, ` ${text}`);
+				log.append(item);
+				log.scrollTop = log.scrollHeight;
+			};
+
+			const signaling = names.track(new BroadcastChannelSignaling('peer-data-demo-chat'), name, (event) => {
+				record(name, event);
+			});
+			const chat = joinChat(signaling, name, {
+				line: ({ from, text }) => {
+					show(from, text, false);
+				},
+				peers: (count) => {
+					status.textContent =
+						count === 0 ? 'Waiting for a peer…' : `Connected to ${String(count)} ${count === 1 ? 'peer' : 'peers'}`;
+				},
+			});
+
+			form.addEventListener('submit', (event) => {
+				event.preventDefault();
+				const text = input.value.trim();
+				if (text === '') return;
+				chat.say(text);
+				show(name, text, true);
+				input.value = '';
+			});
+			window.addEventListener('pagehide', chat.leave);
+		}
+	}
+</script>
+
+<style>
+	.chat-demo {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.peers {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+		gap: 1rem;
+	}
+
+	.peer {
+		display: flex;
+		flex-direction: column;
+		min-width: 0;
+		border: 1px solid var(--sl-color-hairline-light);
+		border-radius: 0.75rem;
+		background: var(--sl-color-bg-nav);
+		overflow: hidden;
+	}
+
+	header {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 0.25rem 1rem;
+		padding: 0.75rem 1rem;
+		border-bottom: 1px solid var(--sl-color-hairline-light);
+	}
+
+	.name {
+		margin: 0;
+		font-size: var(--sl-text-lg);
+		color: var(--sl-color-white);
+	}
+
+	.status {
+		margin: 0;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-3);
+	}
+
+	.log {
+		display: flex;
+		flex-direction: column;
+		gap: 0.375rem;
+		height: 9rem;
+		margin: 0;
+		padding: 0.75rem 1rem;
+		overflow-y: auto;
+		list-style: none;
+		overflow-wrap: anywhere;
+	}
+
+	.log:empty::before {
+		content: 'Nothing said yet.';
+		color: var(--sl-color-gray-3);
+	}
+
+	.log :global(li) {
+		margin: 0;
+		color: var(--sl-color-gray-2);
+	}
+
+	.log :global(b) {
+		margin-right: 0.25rem;
+		color: var(--sl-color-white);
+	}
+
+	.log :global(li.own b) {
+		color: var(--sl-color-accent);
+	}
+
+	/* The button moves under the field when both don't fit, so the placeholder stays readable. */
+	form {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		padding: 0.75rem;
+		border-top: 1px solid var(--sl-color-hairline-light);
+	}
+
+	input {
+		flex: 999 1 12rem;
+		min-width: 0;
+		padding: 0.5rem 0.75rem;
+		border: 1px solid var(--sl-color-gray-5);
+		border-radius: 0.5rem;
+		background: var(--sl-color-bg);
+		color: var(--sl-color-white);
+		font: inherit;
+	}
+
+	input:focus-visible {
+		outline: 2px solid var(--sl-color-accent);
+		outline-offset: 1px;
+	}
+
+	button {
+		flex: 1 0 auto;
+		padding: 0.5rem 1rem;
+		border: 0;
+		border-radius: 0.5rem;
+		background: var(--sl-color-accent);
+		color: var(--sl-color-black);
+		font: inherit;
+		font-weight: 600;
+		cursor: pointer;
+	}
+
+	button:hover {
+		background: var(--sl-color-accent-high);
+	}
+
+	.signals {
+		border: 1px solid var(--sl-color-hairline-light);
+		border-radius: 0.75rem;
+		padding: 0.75rem 1rem;
+	}
+
+	summary {
+		color: var(--sl-color-white);
+		font-weight: 600;
+		cursor: pointer;
+	}
+
+	.signals p {
+		margin: 0.5rem 0;
+		color: var(--sl-color-gray-3);
+		font-size: var(--sl-text-sm);
+	}
+
+	.signals ol {
+		display: flex;
+		flex-direction: column;
+		gap: 0.25rem;
+		max-height: 14rem;
+		margin: 0;
+		padding: 0;
+		overflow-y: auto;
+		list-style: none;
+		font-size: var(--sl-text-sm);
+		color: var(--sl-color-gray-2);
+		overflow-wrap: anywhere;
+	}
+
+	.signals :global(li) {
+		margin: 0;
+	}
+
+	.signals :global(li[data-count])::after {
+		content: ' ' attr(data-count);
+		color: var(--sl-color-gray-3);
+	}
+
+	.signals :global(code) {
+		margin-right: 0.25rem;
+		color: var(--sl-color-accent);
+	}
+</style>

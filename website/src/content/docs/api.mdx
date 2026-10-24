@@ -1,0 +1,118 @@
+---
+title: API reference
+description: Every class, method, event and type peer-data exports.
+---
+
+Everything is a named export of `peer-data`:
+
+```ts
+import { BroadcastChannelSignaling, PeerData, SocketChannel } from 'peer-data';
+import type { Participant, Room, Signaling } from 'peer-data';
+```
+
+## PeerData
+
+This browser: joins rooms over signaling, and connects to the other peers in them.
+
+### `new PeerData(signaling, options?)`
+
+| Option | Type | |
+| --- | --- | --- |
+| `configuration` | `RTCConfiguration` | Passed to every `RTCPeerConnection`: ICE servers and the rest. |
+| `channel` | `RTCDataChannelInit`, without `id` and `negotiated` | Options for the data channel to each participant. Every peer in a room must use the same. |
+| `connectTimeout` | `number` | How long a participant's data channel has to open, in ms, before the participant is closed. Defaults to `30000`. |
+
+The constructor subscribes to `signaling` straight away.
+
+### `peer.connect(roomId, stream?): Room`
+
+Joins the room, or returns it if this peer is already in it. Every track of `stream` is shared with each
+participant. Throws a `TypeError` for an empty id, and an `Error` after `close()`. If signaling throws, so does
+`connect`, and the next `connect` tries again.
+
+### `peer.close(): void`
+
+Leaves every room and stops listening to signaling, even when signaling throws; the first error is thrown
+after. Calling it again does nothing.
+
+## Room
+
+A room joined with `peer.connect`.
+
+| Member | |
+| --- | --- |
+| `id: string` | The room's name. |
+| `participants: ReadonlyMap<string, Participant>` | The other peers in the room now, by id. |
+| `on(type, listener): this` | Listens for an event. |
+| `off(type, listener): this` | Stops listening. |
+| `send(data): this` | Sends `data` to every participant in the room. If one can't take it, the others still get it, then the first error is thrown. |
+| `disconnect(): void` | Leaves: tells the others, and closes the connection to each, even when signaling throws. Calling it again does nothing. |
+
+| Event | Value | Fires when |
+| --- | --- | --- |
+| `participant` | `Participant` | Another peer is in the room. Its connection is still being set up. |
+| `error` | `Error` | Setting up a participant failed, for example for an invalid `RTCConfiguration`. |
+
+## Participant
+
+Another peer in a room, and the connection to it: one `RTCPeerConnection` with one data channel.
+
+| Member | |
+| --- | --- |
+| `id: string` | The participant's id, as the signaling server knows it. |
+| `connection: RTCPeerConnection` | The connection, for what `Participant` doesn't cover, such as `getStats()`. |
+| `channel: RTCDataChannel` | The data channel, for its `bufferedAmount` and `bufferedamountlow` event. Send through `send`. |
+| `on(type, listener): this` | Listens for an event. |
+| `off(type, listener): this` | Stops listening. |
+| `send(data): this` | Sends `data`. Before the channel opens a copy waits, and goes out in order once it does. Throws for a `Blob`, and once the participant is disconnecting. |
+| `addStream(stream): this` | Shares every track of `stream`. The connection renegotiates by itself. |
+| `close(): void` | Closes the connection. Calling it again does nothing. |
+
+| Event | Value | Fires when |
+| --- | --- | --- |
+| `connected` | `undefined` | The data channel opened. |
+| `message` | `string \| ArrayBuffer` | A message arrived. |
+| `track` | `RTCTrackEvent` | The participant shared a media track. |
+| `disconnected` | `undefined` | The participant is gone, and the connection closed: it left, its connection failed or never opened in time, or it was closed. Fires once. |
+| `error` | `Error` | Negotiating the connection failed. |
+
+An error event with no listener is reported as an uncaught error. A listener that throws doesn't stop the
+others; its error is reported the same way.
+
+## Signaling
+
+```ts
+interface Signaling {
+  send(event: SignalingEvent): void;
+  subscribe(listener: (message: unknown) => void): () => void;
+}
+```
+
+Carries signaling events between peers. `subscribe` passes every message that arrives to `listener` until the
+returned function is called; PeerData ignores anything that isn't a well-formed `SignalingEvent`.
+See [Signaling](../signaling/) for writing your own.
+
+### `new SocketChannel(socket)`
+
+Signaling over a socket.io client socket: events go out and come in as `message` events. Sockets of
+socket.io-client 2, 3 and 4 fit its `SignalingSocket` type. When the socket reconnects, it announces this
+peer again in every room it's in.
+
+### `new BroadcastChannelSignaling(name = 'peer-data')`
+
+Signaling between pages of the same origin in one browser, with no server. `close()` stops it; anything sent
+afterwards goes nowhere.
+
+## Types
+
+| Type | |
+| --- | --- |
+| `PeerDataOptions` | The options of `new PeerData`. |
+| `RoomEvents`, `ParticipantEvents` | Event names and the values their listeners receive. |
+| `Listener<T>` | `(value: T) => void` |
+| `Payload` | What `send` takes: `string \| ArrayBuffer \| ArrayBufferView<ArrayBuffer>`. |
+| `SignalingEvent` | A message between peers; see [The messages](../signaling/#the-messages). |
+| `DirectedSignalingEvent` | An OFFER, ANSWER or CANDIDATE: the signaling events with a callee. |
+| `SignalingEventType` | The event types, as a value (`SignalingEventType.OFFER`) and a type. |
+| `Identifiable` | `{ id: string }`, for rooms and peers in signaling events. |
+| `SignalingSocket` | The part of a socket.io socket `SocketChannel` uses. |

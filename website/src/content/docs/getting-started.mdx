@@ -1,0 +1,101 @@
+---
+title: Getting started
+description: Install peer-data, connect two tabs with no server, then connect browsers anywhere through a signaling server.
+---
+
+import { Code, LinkCard, CardGrid, Steps } from '@astrojs/starlight/components';
+import chat from '../../../../examples/chat/chat.ts?raw';
+
+peer-data connects browsers over WebRTC. Three things make a connection:
+
+- **PeerData** is this browser. You give it the signaling it reaches other peers through.
+- **A room** is a name peers join with `peer.connect(name)`. Joining tells the others in it you are there.
+- **A participant** is each other peer in the room, with its own `RTCPeerConnection` and data channel.
+  You send to it, and listen to it for messages, media and leaving.
+
+## Install
+
+```sh
+npm install peer-data
+```
+
+peer-data is an ES module with types. It runs in current Chrome, Edge, Firefox and Safari. In a Vite app,
+[Vite](../vite/) shows how to run signaling on Vite's own server.
+
+## Your first room
+
+Peers need a way to find each other before WebRTC can connect them directly: that is signaling. Between tabs
+of the same browser, `BroadcastChannelSignaling` needs no server, so it is the quickest way to start.
+
+This chat joins a room called `chat`, sends each line to everyone in it, and reports how many peers it can
+talk to:
+
+<Code code={chat} lang="ts" title="examples/chat/chat.ts" />
+
+Use it with signaling between tabs:
+
+```ts
+import { BroadcastChannelSignaling } from 'peer-data';
+import { joinChat } from './chat';
+
+const chat = joinChat(new BroadcastChannelSignaling(), 'Ada', {
+  line: ({ from, text }) => console.log(`${from}: ${text}`),
+  peers: (count) => console.log(`connected to ${count}`),
+});
+
+// Later, from a form:
+chat.say('hello');
+```
+
+`room.send` sends to the participants in the room at that moment, so a line said while no one else is there
+reaches no one. A participant that has joined but isn't connected yet gets it once its channel opens.
+
+## Run it
+
+<Steps>
+
+1. Clone the repository and serve the examples:
+
+   ```sh
+   git clone https://github.com/vardius/peer-data.git
+   cd peer-data
+   npm ci
+   npm run examples
+   ```
+
+2. Open the chat at http://localhost:5173/chat/ in two tabs. Each tab says who it is and how many peers it is
+   connected to; what you type in one appears in the other.
+
+3. Open http://localhost:5173/socket/ in two browsers. This chat signals through the socket.io server the
+   examples run, so it works between browsers. To open it on another device on your network, serve the
+   examples with `npm run examples -- --host` and open the network address it prints.
+
+</Steps>
+
+Or try it right here, in the [live demo](../demo/).
+
+## Across browsers and devices
+
+`BroadcastChannel` only reaches tabs of the same browser. To connect browsers anywhere, signal through a
+server, and give the connections ICE servers so they can find a way through routers and firewalls:
+
+```ts
+import { io } from 'socket.io-client';
+import { PeerData, SocketChannel } from 'peer-data';
+
+const peer = new PeerData(new SocketChannel(io('https://signaling.example.com')), {
+  configuration: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] },
+});
+```
+
+A STUN server lets most peers connect directly. Peers behind stricter networks need a TURN server to relay
+their traffic; add it to `iceServers` with its credentials.
+
+## Next
+
+<CardGrid>
+	<LinkCard title="Rooms and participants" href="../rooms/" description="Joining, leaving, and what each event means." />
+	<LinkCard title="Signaling" href="../signaling/" description="socket.io, BroadcastChannel, a server to start from, and your own." />
+	<LinkCard title="Data" href="../data/" description="Text and binary, to one participant or the room." />
+	<LinkCard title="Media" href="../media/" description="Cameras, screens and canvases, shared at any time." />
+</CardGrid>

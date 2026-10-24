@@ -1,0 +1,21 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Chat · peer-data</title>
+    <link rel="stylesheet" href="/style.css" />
+  </head>
+  <body>
+    <h1>Chat</h1>
+    <p>Open this page in another tab of the same browser: the tabs connect without a server.</p>
+    <p id="status" class="status" role="status"></p>
+    <ul id="log" class="log" aria-live="polite"></ul>
+    <form id="form">
+      <label class="visually-hidden" for="text">Message</label>
+      <input id="text" autocomplete="off" placeholder="Say something" required />
+      <button>Send</button>
+    </form>
+    <script type="module" src="./main.ts"></script>
+  </body>
+</html>

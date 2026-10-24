@@ -1,0 +1,71 @@
+:root {
+  color-scheme: light dark;
+  font-family: system-ui, sans-serif;
+  line-height: 1.5;
+}
+
+body {
+  max-width: 48rem;
+  margin: 0 auto;
+  padding: 1.5rem 1rem;
+}
+
+h1 {
+  margin-top: 0;
+  font-size: 1.5rem;
+}
+
+.status {
+  color: GrayText;
+}
+
+.log {
+  min-height: 10rem;
+  max-height: 50vh;
+  margin: 1rem 0;
+  padding: 0.75rem;
+  overflow-y: auto;
+  border: 1px solid GrayText;
+  border-radius: 0.5rem;
+  list-style: none;
+  overflow-wrap: anywhere;
+}
+
+form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+input {
+  flex: 1 1 12rem;
+  min-width: 0;
+  font: inherit;
+  padding: 0.5rem;
+}
+
+button {
+  font: inherit;
+  padding: 0.5rem 1rem;
+}
+
+.videos {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 14rem), 1fr));
+  gap: 0.5rem;
+}
+
+video {
+  width: 100%;
+  border-radius: 0.5rem;
+  background: #000;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+}

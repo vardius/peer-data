@@ -1,0 +1,76 @@
+---
+title: Media
+description: Share cameras, microphones, screens and canvases with every participant, when you join or at any time later.
+---
+
+## Sharing when you join
+
+Pass a `MediaStream` to `connect`, and every participant in the room receives its tracks, including peers that
+join later:
+
+```ts
+const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+const room = peer.connect('call', stream);
+```
+
+## Receiving
+
+```ts
+room.on('participant', (participant) => {
+  participant.on('track', ({ track, streams: [theirs] }) => {
+    if (theirs) video.srcObject = theirs;
+  });
+});
+```
+
+`track` fires once per track, with the `RTCTrackEvent`; `streams` holds the stream the sender added it with.
+Audio and video from one stream arrive as two events with the same stream, so setting `srcObject` again is
+harmless.
+
+Remove the participant's video when it leaves:
+
+```ts
+participant.on('disconnected', () => video.remove());
+```
+
+## Sharing later
+
+```ts
+const screen = await navigator.mediaDevices.getDisplayMedia({ video: true });
+participant.addStream(screen);
+```
+
+`addStream` adds every track of a stream to one participant's connection, which renegotiates by itself. Either
+side can add media at any time, even both at once: peer-data follows the perfect negotiation pattern, so when
+two offers cross, one side yields and both end up with each other's tracks. The data channel carries on
+through it.
+
+To share with the whole room, add it to each participant:
+
+```ts
+for (const participant of room.participants.values()) participant.addStream(screen);
+```
+
+Peers that join afterwards don't get it: add it in the `participant` listener too, or pass the stream to
+`connect` if you have it when you join.
+
+## Stopping
+
+peer-data never stops your tracks, not even when a participant leaves: stop them yourself when you are done,
+and the others stop receiving them.
+
+```ts
+for (const track of stream.getTracks()) track.stop();
+```
+
+For anything beyond adding streams, such as replacing a track or changing its bitrate, use the connection's
+own API on `participant.connection`, like `getSenders()`.
+
+## Without a camera
+
+Any `MediaStream` works, not only cameras. A canvas gives one with `captureStream()`, which is how the
+[live demo](../demo/#video) and peer-data's own tests share video with no camera:
+
+```ts
+const stream = canvas.captureStream(30);
+```

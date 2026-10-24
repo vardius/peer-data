@@ -1,0 +1,39 @@
+---
+title: Live demo
+description: Two peers on this page chat and call each other over WebRTC, with BroadcastChannel as the signaling and no server.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import ChatDemo from '../../components/ChatDemo.astro';
+import VideoDemo from '../../components/VideoDemo.astro';
+import video from '../../../../examples/video/video.ts?raw';
+
+Everything below runs in your browser. The two peers on this page find each other through
+`BroadcastChannelSignaling`, then talk over WebRTC connections of their own. No server sees what they send.
+
+Open this page in another tab of the same browser and its peers join in too.
+
+## Chat
+
+Each peer is a `PeerData` in a room called `chat`. A line typed into one goes over its data channel to every
+other peer in the room. Open "What went through signaling" to see how they connected: a CONNECT to the room,
+then an offer, an answer and ICE candidates between each pair.
+
+<ChatDemo />
+
+The chat is [examples/chat/chat.ts](../getting-started/#your-first-room), the same code the getting started
+guide walks through.
+
+## Video
+
+Each peer joins a room called `call` with a stream, and shows the streams of the others. The streams come from
+canvases, so the call needs no camera; a real call passes the stream from `getUserMedia` instead.
+
+<VideoDemo />
+
+<Code code={video} lang="ts" title="examples/video/video.ts" />
+
+## Where this works
+
+Both demos signal over `BroadcastChannel`, which reaches pages of the same origin in one browser. To connect
+different browsers or devices, the peers need a signaling server: see [Signaling](../signaling/).

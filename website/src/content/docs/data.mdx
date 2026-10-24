@@ -1,0 +1,74 @@
+---
+title: Data
+description: Send text and binary data to one participant or the whole room over WebRTC data channels.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import largeData from '../../../../examples/large-data/large-data.ts?raw';
+
+## Sending
+
+```ts
+participant.send('hello'); // to one participant
+room.send('hello, everyone'); // to every participant in the room now
+```
+
+`send` takes a `string`, an `ArrayBuffer`, or a typed array or `DataView`. Send objects as JSON:
+
+```ts
+room.send(JSON.stringify({ type: 'move', x: 3, y: 5 }));
+```
+
+Each participant has one data channel, created with the connection, so it survives renegotiation when media
+is added. What you send before it opens waits, and goes out in order once it does: you can send from the
+`participant` listener. What waits is a copy, so changing a buffer after sending it doesn't change what
+arrives.
+
+`send` refuses a `Blob`: browsers read a Blob before sending it, so it could arrive before data sent ahead of
+it. Send `await blob.arrayBuffer()` instead.
+
+Sending to a participant that is disconnecting or has disconnected throws. `room.send` still sends to every
+other participant, then throws the first such error.
+
+## Receiving
+
+```ts
+participant.on('message', (data) => {
+  if (typeof data === 'string') {
+    console.log('text', data);
+  } else {
+    console.log('binary', new Uint8Array(data));
+  }
+});
+```
+
+Text arrives as a `string`, and binary data as an `ArrayBuffer`, in every browser.
+
+Anyone in the room can send anything, so check what arrives before you trust it: the
+[chat example](../getting-started/#your-first-room) parses each line and drops what isn't one.
+
+## Channel options
+
+Options for the data channel go in `channel`, and apply to the channel to every participant:
+
+```ts
+const peer = new PeerData(signaling, {
+  channel: { ordered: false, maxRetransmits: 0 },
+});
+```
+
+That makes a channel like UDP: messages can arrive out of order or not at all, but a lost one never holds
+back the next. Every peer in the room must use the same options, because both sides of a connection create the
+channel. The default is ordered and reliable.
+
+## Large data
+
+A message is sent whole, and browsers limit how large one can be: the connection's
+`participant.connection.sctp?.maxMessageSize` says how large. Split a file into chunks, for example of 16 KiB,
+send them in order on a reliable channel, and join them on the other side.
+
+Browsers also limit how much a channel buffers, and `send` throws past it, so a large file can't go out in
+one loop. `participant.channel` is the data channel: wait for its `bufferedamountlow` event whenever its
+`bufferedAmount` is high. This sends 20 MiB in its tests:
+
+<Code code={largeData} lang="ts" title="examples/large-data/large-data.ts" />

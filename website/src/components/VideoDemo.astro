@@ -1,0 +1,251 @@
+---
+// A live video call between two peers in this page, signaling over BroadcastChannel: no server. Each shares an
+// animation drawn on a canvas, so no camera is needed. The call itself is examples/video/video.ts, which has
+// its own tests.
+---
+
+<div class="video-demo not-content" data-video-demo>
+	<div class="controls">
+		<button type="button" class="toggle" aria-pressed="false">Start the call</button>
+		<p class="status" role="status">Nothing is shared until you start.</p>
+	</div>
+	<div class="peers" hidden>
+		{
+			[0, 1].map((i) => (
+				<section class="peer" aria-labelledby={`video-name-${i}`}>
+					<h3 class="name" id={`video-name-${i}`}>
+						Peer {i + 1}
+					</h3>
+					<div class="screens">
+						<figure>
+							<canvas width="320" height="180" />
+							<figcaption>Sends</figcaption>
+						</figure>
+					</div>
+				</section>
+			))
+		}
+	</div>
+</div>
+
+<script>
+	import { BroadcastChannelSignaling } from 'peer-data';
+	import { joinCall } from '../../../examples/video/video';
+	import { Names, peerNames } from '../scripts/demo';
+
+	const COLORS = ['#22a868', '#e0a526'];
+
+	for (const demo of document.querySelectorAll<HTMLElement>('[data-video-demo]')) runVideoDemo(demo);
+
+	function runVideoDemo(demo: HTMLElement): void {
+		const toggle = demo.querySelector<HTMLButtonElement>('.toggle');
+		const status = demo.querySelector('.status');
+		const peers = demo.querySelector<HTMLElement>('.peers');
+		if (!toggle || !status || !peers) return;
+		let stop: (() => void) | undefined;
+
+		toggle.addEventListener('click', () => {
+			if (stop) {
+				stop();
+				stop = undefined;
+				peers.hidden = true;
+				toggle.textContent = 'Start the call';
+				toggle.setAttribute('aria-pressed', 'false');
+				status.textContent = 'The call ended.';
+				return;
+			}
+			peers.hidden = false;
+			stop = startCall(peers);
+			toggle.textContent = 'End the call';
+			toggle.setAttribute('aria-pressed', 'true');
+			status.textContent = 'Each peer sends its animation and shows what the others send.';
+		});
+		window.addEventListener('pagehide', () => stop?.());
+		// A page restored from the back-forward cache has ended its call: start afresh.
+		window.addEventListener('pageshow', (event) => {
+			if (event.persisted) location.reload();
+		});
+	}
+
+	/** Starts both peers' calls, and returns what ends them. */
+	function startCall(peers: HTMLElement): () => void {
+		const names = new Names();
+		const stops: (() => void)[] = [];
+		for (const [i, panel] of peers.querySelectorAll<HTMLElement>('.peer').entries()) {
+			const name = peerNames[i % 2] ?? 'Peer';
+			const heading = panel.querySelector('.name');
+			const canvas = panel.querySelector('canvas');
+			const screens = panel.querySelector('.screens');
+			if (!heading || !canvas || !screens) continue;
+			heading.textContent = name;
+
+			const stopDrawing = animate(canvas, name, COLORS[i % 2] ?? '#22a868');
+			const stream = canvas.captureStream(30);
+			const remote = new Map<string, HTMLElement>();
+			const signaling = new BroadcastChannelSignaling('peer-data-demo-video');
+			const call = joinCall(names.track(signaling, name), stream, {
+				stream: (id, theirs) => {
+					const existing = remote.get(id)?.querySelector('video');
+					if (existing) {
+						existing.srcObject = theirs;
+						return;
+					}
+					const figure = screen(theirs, `From ${names.of(id) ?? 'another tab'}`);
+					remote.set(id, figure);
+					screens.append(figure);
+				},
+				left: (id) => {
+					remote.get(id)?.remove();
+					remote.delete(id);
+				},
+			});
+
+			stops.push(() => {
+				call.leave();
+				signaling.close();
+				stopDrawing();
+				for (const track of stream.getTracks()) track.stop();
+				for (const figure of remote.values()) figure.remove();
+			});
+		}
+		return () => {
+			for (const stopPeer of stops) stopPeer();
+		};
+	}
+
+	/** A captioned, playing video of stream. */
+	function screen(stream: MediaStream, caption: string): HTMLElement {
+		const figure = document.createElement('figure');
+		const video = document.createElement('video');
+		video.autoplay = true;
+		video.muted = true;
+		video.playsInline = true;
+		video.srcObject = stream;
+		const label = document.createElement('figcaption');
+		label.textContent = caption;
+		figure.append(video, label);
+		return figure;
+	}
+
+	/** Draws name and a ball bouncing in color on canvas every frame, until the returned function is called. */
+	function animate(canvas: HTMLCanvasElement, name: string, color: string): () => void {
+		const context = canvas.getContext('2d');
+		if (!context) return () => {};
+		const { width, height } = canvas;
+		const radius = 16;
+		let x = radius + Math.random() * (width - 2 * radius);
+		let y = radius + Math.random() * (height - 2 * radius);
+		let dx = 2.5;
+		let dy = 2;
+		let frame = 0;
+
+		const draw = (): void => {
+			x += dx;
+			y += dy;
+			if (x < radius || x > width - radius) dx = -dx;
+			if (y < radius || y > height - radius) dy = -dy;
+			context.fillStyle = '#101418';
+			context.fillRect(0, 0, width, height);
+			context.fillStyle = color;
+			context.beginPath();
+			context.arc(x, y, radius, 0, 2 * Math.PI);
+			context.fill();
+			context.fillStyle = '#ffffff';
+			context.font = '600 26px system-ui, sans-serif';
+			context.fillText(name, 16, 38);
+			frame = requestAnimationFrame(draw);
+		};
+		draw();
+		return () => {
+			cancelAnimationFrame(frame);
+		};
+	}
+</script>
+
+<style>
+	.video-demo {
+		display: grid;
+		gap: 1rem;
+	}
+
+	.controls {
+		display: flex;
+		flex-wrap: wrap;
+		align-items: center;
+		gap: 0.75rem 1rem;
+	}
+
+	.toggle {
+		flex-shrink: 0;
+		padding: 0.5rem 1.25rem;
+		border: 0;
+		border-radius: 0.5rem;
+		background: var(--sl-color-accent);
+		color: var(--sl-color-black);
+		font: inherit;
+		font-weight: 600;
+		cursor: pointer;
+	}
+
+	.toggle:hover {
+		background: var(--sl-color-accent-high);
+	}
+
+	.status {
+		margin: 0;
+		min-width: 0;
+		color: var(--sl-color-gray-3);
+		font-size: var(--sl-text-sm);
+	}
+
+	.peers {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 18rem), 1fr));
+		gap: 1rem;
+	}
+
+	.peers[hidden] {
+		display: none;
+	}
+
+	.peer {
+		min-width: 0;
+		padding: 0.75rem 1rem 1rem;
+		border: 1px solid var(--sl-color-hairline-light);
+		border-radius: 0.75rem;
+		background: var(--sl-color-bg-nav);
+	}
+
+	.name {
+		margin: 0 0 0.75rem;
+		font-size: var(--sl-text-lg);
+		color: var(--sl-color-white);
+	}
+
+	.screens {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(min(100%, 9rem), 1fr));
+		gap: 0.75rem;
+	}
+
+	.screens :global(figure) {
+		margin: 0;
+		min-width: 0;
+	}
+
+	.screens :global(canvas),
+	.screens :global(video) {
+		display: block;
+		width: 100%;
+		height: auto;
+		aspect-ratio: 16 / 9;
+		border-radius: 0.5rem;
+		background: #101418;
+	}
+
+	.screens :global(figcaption) {
+		margin-top: 0.25rem;
+		color: var(--sl-color-gray-3);
+		font-size: var(--sl-text-sm);
+	}
+</style>

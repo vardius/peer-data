@@ -1,7 +1,0 @@
-{
-  "docs": {
-    "Quick Start": ["installation", "client", "signaling"],
-    "Connection": ["data-channel", "media-stream"],
-    "Examples": ["error", "local", "socket", "data"]
-  }
-}

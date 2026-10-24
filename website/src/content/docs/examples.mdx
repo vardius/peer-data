@@ -1,0 +1,43 @@
+---
+title: Examples
+description: Runnable examples in the repository - a chat between tabs, a video call, and a chat through a socket.io server.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import chatPage from '../../../../examples/chat/page.ts?raw';
+import chatMain from '../../../../examples/chat/main.ts?raw';
+import videoMain from '../../../../examples/video/main.ts?raw';
+import socketMain from '../../../../examples/socket/main.ts?raw';
+
+The [examples folder](https://github.com/vardius/peer-data/tree/master/examples) holds three small apps. The
+chat and the call are modules with tests that run them over real peer connections in a browser, and the
+code here wires them to the DOM. Serve them all from a clone of the repository:
+
+```sh
+npm ci
+npm run examples
+```
+
+## Chat between tabs
+
+http://localhost:5173/chat/ — open it in two tabs. The chat itself, `joinChat`, is on the
+[getting started](../getting-started/#your-first-room) page; this is the page around it:
+
+<Code code={chatPage} lang="ts" title="examples/chat/page.ts" />
+
+<Code code={chatMain} lang="ts" title="examples/chat/main.ts" />
+
+## Video call between tabs
+
+http://localhost:5173/video/ — open it in two tabs and start each. `joinCall` is on the
+[live demo](../demo/#video) page; this page shares your camera with it:
+
+<Code code={videoMain} lang="ts" title="examples/video/main.ts" />
+
+## Chat through a server
+
+http://localhost:5173/socket/ — open it in two browsers. The same chat page, signaling through the socket.io
+server in [examples/socket/server.ts](../signaling/#the-server), which the dev server runs on the same port
+through [a Vite plugin](../vite/):
+
+<Code code={socketMain} lang="ts" title="examples/socket/main.ts" />

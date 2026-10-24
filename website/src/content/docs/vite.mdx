@@ -1,0 +1,66 @@
+---
+title: Vite
+description: Use peer-data in a Vite app, with the signaling server running on Vite's own dev and preview servers.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import plugin from '../../../../examples/socket/vite-plugin.ts?raw';
+
+peer-data needs no setup in Vite. It is an ES module with types and no dependencies, so `vite` serves it and
+`vite build` bundles it like any other import:
+
+```sh
+npm install peer-data
+```
+
+`BroadcastChannelSignaling` needs no server, so tabs of one browser connect from the first `vite` run.
+
+## Signaling on Vite's server
+
+To connect browsers through socket.io while you develop, run the signaling server on Vite's own server. Pages
+then reach it on the origin they were served from, with no second server or port to start. This plugin does
+that for `vite` and `vite preview`:
+
+<Code code={plugin} lang="ts" title="examples/socket/vite-plugin.ts" />
+
+It runs [the server](../signaling/#the-server) from the signaling guide. Copy both files into your project,
+install socket.io for the server and socket.io-client for the pages, and add the plugin to your config:
+
+```sh
+npm install socket.io socket.io-client
+```
+
+```ts
+// vite.config.ts
+import { defineConfig } from 'vite';
+import { signaling } from './signaling/vite-plugin';
+
+export default defineConfig({
+  plugins: [signaling()],
+});
+```
+
+Pages signal through `io()`, which connects to the origin of the page:
+
+```ts
+import { io } from 'socket.io-client';
+import { PeerData, SocketChannel } from 'peer-data';
+
+const peer = new PeerData(new SocketChannel(io()));
+```
+
+`vite --host` serves the app on your network too, to try it on a phone. Cameras and microphones only work on
+`localhost` or over HTTPS, so for media on another device, give Vite a certificate with `server.https`: the
+plugin runs over HTTPS as well. The examples run this plugin: `npm run examples` in the repository.
+
+## In production
+
+`vite build` writes static files, and Vite's server doesn't run in production. Serve the files as you like,
+and run `attachSignaling` on a Node.js server of your own, then pass its address to `io()`:
+
+```ts
+const peer = new PeerData(new SocketChannel(io('https://signaling.example.com')));
+```
+
+When the signaling server is on another origin, allow your site's origin in its `cors` option, as
+[the server](../signaling/#the-server) shows.

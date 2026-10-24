@@ -1,10 +1,11 @@
-typings
-.code
-.rpt2_cache
+node_modules/
+dist/
+coverage/
+.vitest/
 .DS_Store
 *.log
-node_modules
-dist
-coverage
-.idea
-npm-debug.log
+
+# Website
+website/node_modules/
+website/dist/
+website/.astro/

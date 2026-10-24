@@ -1,0 +1,98 @@
+---
+title: Rooms and participants
+description: Join and leave rooms, follow participants as they connect and leave, and handle errors.
+---
+
+## Joining a room
+
+```ts
+import { PeerData } from 'peer-data';
+
+const peer = new PeerData(signaling, { configuration: { iceServers } });
+const room = peer.connect('lobby');
+```
+
+`connect` announces this peer to the others in the room and returns the `Room` at once. Calling it again
+with the same name returns the same room until you leave it. A peer can be in several rooms at a time, with a
+separate connection to each participant in each.
+
+`configuration` is the `RTCConfiguration` every connection gets: ICE servers, and anything else
+`RTCPeerConnection` takes.
+
+## Participants
+
+Each other peer in the room arrives as a `participant` event, whether it was there first or joins later:
+
+```ts
+room.on('participant', (participant) => {
+  participant
+    .on('connected', () => console.log(participant.id, 'connected'))
+    .on('message', (data) => console.log(participant.id, 'says', data))
+    .on('disconnected', () => console.log(participant.id, 'left'));
+});
+```
+
+A participant's connection is still being set up when the event fires. You can send to it straight away: what
+you send waits, and goes out in order once the data channel opens.
+
+| Event | Fires when |
+| --- | --- |
+| `connected` | The data channel opened, after anything sent before it went out. |
+| `message` | A message arrived: a `string`, or an `ArrayBuffer` for binary data. |
+| `track` | The participant shared a media track. |
+| `disconnected` | The participant left, the connection failed, the data channel closed or didn't open in time, or you called `close()`. Fires once. |
+| `error` | Negotiating the connection failed. |
+
+`room.participants` holds the participants in the room now, by id. A participant leaves it when it
+disconnects; if the same peer joins again, it arrives as a new participant. A peer that announces itself under
+an id already in the room is a new peer, as after a reload with an id the server gave: it replaces the old
+participant, which disconnects.
+
+A participant whose data channel hasn't opened 30 seconds after it arrived is closed, so a peer that never
+answers doesn't wait forever. `connectTimeout` changes how long, in milliseconds:
+
+```ts
+const peer = new PeerData(signaling, { connectTimeout: 10_000 });
+```
+
+`participant.connection` is its `RTCPeerConnection`, for what peer-data doesn't wrap, such as `getStats()`.
+
+## Leaving
+
+```ts
+participant.close(); // the connection to one participant
+room.disconnect(); // tells the others, and closes every connection in the room
+peer.close(); // leaves every room and stops listening to signaling
+```
+
+Each of them is safe to call twice. After `room.disconnect()`, `peer.connect` with the same name joins afresh;
+after `peer.close()`, `connect` throws.
+
+Closing the tab doesn't run any of them. The others then see the participant disconnect when its data
+channel closes or its connection fails, which can take many seconds if the tab lost its network. Leave on
+`pagehide` to tell them at once, and reload a page the browser restores from its back-forward cache, which has
+left:
+
+```ts
+window.addEventListener('pagehide', () => peer.close());
+window.addEventListener('pageshow', (event) => {
+  if (event.persisted) location.reload();
+});
+```
+
+## Errors
+
+```ts
+room.on('error', (error) => console.error('could not set up a participant', error));
+
+room.on('participant', (participant) => {
+  participant.on('error', (error) => console.error('negotiation failed', error));
+});
+```
+
+The room reports a participant that could not be set up, for example because the `RTCConfiguration` is
+invalid. A participant reports a failed negotiation, such as a description its peer sent that the browser
+rejects. An error with no listener is thrown asynchronously, so it shows up as an uncaught error rather than
+being lost.
+
+Listeners that throw don't stop the others: their errors are reported the same way.

@@ -1,109 +1,68 @@
 {
   "name": "peer-data",
-  "version": "3.2.5",
-  "description": "PeerData - library for files, media streaming/sharing using WebRTC",
-  "scripts": {
-    "build": "rollup -c",
-    "clean": "rimraf dist coverage",
-    "typecheck": "tsc --noEmit",
-    "lint": "eslint -c .eslintrc.js --ext .ts src",
-    "test": "jest --no-cache",
-    "test:cov": "yarn test -- --coverage",
-    "test:watch": "yarn test -- --watchAll",
-    "prepare": "yarn build",
-    "prebuild": "yarn clean",
-    "postbuild": "rimraf dist/**/__tests__",
-    "posttest": "yarn typecheck && yarn lint",
-    "preversion": "yarn test",
-    "postversion": "git push && git push --tags",
-    "check": "npm-check -u"
-  },
-  "main": "dist/index.js",
-  "module": "dist/index.es.js",
-  "jsnext:main": "dist/index.es.js",
-  "types": "dist/index.d.ts",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/vardius/peer-data.git"
+  "version": "4.0.0",
+  "description": "WebRTC data channels and media between browsers, one peer connection per participant, over the signaling you choose",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
   },
   "files": [
     "dist"
   ],
+  "sideEffects": false,
+  "scripts": {
+    "build": "rm -rf dist && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "lint": "eslint .",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "examples": "vite --config examples/vite.config.ts",
+    "prepare": "npm run build",
+    "format": "prettier --write .",
+    "format:check": "prettier --check ."
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/vardius/peer-data.git"
+  },
   "keywords": [
-    "PeerData",
-    "WebRTC",
-    "cdn",
-    "web",
-    "rtc",
-    "video",
-    "player",
-    "html5",
-    "peer",
-    "socket",
-    "real",
-    "time",
-    "communication"
+    "webrtc",
+    "rtcdatachannel",
+    "rtcpeerconnection",
+    "peer-to-peer",
+    "p2p",
+    "data-channel",
+    "media-stream",
+    "signaling",
+    "socket.io"
   ],
   "author": {
     "name": "Rafał Lorenz",
-    "email": "vardius@gmail.com"
+    "email": "folksy.surges9p@icloud.com"
   },
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/vardius/peer-data/issues"
   },
-  "homepage": "https://github.com/vardius/peer-data#readme",
-  "jest": {
-    "transform": {
-      ".(ts?)": "ts-jest"
-    },
-    "testMatch": [
-      "**/?(*.)(spec|test).{t,j}s"
-    ],
-    "testPathIgnorePatterns": [
-      "<rootDir>/(node_modules|lib|es|dist)"
-    ],
-    "collectCoverageFrom": [
-      "src/**/*.{t,j}s",
-      "!src/**/*.d.ts"
-    ],
-    "moduleFileExtensions": [
-      "js",
-      "json",
-      "ts"
-    ]
-  },
-  "peerDependencies": {
-    "webrtc-adapter": "^7.2.3"
-  },
-  "dependencies": {
-    "@types/uuid": "^8.0.0",
-    "socket.io-client": "^2.3.0",
-    "uuid": "^8.1.0"
-  },
+  "homepage": "https://vardius.github.io/peer-data/",
   "devDependencies": {
-    "@rollup/plugin-commonjs": "^11.0.2",
-    "@rollup/plugin-node-resolve": "^7.1.1",
-    "@types/jest": "^25.1.2",
-    "@types/node": "^13.7.0",
-    "@types/socket.io-client": "^1.4.29",
-    "@types/webrtc": "0.0.25",
-    "@typescript-eslint/eslint-plugin": "^2.19.0",
-    "@typescript-eslint/parser": "^2.19.0",
-    "codecov": "^3.6.5",
-    "cross-env": "^7.0.0",
-    "dts-bundle": "^0.7.3",
-    "eslint": "^6.8.0",
-    "jest": "^25.1.0",
-    "jest-cli": "^25.1.0",
-    "jest-environment-node-debug": "^2.0.0",
-    "npm-check": "^5.7.1",
-    "rimraf": "^3.0.1",
-    "rollup": "^1.31.0",
-    "rollup-plugin-sourcemaps": "^0.5.0",
-    "rollup-plugin-typescript2": "^0.25.3",
-    "ts-jest": "^25.2.0",
-    "tslib": "^1.10.0",
-    "typescript": "^3.7.5"
+    "@eslint/js": "^10.0.1",
+    "@types/node": "^26.6.5",
+    "@vitest/browser-playwright": "^5.0.5",
+    "eslint": "^10.13.0",
+    "globals": "^17.13.0",
+    "playwright": "^1.64.1",
+    "prettier": "^3.9.10",
+    "socket.io": "^4.8.4",
+    "socket.io-client": "^4.8.4",
+    "typescript": "~6.0.3",
+    "typescript-eslint": "^8.72.0",
+    "vite": "^8.3.5",
+    "vitest": "^5.0.5"
   }
 }

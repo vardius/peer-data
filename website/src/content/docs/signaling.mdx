@@ -1,0 +1,121 @@
+---
+title: Signaling
+description: How peers find each other before WebRTC connects them, with socket.io, BroadcastChannel, or signaling of your own.
+---
+
+import { Code } from '@astrojs/starlight/components';
+import server from '../../../../examples/socket/server.ts?raw';
+
+Before two browsers can connect directly, they have to exchange a few messages: who is in a room, the
+descriptions of their connections, and the network addresses they can be reached at. Carrying those messages
+is signaling. peer-data doesn't do it itself; you give `PeerData` the signaling to use.
+
+## Between tabs: BroadcastChannel
+
+```ts
+import { BroadcastChannelSignaling, PeerData } from 'peer-data';
+
+const peer = new PeerData(new BroadcastChannelSignaling());
+```
+
+`BroadcastChannelSignaling` reaches the pages of the same origin in one browser: tabs, windows and iframes.
+It needs no server, which makes it right for demos, tests, and apps that connect their own tabs. Give each
+`PeerData` its own instance; pass the same name, `peer-data` by default, to the ones that should meet.
+
+`close()` stops it. Anything sent afterwards goes nowhere, so close it after `peer.close()`, not before, or the
+others won't hear that you left.
+
+## Through a server: socket.io
+
+```ts
+import { io } from 'socket.io-client';
+import { PeerData, SocketChannel } from 'peer-data';
+
+const peer = new PeerData(new SocketChannel(io('https://signaling.example.com')));
+```
+
+`SocketChannel` sends each signaling message as a `message` event on the socket, and passes on the `message`
+events that come back. It takes a socket you create, so you pick the client version and its options:
+
+- **socket.io 3 or 4 server**: socket.io-client 4.
+- **socket.io 2 server**, such as peer-data-server 1.x: socket.io-client 2.
+
+peer-data itself depends on neither. When the socket reconnects after a drop, `SocketChannel` announces this
+peer again in every room it's in: the server has forgotten it, and the others may have been told it left.
+
+## The server
+
+A signaling server only routes messages; it never looks inside them. This one, on socket.io 4, is what the
+examples and tests run:
+
+<Code code={server} lang="ts" title="examples/socket/server.ts" />
+
+Attach it to your HTTP server:
+
+```ts
+import { createServer } from 'node:http';
+import { attachSignaling } from './server';
+
+const httpServer = createServer();
+attachSignaling(httpServer, { cors: { origin: 'https://your.site' } });
+httpServer.listen(8080);
+```
+
+Beyond routing, it checks that each socket only speaks for the peer ids it joined with, and tells a room when
+a socket drops. Add whatever your app needs on top, such as authentication before a socket may join a room.
+
+## The messages
+
+Every signaling message has the same shape, unchanged since peer-data 3:
+
+```ts
+type SignalingEvent = {
+  type: 'CONNECT' | 'DISCONNECT' | 'OFFER' | 'ANSWER' | 'CANDIDATE';
+  room: { id: string };
+  caller: { id: string }; // the peer that sent it
+  callee: { id: string } | null; // the peer it is for, or null for the whole room
+  payload: RTCSessionDescriptionInit | RTCIceCandidateInit | null;
+};
+```
+
+A server routes them in two ways, never back to the peer that sent them, and in the order they were sent:
+
+- **CONNECT** and **DISCONNECT** have no callee: send them to everyone else in the room.
+- **OFFER**, **ANSWER** and **CANDIDATE** go to the callee only. A peer that received another's offers would
+  apply them to its own connection to that peer, so in a room of three or more nobody connects.
+
+Peer ids are random, made up by each peer for each room it joins. A server may replace the caller's id with its
+own, such as the socket's id, as long as it routes messages for that id back to the same peer: peer-data uses
+whichever id the others address it by.
+
+## Your own
+
+Signaling is an object with two methods, so anything that can route JSON between peers as
+[the messages](#the-messages) describes works: WebSockets, or server-sent events and `fetch`, to a server that
+routes them. peer-data can't filter out offers meant for someone else itself, because a server may replace the
+ids peers address each other by.
+
+```ts
+import { PeerData, type Signaling } from 'peer-data';
+
+const socket = new WebSocket('wss://signaling.example.com');
+
+const signaling: Signaling = {
+  send: (event) => socket.send(JSON.stringify(event)),
+  subscribe: (listener) => {
+    const onMessage = ({ data }: MessageEvent<string>) => listener(JSON.parse(data));
+    socket.addEventListener('message', onMessage);
+    return () => socket.removeEventListener('message', onMessage);
+  },
+};
+
+const peer = new PeerData(signaling);
+```
+
+`send` carries a message to the server; `subscribe` passes each message that arrives to the listener until
+the function it returns is called. PeerData checks every message and ignores anything that isn't a signaling
+event, so you can pass messages on as they come.
+
+`send` is called as soon as you join a room, so the transport should queue messages until it is open. The
+WebSocket above doesn't: wait for its `open` event before calling `peer.connect`. If `send` throws, so does
+`peer.connect`, and calling it again later tries again.

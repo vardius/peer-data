@@ -1,75 +1,102 @@
-# PeerData
-[![Build Status](https://travis-ci.org/vardius/peer-data.svg?branch=master)](https://travis-ci.org/vardius/peer-data)
+# 📡 peer-data
+
+[![CI](https://github.com/vardius/peer-data/actions/workflows/ci.yml/badge.svg)](https://github.com/vardius/peer-data/actions/workflows/ci.yml)
 [![npm version](https://img.shields.io/npm/v/peer-data.svg)](https://www.npmjs.com/package/peer-data)
-[![npm downloads](https://img.shields.io/npm/dm/peer-data.svg)](https://www.npmjs.com/package/peer-data)
-[![license](https://img.shields.io/github/license/vardius/peer-data.svg)](LICENSE)
-<!--[![codecov](https://codecov.io/gh/vardius/peer-data/branch/master/graph/badge.svg)](https://codecov.io/gh/vardius/peer-data)-->
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg)](LICENSE)
 
-<img align="right" height="180px" src="website/src/static/img/logo.png" alt="logo" />
+WebRTC rooms for the browser: send data and share media straight from one peer to the others.
 
-PeerData is a library for bidirectional peer-to-peer transfers of arbitrary data using [RTCDataChannel](https://developer.mozilla.org/pl/docs/Web/API/RTCDataChannel). Simple *WebRTC* wrapper providing data channel abstraction.
+- **Rooms.** Join a room by name, and get a participant for every other peer in it, each with its own `RTCPeerConnection`.
+- **Data channels.** `send` a string or binary data to one participant or the whole room. Messages sent before the channel opens wait and go out in order.
+- **Media.** Share a `MediaStream` when you join or at any time later: the connection renegotiates by itself, and offers that cross are resolved with the perfect negotiation pattern.
+- **Your signaling.** socket.io with the client version that matches your server, `BroadcastChannel` between tabs with no server at all, or your own in two methods.
+- **Small.** No dependencies, typed events, ES modules, written in strict TypeScript.
 
-[WebRTC](https://webrtc.org/) needs a messaging service to set up and maintain a *WebRTC* call.
+📖 **[Documentation](https://vardius.github.io/peer-data/)** · [Live demo](https://vardius.github.io/peer-data/demo/) · [Examples](examples) · [Migrating from v3](MIGRATION.md)
 
-The sender and receiver *RTCPeerConnections* run in web pages on different devices, and we need a way for them to communicate metadata.
-For this, we use a signaling server: a server that can pass messages between *WebRTC* clients (peers).
+## Install
 
-[PeerDataServer](https://github.com/vardius/peer-data-server) - An **ready to use** example of signaling server on *Node* using [socket.io](http://socket.io/).
-
-📖 ABOUT
-==================================================
-Contributors:
-
-* [Rafał Lorenz](https://rafallorenz.com)
-
-Want to contribute ? Feel free to send pull requests!
-
-Have problems, bugs, feature ideas?
-We are using the github [issue tracker](https://github.com/vardius/peer-data/issues) to manage them.
-
-## 📚 Documentation
-
-For **documentation** (_including examples_), **visit [rafallorenz.com/peer-data](https://rafallorenz.com/peer-data)**
-
-🚏 HOW TO USE
-==================================================
-
-1. [Chat Example](https://github.com/vardius/webrtc-chat)
-2. [React Chat Example](https://github.com/vardius/react-webrtc-chat)
-3. [React Hook](https://github.com/vardius/react-peer-data)
-
-## Installation
-```bash
-$ npm install peer-data
+```sh
+npm install peer-data
 ```
 
-## Basic example
-```typescript
-import PeerData, { EventDispatcher, SocketChannel } from 'peer-data';
+peer-data runs in current Chrome, Edge, Firefox and Safari; its tests run in Chromium, Firefox and WebKit.
 
-const constraints = {ordered: true};
-const servers = {
-  iceServers: [
-    {urls: "stun:stun.1.google.com:19302"}
-  ]
-};
+## Quick start
 
+Two tabs of the same page talk with no server, through `BroadcastChannel`:
+
+```ts
+import { BroadcastChannelSignaling, PeerData } from 'peer-data';
+
+const peer = new PeerData(new BroadcastChannelSignaling());
+const room = peer.connect('lobby');
+
+room.on('participant', (participant) => {
+  participant.on('message', (data) => console.log(participant.id, 'says', data));
+  participant.send('hello');
+});
+```
+
+Open it in two tabs, and each logs the other's hello. Across browsers and devices, signal through a server instead:
+
+```ts
+import { io } from 'socket.io-client';
+import { PeerData, SocketChannel } from 'peer-data';
+
+const peer = new PeerData(new SocketChannel(io('https://signaling.example.com')), {
+  configuration: { iceServers: [{ urls: 'stun:stun.l.google.com:19302' }] },
+});
+```
+
+[examples/socket/server.ts](examples/socket/server.ts) is a small signaling server on socket.io 4 to start from.
+
+## Media
+
+Pass a stream when you join, and every participant receives its tracks:
+
+```ts
+const stream = await navigator.mediaDevices.getUserMedia({ video: true, audio: true });
+const room = peer.connect('call', stream);
+
+room.on('participant', (participant) => {
+  participant.on('track', ({ streams: [remote] }) => {
+    if (remote) video.srcObject = remote;
+  });
+});
+```
+
+`participant.addStream(stream)` shares one later. Either side can add media at any time.
+
+## Leaving
+
+`room.disconnect()` tells the others and closes every connection in the room; `peer.close()` leaves every room.
+A participant fires `disconnected` once when it leaves, its connection fails, or you call `participant.close()`.
+
+## Upgrading from v3
+
+v4 has no `EventDispatcher`: PeerData takes the signaling directly, and SocketChannel takes a socket you create.
+
+```ts
+// v3
 const dispatcher = new EventDispatcher();
 const peerData = new PeerData(dispatcher, servers, constraints);
 const signaling = new SocketChannel(dispatcher, 'http://localhost:8080');
 
-const room = peerData.connect('test-room');
-
-room.on("participant", participant => {
-  participant.on("message", payload => console.log("message", payload));
-
-  participant.send('Hi mate! this is private message.');
-})
+// v4
+const peerData = new PeerData(new SocketChannel(io('http://localhost:8080')), {
+  configuration: servers,
+  channel: constraints,
+});
 ```
 
-For how to **disconnect**, **close connection** and handle errors please check [documentation](https://rafallorenz.com/peer-data/docs/client).
+The messages between peers keep their v3 shape, so v3 signaling servers still route them.
+[MIGRATION.md](MIGRATION.md) maps every v3 call to its v4 form and lists the behaviour changes.
 
-📜 [License](LICENSE.md)
--------
+## Contributing
 
-This package is released under the MIT license. See the complete license in the package
+Bug reports and pull requests are welcome: see [CONTRIBUTING.md](.github/CONTRIBUTING.md).
+
+## License
+
+MIT, see [LICENSE](LICENSE).

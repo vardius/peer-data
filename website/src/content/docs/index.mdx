@@ -1,0 +1,124 @@
+---
+title: WebRTC rooms for the browser
+description: peer-data connects browsers in rooms over WebRTC. Send data and share media straight from one peer to the others, over socket.io, BroadcastChannel or signaling of your own.
+template: splash
+hero:
+  title: Browser to browser, <span class="accent">directly</span>
+  tagline: Join a room, and every other peer in it is a participant you can send data to and share media with, peer to peer. peer-data handles the WebRTC negotiation; you choose how peers find each other.
+  actions:
+    - text: Get started
+      link: getting-started/
+      icon: right-arrow
+    - text: Try the live demo
+      link: demo/
+      variant: minimal
+---
+
+import { CardGrid, Card, LinkButton, LinkCard } from '@astrojs/starlight/components';
+import ChatDemo from '../../components/ChatDemo.astro';
+import Stats from '../../components/Stats.astro';
+
+<Stats />
+
+<div class="landing-section">
+
+<p class="eyebrow">Features</p>
+
+## What you get
+
+<CardGrid>
+	<Card title="Rooms" icon="laptop">
+		Join a room by name. Every other peer in it becomes a participant with its own `RTCPeerConnection`, and
+		leaving closes them all.
+	</Card>
+	<Card title="Data channels" icon="comment">
+		Send text or binary data to one participant or the whole room. What you send before the channel opens
+		waits, and goes out in order.
+	</Card>
+	<Card title="Media at any time" icon="star">
+		Share a stream when you join or later. Connections renegotiate by themselves, and offers that cross are
+		resolved with perfect negotiation.
+	</Card>
+	<Card title="Your signaling" icon="random">
+		socket.io with the client that matches your server, `BroadcastChannel` between tabs with no server, or
+		your own in two methods.
+	</Card>
+	<Card title="Typed" icon="approve-check">
+		Written in strict TypeScript: event names and what they carry are typed, and so is every signaling
+		message.
+	</Card>
+	<Card title="Nothing else to install" icon="rocket">
+		An ES module with no dependencies. Its tests run real connections in Chromium, Firefox and WebKit.
+	</Card>
+</CardGrid>
+
+</div>
+
+<div class="landing-section">
+
+<p class="eyebrow">Try it</p>
+
+## Two peers, on this page
+
+<div class="landing-lead">
+	These two peers found each other through `BroadcastChannel` and chat over a WebRTC data channel, with no
+	server. Open this page in another tab and it joins the same chat.
+</div>
+
+<ChatDemo />
+
+<LinkCard title="More of the live demo" href="demo/" description="A video call with no camera, and how the chat is built." />
+
+</div>
+
+<div class="landing-section">
+
+<p class="eyebrow">Upgrading</p>
+
+## Coming from v3
+
+<div class="landing-lead">
+	Rooms, participants and their events are the same. The `EventDispatcher` is gone: PeerData takes the
+	signaling, SocketChannel takes a socket you create, and connections negotiate by themselves.
+</div>
+
+<div class="compare">
+
+```ts title="v3"
+const dispatcher = new EventDispatcher();
+const peerData = new PeerData(dispatcher, servers);
+new SocketChannel(dispatcher, 'http://localhost:8080');
+
+const room = peerData.connect('room');
+room.on('participant', (participant) => {
+  participant.addStream(stream);
+  participant.renegotiate();
+});
+```
+
+```ts title="v4"
+const peerData = new PeerData(
+  new SocketChannel(io('http://localhost:8080')),
+  { configuration: servers },
+);
+
+const room = peerData.connect('room');
+room.on('participant', (participant) => {
+  participant.addStream(stream);
+});
+```
+
+</div>
+
+<LinkCard title="Migration guide" href="migrating-from-v3/" description="Every v3 call and its v4 form, and the behaviour changes to know about." />
+
+</div>
+
+<div class="cta not-content">
+	<h2>Connect two tabs in five minutes</h2>
+	<p>Install the package, join a room, and send your first message. The guide starts with no server and ends with one.</p>
+	<div class="cta-actions">
+		<LinkButton href="getting-started/" icon="right-arrow">Get started</LinkButton>
+		<LinkButton href="rooms/" variant="minimal">Read the docs</LinkButton>
+	</div>
+</div>

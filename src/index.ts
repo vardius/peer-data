@@ -1,22 +1,13 @@
-// import 'webrtc-adapter';
-
-import { App as PeerData } from './app/App';
-
-import { Room } from './app/Room';
-import { Participant } from './app/Participant';
-import { EventDispatcher } from './app/EventDispatcher';
-
-import { Signaling, SignalingEvent, SignalingEventType } from './app/Signaling';
-import { SocketChannel } from './app/SocketChannel';
-
+export { PeerData, type PeerDataOptions } from './PeerData.js';
+export type { Room, RoomEvents } from './Room.js';
+export type { Participant, ParticipantEvents, Payload } from './Participant.js';
+export type { Listener } from './Emitter.js';
 export {
-    Room,
-    Participant,
-    EventDispatcher,
-    Signaling,
-    SignalingEvent,
-    SignalingEventType,
-    SocketChannel,
-};
-
-export default PeerData;
+  SignalingEventType,
+  type DirectedSignalingEvent,
+  type Identifiable,
+  type Signaling,
+  type SignalingEvent,
+} from './signaling.js';
+export { SocketChannel, type SignalingSocket } from './SocketChannel.js';
+export { BroadcastChannelSignaling } from './BroadcastChannelSignaling.js';
