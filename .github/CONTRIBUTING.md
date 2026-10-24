@@ -34,6 +34,9 @@ npm pack --dry-run
 
 `npm run format` fixes formatting.
 
+On Linux, Firefox gathers no WebRTC candidates when IPv6 is on but has no route, so its tests time out. CI turns
+IPv6 off first: `sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1`.
+
 ### Layout
 
 - `src/` holds the library: `PeerData`, `Room`, `Participant`, the signaling types, `SocketChannel` and

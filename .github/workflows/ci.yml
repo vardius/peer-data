@@ -27,6 +27,9 @@ jobs:
       - run: npm run format:check
       - name: Install browsers
         run: npx playwright install --with-deps chromium firefox webkit
+      # Firefox gathers no ICE candidates at all when IPv6 is on but has no route, as on this runner.
+      - name: Turn off IPv6, for Firefox's WebRTC
+        run: sudo sysctl -w net.ipv6.conf.all.disable_ipv6=1 net.ipv6.conf.default.disable_ipv6=1
       - run: npm test
       - run: npm run build
       - name: Check the package contents
