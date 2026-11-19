@@ -1,6 +1,6 @@
 {
   "name": "peer-data",
-  "version": "4.0.0",
+  "version": "4.0.1",
   "description": "WebRTC data channels and media between browsers, one peer connection per participant, over the signaling you choose",
   "type": "module",
   "main": "./dist/index.js",
